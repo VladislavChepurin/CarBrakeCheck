@@ -1,0 +1,45 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Цветовая палитра -->
+    <Color x:Key="PrimaryColor">#4DA6FF</Color>
+    <Color x:Key="PrimaryLightColor">#80C1FF</Color>
+    <Color x:Key="PrimaryLighterColor">#B3D9FF</Color>
+    <Color x:Key="PrimaryLightestColor">#E6F3FF</Color>
+    <Color x:Key="PrimaryLightestColor2">#F0F8FF</Color>
+    <Color x:Key="PrimaryDarkColor">#0066CC</Color>
+    <Color x:Key="TextColor">#0066CC</Color>
+    <Color x:Key="TextLightColor">#666666</Color>
+    <Color x:Key="WhiteColor">#FFFFFF</Color>
+    <Color x:Key="DividerColor">#B3D9FF</Color>
+
+    <!-- Кисти -->
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+    <SolidColorBrush x:Key="PrimaryLightBrush" Color="{StaticResource PrimaryLightColor}"/>
+    <SolidColorBrush x:Key="PrimaryLighterBrush" Color="{StaticResource PrimaryLighterColor}"/>
+    <SolidColorBrush x:Key="PrimaryLightestBrush" Color="{StaticResource PrimaryLightestColor}"/>
+    <SolidColorBrush x:Key="PrimaryLightestBrush2" Color="{StaticResource PrimaryLightestColor2}"/>
+    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource PrimaryDarkColor}"/>
+    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}"/>
+    <SolidColorBrush x:Key="TextLightBrush" Color="{StaticResource TextLightColor}"/>
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource WhiteColor}"/>
+    <SolidColorBrush x:Key="DividerBrush" Color="{StaticResource DividerColor}"/>
+
+    <!-- Градиентные кисти -->
+    <LinearGradientBrush x:Key="SelectedTabGradient" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource PrimaryLightestColor2}" Offset="0.8"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="HeaderGradient" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="{StaticResource PrimaryLightestColor2}" Offset="0"/>
+        <GradientStop Color="{StaticResource PrimaryLightestColor2}" Offset="0.2"/>
+        <GradientStop Color="{StaticResource PrimaryLightestColor}" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="VerticalDividerGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource PrimaryLightColor}" Offset="0.5"/>
+        <GradientStop Color="{StaticResource PrimaryColor}" Offset="1"/>
+    </LinearGradientBrush>
+    
+</ResourceDictionary>
