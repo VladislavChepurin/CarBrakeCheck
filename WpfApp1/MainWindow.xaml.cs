@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using WpfApp1.Properties;
+using WpfApp1.DataBase.Entity;
+using WpfApp1.SettingsWindow;
 
 namespace WpfApp1
 {
@@ -15,6 +12,7 @@ namespace WpfApp1
         private Border _selectedTab;
         private AppSettings _settings;
         private Dictionary<string, (Border tab, FrameworkElement content)> _tabMapping;
+        private readonly MainContext _context;
 
         public MainWindow()
         {
@@ -28,6 +26,7 @@ namespace WpfApp1
                 SubscribeToEvents();
                 ApplyWindowSettings();
                 InitializeLanguage();
+                _context = new MainContext();
             }
             catch (Exception ex)
             {
@@ -92,6 +91,12 @@ namespace WpfApp1
             }
         }
 
+        private void OpenCarBrands_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new CarBrands(_context);
+            window.ShowDialog(); // или window.Show() для немодального
+        }
+
         private void Window_Closed(object sender, EventArgs e)
         {
             try
@@ -108,6 +113,7 @@ namespace WpfApp1
             finally
             {
                 App.LanguageChanged -= OnLanguageChanged;
+                _context?.Dispose();
             }
         }
 
@@ -359,5 +365,7 @@ namespace WpfApp1
                 System.Diagnostics.Debug.WriteLine($"Error hiding content: {ex.Message}");
             }
         }
+
+       
     }
 }

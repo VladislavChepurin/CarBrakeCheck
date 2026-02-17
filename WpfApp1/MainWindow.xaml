@@ -129,6 +129,10 @@
                                    FontSize="18" 
                                    Foreground="#666666"/>
 
+                        <!--Временно-->
+                        <Button Content="Управление марками" Click="OpenCarBrands_Click" Width="200" Height="30"/>
+
+                        
                         <ComboBox x:Name="LanguageComboBox" 
                           Style="{StaticResource ComboBoxStyle}"
                           SelectionChanged="LanguageComboBox_SelectionChanged">
