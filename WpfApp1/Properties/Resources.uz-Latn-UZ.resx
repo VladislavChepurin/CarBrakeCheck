@@ -129,6 +129,9 @@
   <data name="Measurements" xml:space="preserve">
     <value>Oʻlchovlar</value>
   </data>
+  <data name="NameProgram" xml:space="preserve">
+    <value>Tormoz kuchini tekshirish dasturi</value>
+  </data>
   <data name="Reports" xml:space="preserve">
     <value>Hisobotlar</value>
   </data>

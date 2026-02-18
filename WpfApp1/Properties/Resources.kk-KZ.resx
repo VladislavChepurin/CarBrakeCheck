@@ -129,6 +129,9 @@
   <data name="Measurements" xml:space="preserve">
     <value>Өлшеулер</value>
   </data>
+  <data name="NameProgram" xml:space="preserve">
+    <value>Тежегіш күшін тексеру бағдарламасы</value>
+  </data>
   <data name="Reports" xml:space="preserve">
     <value>Есептер</value>
   </data>

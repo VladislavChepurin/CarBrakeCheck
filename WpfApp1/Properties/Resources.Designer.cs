@@ -97,6 +97,15 @@ namespace WpfApp1.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Программа проверки тормозных усилий.
+        /// </summary>
+        public static string NameProgram {
+            get {
+                return ResourceManager.GetString("NameProgram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Отчеты.
         /// </summary>
         public static string Reports {

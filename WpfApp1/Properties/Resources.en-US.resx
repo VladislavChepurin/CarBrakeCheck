@@ -129,6 +129,9 @@
   <data name="Measurements" xml:space="preserve">
     <value>Measurements</value>
   </data>
+  <data name="NameProgram" xml:space="preserve">
+    <value>Brake force test program</value>
+  </data>
   <data name="Reports" xml:space="preserve">
     <value>Reports</value>
   </data>

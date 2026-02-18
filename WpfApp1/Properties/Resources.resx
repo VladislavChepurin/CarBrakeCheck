@@ -129,6 +129,9 @@
   <data name="Measurements" xml:space="preserve">
     <value>Измерения</value>
   </data>
+  <data name="NameProgram" xml:space="preserve">
+    <value>Программа проверки тормозных усилий</value>
+  </data>
   <data name="Reports" xml:space="preserve">
     <value>Отчеты</value>
   </data>

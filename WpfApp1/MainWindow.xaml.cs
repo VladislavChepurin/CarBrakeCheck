@@ -146,7 +146,7 @@ namespace WpfApp1
             try
             {
                 UpdateAllTexts();
-                this.Title = WpfApp1.Properties.Resources.Settings;
+                this.Title = WpfApp1.Properties.Resources.NameProgram;
             }
             catch (Exception ex)
             {
@@ -175,7 +175,7 @@ namespace WpfApp1
                     AboutTabText.Text = Properties.Resources.About;
 
                 // Обновляем заголовок окна
-                this.Title = Properties.Resources.Settings;
+                //this.Title = Properties.Resources.NameProgram;
             }
             catch (Exception ex)
             {
