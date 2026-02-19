@@ -10,7 +10,7 @@ namespace WpfApp1.DataBase.Entity
         public DbSet<Owner> Owners { get; set; }
         public DbSet<TheCar> TheCars { get; set; }
         public DbSet<DataCheck> DataChecks { get; set; }
-
+        public DbSet<Axle> Axles { get; set; }
 
         // Настройка подключения и параметров
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -56,6 +56,21 @@ namespace WpfApp1.DataBase.Entity
                 .WithMany(c => c.CarModels)
                 .HasForeignKey(m => m.CarCategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Новая настройка для Axle
+            modelBuilder.Entity<Axle>()
+                .HasOne(a => a.CarModel)
+                .WithMany(m => m.Axles)
+                .HasForeignKey(a => a.CarModelId)
+                .OnDelete(DeleteBehavior.Cascade); // При удалении модели удаляются и её оси
+
+            // Опционально: добавить уникальный индекс на пару (CarModelId, Order),
+            // чтобы в рамках одной модели номера осей не повторялись.
+            modelBuilder.Entity<Axle>()
+                .HasIndex(a => new { a.CarModelId, a.Order })
+                .IsUnique();
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

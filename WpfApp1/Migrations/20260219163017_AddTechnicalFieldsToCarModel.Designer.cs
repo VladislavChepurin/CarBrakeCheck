@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WpfApp1.DataBase.Entity;
 
@@ -10,9 +11,11 @@ using WpfApp1.DataBase.Entity;
 namespace WpfApp1.Migrations
 {
     [DbContext(typeof(MainContext))]
-    partial class MainContextModelSnapshot : ModelSnapshot
+    [Migration("20260219163017_AddTechnicalFieldsToCarModel")]
+    partial class AddTechnicalFieldsToCarModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,38 +23,6 @@ namespace WpfApp1.Migrations
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true);
-
-            modelBuilder.Entity("WpfApp1.DataBase.Entity.Axle", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("BrakeType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("CarModelId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("HasParkingBrake")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("HasRegulator")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RotationDirection")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarModelId", "Order")
-                        .IsUnique();
-
-                    b.ToTable("Axles");
-                });
 
             modelBuilder.Entity("WpfApp1.DataBase.Entity.CarBrand", b =>
                 {
@@ -184,17 +155,6 @@ namespace WpfApp1.Migrations
                     b.ToTable("TheCars");
                 });
 
-            modelBuilder.Entity("WpfApp1.DataBase.Entity.Axle", b =>
-                {
-                    b.HasOne("WpfApp1.DataBase.Entity.CarModel", "CarModel")
-                        .WithMany("Axles")
-                        .HasForeignKey("CarModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CarModel");
-                });
-
             modelBuilder.Entity("WpfApp1.DataBase.Entity.CarModel", b =>
                 {
                     b.HasOne("WpfApp1.DataBase.Entity.CarBrand", "CarBrand")
@@ -249,8 +209,6 @@ namespace WpfApp1.Migrations
 
             modelBuilder.Entity("WpfApp1.DataBase.Entity.CarModel", b =>
                 {
-                    b.Navigation("Axles");
-
                     b.Navigation("TheCars");
                 });
 
