@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using WpfApp1.DataBase.Entity;
-using WpfApp1.SettingsWindow;
+using WpfApp1.ViewModels;
 
 namespace WpfApp1
 {
@@ -20,13 +20,15 @@ namespace WpfApp1
 
             try
             {
+                _context = new MainContext();
+                DataContext = new MainViewModel(_context);
                 // Инициализация в правильном порядке
                 InitializeSettings();
                 InitializeTabMapping();
                 SubscribeToEvents();
                 ApplyWindowSettings();
                 InitializeLanguage();
-                _context = new MainContext();
+               
             }
             catch (Exception ex)
             {
@@ -89,13 +91,7 @@ namespace WpfApp1
             {
                 RestoreLastSelectedTab();
             }
-        }
-
-        private void OpenCarBrands_Click(object sender, RoutedEventArgs e)
-        {
-            var window = new CarBrands(_context);
-            window.ShowDialog(); // или window.Show() для немодального
-        }
+        }              
 
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -173,6 +169,15 @@ namespace WpfApp1
                 if (AboutTabText != null)
                     AboutTabText.Text = Properties.Resources.About;
 
+                if (BrandsManager != null)
+                {
+                    BrandsManager.Title = Properties.Resources.BrandsWindowTitle;
+                    BrandsManager.ButtonAdd = Properties.Resources.Add;
+                    BrandsManager.ButtonUpdate = Properties.Resources.Update;
+                    BrandsManager.ButtonDelete = Properties.Resources.Delete;
+                    BrandsManager.NameElement = Properties.Resources.NameElement;
+                }                           
+                    
                 // Обновляем заголовок окна
                 this.Title = Properties.Resources.NameProgram;
             }

@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
+         xmlns:controls="clr-namespace:WpfApp1.Controls"
         xmlns:properties="clr-namespace:WpfApp1.Properties"
         mc:Ignorable="d"
-        Title="Приложение" Height="650" Width="1200"
+        Title="Приложение"        
+        MaxWidth="1920" MaxHeight="1080"
+        MinWidth="1366" MinHeight="768"
+        
         Loaded="Window_Loaded">
 
     <Grid Background="#F0F8FF">
@@ -115,31 +119,59 @@
         <!-- Основная область контента -->
         <Grid x:Name="ContentArea" Grid.Column="1" Background="#F0F8FF">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>   
             </Grid.RowDefinitions>
 
             <!-- Контент для Установки -->
             <Grid x:Name="SettingsContent" Visibility="Visible" Margin="10">
-                <Border Background="White" CornerRadius="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="65"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="White" CornerRadius="5" Margin="0,0,0,5">
                     <Border.Effect>
                         <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                     </Border.Effect>
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="15,0,0,0">
                         <TextBlock Text="Настройки параметров приложения" 
                                    FontSize="18" 
                                    Foreground="#666666"/>
-
-                        <!--Временно-->
-                        <Button Content="Управление марками" Click="OpenCarBrands_Click" Width="200" Height="30"/>
-
+                                                
+                        <controls:EntityManager x:Name="BrandsManager"
+                                Title="{x:Static properties:Resources.BrandsWindowTitle}"
+                                ButtonAdd="{x:Static properties:Resources.Add}"
+                                ButtonUpdate="{x:Static properties:Resources.Update}"
+                                ButtonDelete="{x:Static properties:Resources.Delete}"
+                                NameElement ="{x:Static properties:Resources.NameElement}"             
+                                DisplayMemberPath="BrandName"/>
+                                <!--AddRequested="BrandsManager_AddRequested"
+                                EditRequested="BrandsManager_EditRequested"
+                                DeleteRequested="BrandsManager_DeleteRequested"-->
                         
+                    </StackPanel>                            
+                </Border>
+
+                <!-- Разделительная линия после четвертой вкладки -->
+                <Border Grid.Row="1" 
+                    Style="{StaticResource DividerStyle}"
+                     Margin="10,0,10,10"
+                     VerticalAlignment="Top"/>
+
+                <Border Grid.Row="1" Background="White" CornerRadius="5"  Margin="0,5,0,0">
+                    <Border.Effect>
+                        <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
+                    </Border.Effect>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,10,0,0">
+
                         <ComboBox x:Name="LanguageComboBox" 
-                          Style="{StaticResource ComboBoxStyle}"
-                          SelectionChanged="LanguageComboBox_SelectionChanged">
+                        Style="{StaticResource ComboBoxStyle}"
+                        SelectionChanged="LanguageComboBox_SelectionChanged">
                             <ComboBoxItem Tag="ru-RU" IsSelected="True">🇷🇺 Русский</ComboBoxItem>
                             <ComboBoxItem Tag="en-US">🇬🇧 English</ComboBoxItem>
                             <ComboBoxItem Tag="kk-KZ">🇰🇿 Қазақша</ComboBoxItem>
-                            <ComboBoxItem Tag="uz-Latn-UZ">🇺🇿 O'zbekcha</ComboBoxItem>                            
+                            <ComboBoxItem Tag="uz-Latn-UZ">🇺🇿 O'zbekcha</ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
                 </Border>

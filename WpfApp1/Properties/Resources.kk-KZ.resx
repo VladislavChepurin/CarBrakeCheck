@@ -120,6 +120,15 @@
   <data name="About" xml:space="preserve">
     <value>Бағдарлама туралы</value>
   </data>
+  <data name="Add" xml:space="preserve">
+    <value>Қосу</value>
+  </data>
+  <data name="BrandsWindowTitle" xml:space="preserve">
+    <value>Брендтерді басқару</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Жою</value>
+  </data>
   <data name="Help" xml:space="preserve">
     <value>Анықтама</value>
   </data>
@@ -137,5 +146,11 @@
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Параметрлер</value>
+  </data>
+  <data name="NameElement" xml:space="preserve">
+    <value>Атауы</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Өзгерту</value>
   </data>
 </root>

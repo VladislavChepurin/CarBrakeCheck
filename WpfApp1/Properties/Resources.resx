@@ -120,6 +120,15 @@
   <data name="About" xml:space="preserve">
     <value>О программе</value>
   </data>
+  <data name="Add" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="BrandsWindowTitle" xml:space="preserve">
+    <value>Управление брендами</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
   <data name="Help" xml:space="preserve">
     <value>Справка</value>
   </data>
@@ -137,5 +146,11 @@
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Установки</value>
+  </data>
+  <data name="NameElement" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Изменить</value>
   </data>
 </root>

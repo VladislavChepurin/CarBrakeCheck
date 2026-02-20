@@ -120,6 +120,15 @@
   <data name="About" xml:space="preserve">
     <value>Dastur haqida</value>
   </data>
+  <data name="Add" xml:space="preserve">
+    <value>Qo'shish</value>
+  </data>
+  <data name="BrandsWindowTitle" xml:space="preserve">
+    <value>Brendlarni boshqarish</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>O'chirish</value>
+  </data>
   <data name="Help" xml:space="preserve">
     <value>Yordam</value>
   </data>
@@ -137,5 +146,11 @@
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Sozlamalar</value>
+  </data>
+  <data name="NameElement" xml:space="preserve">
+    <value>Nomi</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>O'zgartirish</value>
   </data>
 </root>

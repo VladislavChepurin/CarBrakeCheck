@@ -45,6 +45,32 @@ namespace WpfApp1.BusinessLayer
             return _context.CarModels.Local.ToObservableCollection();
         }
 
+        /// <summary>
+        /// Получить модели для указанного бренда с возможностью загрузки осей
+        /// </summary>
+        /// <param name="brandId">Идентификатор бренда</param>
+        /// <param name="includeAxles">Загружать ли связанные оси</param>
+        public IQueryable<CarModel> GetByBrand(int brandId, bool includeAxles = true)
+        {
+            var query = _context.CarModels.Where(m => m.CarBrandId == brandId);
+            if (includeAxles)
+                query = query.Include(m => m.Axles);
+            return query;
+        }
+
+        /// <summary>
+        /// Загрузить модели для указанного бренда в локальный кэш и вернуть ObservableCollection для привязки (WPF)
+        /// </summary>
+        /// <param name="brandId">Идентификатор бренда</param>
+        public ObservableCollection<CarModel> GetLocalModelsByBrand(int brandId)
+        {
+            _context.CarModels
+                .Where(m => m.CarBrandId == brandId)
+                .Include(m => m.Axles)
+                .Load();
+            return _context.CarModels.Local.ToObservableCollection();
+        }
+
         // ---------- Создание ----------
 
         /// <summary>

@@ -6,34 +6,75 @@
         xmlns:local="clr-namespace:WpfApp1.SettingsWindow"
         xmlns:models="clr-namespace:WpfApp1.DataBase.Entity"
         mc:Ignorable="d"
-        Title="CarBrands" Height="300" Width="400"
-        Loaded="Window_Loaded"    
-        Closed="Window_Closed">
-    <!-- Закрывающая скобка после всех атрибутов -->
+        Title="CarBrands" Height="400" Width="450"
+        Loaded="Window_Loaded" Closed="Window_Closed">
     <Window.Resources>
         <CollectionViewSource x:Key="BrandsViewSource"/>
     </Window.Resources>
 
-    <Grid Background="#F0F8FF">
+    <Grid Background="#F0F8FF" Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="45"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="45"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0"/>
-        <Grid Grid.Row="1">
-            <DataGrid ItemsSource="{Binding Source={StaticResource BrandsViewSource}}"
-                      AutoGenerateColumns="False"
-                      IsReadOnly="True"
-                      Margin="5">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Марка"
-                                        Binding="{Binding BrandName}"
-                                        Width="*"/>
-                </DataGrid.Columns>
-            </DataGrid>
+        <!-- Панель ввода -->
+        <Grid Grid.Row="0" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" 
+               Text="Название марки:" 
+               VerticalAlignment="Center" 
+               Margin="0,0,10,0"/>
+
+            <TextBox Grid.Column="1" 
+             x:Name="BrandNameTextBox" 
+             Height="25" 
+             Padding="3"
+             HorizontalAlignment="Stretch"/>
         </Grid>
-        <Grid Grid.Row="2"/>
+
+        <!-- DataGrid с марками -->
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding Source={StaticResource BrandsViewSource}}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  Margin="0,0,0,1"
+                  SelectionMode="Single"
+                  SelectionUnit="FullRow"
+                  x:Name="BrandsDataGrid">
+
+            <!--SelectionChanged="BrandsDataGrid_SelectionChanged">-->
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Марка"
+                                    Binding="{Binding BrandName}"
+                                    Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Панель кнопок -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <!--<Button Content="Добавить"
+                    Width="80"
+                    Height="30"
+                    Margin="5"
+                    Click="AddButton_Click"/>
+            <Button Content="Изменить"
+                    Width="80"
+                    Height="30"
+                    Margin="5"
+                    Click="EditButton_Click"/>
+            <Button Content="Удалить"
+                    Width="80"
+                    Height="30"
+                    Margin="5"
+                    Click="DeleteButton_Click"/>-->
+        </StackPanel>
     </Grid>
 </Window>
