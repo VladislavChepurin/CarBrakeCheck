@@ -120,13 +120,13 @@
   <data name="About" xml:space="preserve">
     <value>About</value>
   </data>
-  <data name="Add" xml:space="preserve">
+  <data name="AddBth" xml:space="preserve">
     <value>Add</value>
   </data>
   <data name="BrandsWindowTitle" xml:space="preserve">
     <value>Brand Management</value>
   </data>
-  <data name="Delete" xml:space="preserve">
+  <data name="DeleteBth" xml:space="preserve">
     <value>Delete</value>
   </data>
   <data name="Help" xml:space="preserve">
@@ -139,7 +139,7 @@
     <value>Measurements</value>
   </data>
   <data name="NameProgram" xml:space="preserve">
-    <value>Brake force test program</value>
+    <value>TechSto - Brake force test program</value>
   </data>
   <data name="Reports" xml:space="preserve">
     <value>Reports</value>
@@ -150,7 +150,28 @@
   <data name="NameElement" xml:space="preserve">
     <value>Title</value>
   </data>
-  <data name="Update" xml:space="preserve">
+  <data name="UpdateBth" xml:space="preserve">
     <value>Update</value>
+  </data>
+  <data name="MessageWarning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="EnterName" xml:space="preserve">
+    <value>Enter the name.</value>
+  </data>
+  <data name="DeleteSelectedItem" xml:space="preserve">
+    <value>Delete the selected item?</value>
+  </data>
+  <data name="SelectItemToDelete" xml:space="preserve">
+    <value>Select the item to delete.</value>
+  </data>
+  <data name="SelectItemToEdit" xml:space="preserve">
+    <value>Select the item to edit.</value>
+  </data>
+  <data name="ChooseBtn" xml:space="preserve">
+    <value>Choose</value>
+  </data>
+  <data name="SelectItemToChoose" xml:space="preserve">
+    <value>You need to select the car brand.</value>
   </data>
 </root>

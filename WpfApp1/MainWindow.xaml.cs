@@ -13,7 +13,7 @@ namespace WpfApp1
         private AppSettings _settings;
         private Dictionary<string, (Border tab, FrameworkElement content)> _tabMapping;
         private readonly MainContext _context;
-
+               
         public MainWindow()
         {
             InitializeComponent();
@@ -34,7 +34,7 @@ namespace WpfApp1
             {
                 MessageBox.Show($"Ошибка при инициализации окна: {ex.Message}",
                     "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            }                 
         }
 
         private void InitializeSettings()
@@ -172,12 +172,19 @@ namespace WpfApp1
                 if (BrandsManager != null)
                 {
                     BrandsManager.Title = Properties.Resources.BrandsWindowTitle;
-                    BrandsManager.ButtonAdd = Properties.Resources.Add;
-                    BrandsManager.ButtonUpdate = Properties.Resources.Update;
-                    BrandsManager.ButtonDelete = Properties.Resources.Delete;
+                    BrandsManager.ButtonAdd = Properties.Resources.AddBth;
+                    BrandsManager.ButtonUpdate = Properties.Resources.UpdateBth;
+                    BrandsManager.ButtonDelete = Properties.Resources.DeleteBth;
+                    BrandsManager.ButtonChoose = Properties.Resources.ChooseBtn;
                     BrandsManager.NameElement = Properties.Resources.NameElement;
-                }                           
-                    
+                    BrandsManager.EnterName = Properties.Resources.EnterName;
+                    BrandsManager.MessageWarning = Properties.Resources.MessageWarning;
+                    BrandsManager.SelectItemToEdit = Properties.Resources.SelectItemToEdit;
+                    BrandsManager.SelectItemToDelete = Properties.Resources.SelectItemToDelete;
+                    BrandsManager.DeleteSelectedItem = Properties.Resources.DeleteSelectedItem;
+                    BrandsManager.SelectItemToChoose = Properties.Resources.SelectItemToChoose;
+                }
+
                 // Обновляем заголовок окна
                 this.Title = Properties.Resources.NameProgram;
             }

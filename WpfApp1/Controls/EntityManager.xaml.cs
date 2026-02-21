@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace WpfApp1.Controls
 {
@@ -19,9 +20,27 @@ namespace WpfApp1.Controls
         public static readonly DependencyProperty ButtonUpdateProperty =
             DependencyProperty.Register("ButtonUpdate", typeof(string), typeof(EntityManager), new PropertyMetadata(""));
 
+        public static readonly DependencyProperty ButtonChooseProperty =
+          DependencyProperty.Register("ButtonChoose", typeof(string), typeof(EntityManager), new PropertyMetadata(""));
+
         public static readonly DependencyProperty NameElementProperty =
             DependencyProperty.Register("NameElement", typeof(string), typeof(EntityManager), new PropertyMetadata(""));
 
+        public static readonly DependencyProperty MessageWarningProperty =
+          DependencyProperty.Register("MessageWarning", typeof(string), typeof(EntityManager), new PropertyMetadata(""));
+
+        public static readonly DependencyProperty EnterNameProperty =
+         DependencyProperty.Register("EnterName", typeof(string), typeof(EntityManager), new PropertyMetadata(""));
+
+        public static readonly DependencyProperty SelectItemToDeleteProperty =
+         DependencyProperty.Register("SelectItemToDelete", typeof(string), typeof(EntityManager), new PropertyMetadata(""));
+
+        public static readonly DependencyProperty SelectItemToEditProperty =
+         DependencyProperty.Register("SelectItemToEdit", typeof(string), typeof(EntityManager), new PropertyMetadata(""));
+
+        public static readonly DependencyProperty DeleteSelectedItemProperty =
+         DependencyProperty.Register("DeleteSelectedItem", typeof(string), typeof(EntityManager), new PropertyMetadata(""));
+              
         // DependencyProperty: ItemsSource (коллекция элементов)
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register("ItemsSource", typeof(IEnumerable), typeof(EntityManager), new PropertyMetadata(null));
@@ -33,6 +52,26 @@ namespace WpfApp1.Controls
         // DependencyProperty: DisplayMemberPath (имя свойства для отображения)
         public static readonly DependencyProperty DisplayMemberPathProperty =
             DependencyProperty.Register("DisplayMemberPath", typeof(string), typeof(EntityManager), new PropertyMetadata(""));
+
+        // DependencyProperty для сообщения о необходимости выбора элемента
+        public static readonly DependencyProperty SelectItemToChooseProperty =
+            DependencyProperty.Register("SelectItemToChoose", typeof(string), typeof(EntityManager), new PropertyMetadata(""));
+
+        // DependencyProperty для кнопки Add
+        public static readonly DependencyProperty AddCommandProperty =
+            DependencyProperty.Register("AddCommand", typeof(ICommand), typeof(EntityManager), new PropertyMetadata(null));
+
+        // DependencyProperty для кнопки Edit
+        public static readonly DependencyProperty EditCommandProperty =
+            DependencyProperty.Register("EditCommand", typeof(ICommand), typeof(EntityManager), new PropertyMetadata(null));
+
+        // DependencyProperty для кнопки Delete
+        public static readonly DependencyProperty DeleteCommandProperty =
+            DependencyProperty.Register("DeleteCommand", typeof(ICommand), typeof(EntityManager), new PropertyMetadata(null));
+
+        // DependencyProperty для кнопки Choose
+        public static readonly DependencyProperty ChooseCommandProperty =
+            DependencyProperty.Register("ChooseCommand", typeof(ICommand), typeof(EntityManager), new PropertyMetadata(null));
 
         public string Title
         {
@@ -57,11 +96,46 @@ namespace WpfApp1.Controls
             get => (string)GetValue(ButtonUpdateProperty);
             set => SetValue(ButtonUpdateProperty, value);
         }
+        
+        public string ButtonChoose
+        {
+            get => (string)GetValue(ButtonChooseProperty);
+            set => SetValue(ButtonChooseProperty, value);
+        }
 
         public string NameElement
         {
             get => (string)GetValue(NameElementProperty);
             set => SetValue(NameElementProperty, value);
+        }
+        public string MessageWarning
+        {
+            get => (string)GetValue(MessageWarningProperty);
+            set => SetValue(MessageWarningProperty, value);
+        }
+
+        public string EnterName
+        {
+            get => (string)GetValue(EnterNameProperty);
+            set => SetValue(EnterNameProperty, value);
+        }
+
+        public string SelectItemToDelete
+        {
+            get => (string)GetValue(SelectItemToDeleteProperty);
+            set => SetValue(SelectItemToDeleteProperty, value);
+        }
+
+        public string SelectItemToEdit
+        {
+            get => (string)GetValue(SelectItemToEditProperty);
+            set => SetValue(SelectItemToEditProperty, value);
+        }
+
+        public string DeleteSelectedItem
+        {
+            get => (string)GetValue(DeleteSelectedItemProperty);
+            set => SetValue(DeleteSelectedItemProperty, value);
         }
 
         public IEnumerable ItemsSource
@@ -82,10 +156,35 @@ namespace WpfApp1.Controls
             set => SetValue(DisplayMemberPathProperty, value);
         }
 
-        // События для операций
-        public event EventHandler<AddEventArgs> AddRequested;
-        public event EventHandler<EditEventArgs> EditRequested;
-        public event EventHandler<DeleteEventArgs> DeleteRequested;
+        public string SelectItemToChoose
+        {
+            get => (string)GetValue(SelectItemToChooseProperty);
+            set => SetValue(SelectItemToChooseProperty, value);
+        }
+
+        public ICommand AddCommand
+        {
+            get => (ICommand)GetValue(AddCommandProperty);
+            set => SetValue(AddCommandProperty, value);
+        }
+
+        public ICommand EditCommand
+        {
+            get => (ICommand)GetValue(EditCommandProperty);
+            set => SetValue(EditCommandProperty, value);
+        }
+
+        public ICommand DeleteCommand
+        {
+            get => (ICommand)GetValue(DeleteCommandProperty);
+            set => SetValue(DeleteCommandProperty, value);
+        }
+
+        public ICommand ChooseCommand
+        {
+            get => (ICommand)GetValue(ChooseCommandProperty);
+            set => SetValue(ChooseCommandProperty, value);
+        }
 
         public EntityManager()
         {
@@ -106,15 +205,26 @@ namespace WpfApp1.Controls
             }
         }
 
+        // Обработчик двойного клика на DataGrid
+        private void DataGrid_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (SelectedItem != null)
+            {
+                if (ChooseCommand?.CanExecute(SelectedItem) == true)
+                    ChooseCommand.Execute(SelectedItem);
+            }
+        }
+
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             string text = InputTextBox.Text.Trim();
             if (string.IsNullOrWhiteSpace(text))
             {
-                MessageBox.Show("Введите название.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(EnterName, MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            AddRequested?.Invoke(this, new AddEventArgs(text));
+            if (AddCommand?.CanExecute(text) == true)
+                AddCommand.Execute(text);
             InputTextBox.Clear();
         }
 
@@ -122,51 +232,53 @@ namespace WpfApp1.Controls
         {
             if (SelectedItem == null)
             {
-                MessageBox.Show("Выберите элемент для редактирования.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(SelectItemToEdit, MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             string text = InputTextBox.Text.Trim();
             if (string.IsNullOrWhiteSpace(text))
             {
-                MessageBox.Show("Введите название.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(EnterName, MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            EditRequested?.Invoke(this, new EditEventArgs(SelectedItem, text));
+            // Передаём текущий элемент и новое имя как параметр
+            var param = new EditCommandParameter { Item = SelectedItem, NewName = text };
+            if (EditCommand?.CanExecute(param) == true)
+                EditCommand.Execute(param);
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             if (SelectedItem == null)
             {
-                MessageBox.Show("Выберите элемент для удаления.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(SelectItemToDelete, MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            var result = MessageBox.Show("Удалить выбранный элемент?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var result = MessageBox.Show(DeleteSelectedItem, MessageWarning, MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                DeleteRequested?.Invoke(this, new DeleteEventArgs(SelectedItem));
+                if (DeleteCommand?.CanExecute(SelectedItem) == true)
+                    DeleteCommand.Execute(SelectedItem);
                 InputTextBox.Clear();
             }
         }
+
+        private void ChooseButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (SelectedItem == null)
+            {
+                MessageBox.Show(SelectItemToChoose, MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (ChooseCommand?.CanExecute(SelectedItem) == true)
+                ChooseCommand.Execute(SelectedItem);
+        }
     }
 
-    // Классы аргументов событий
-    public class AddEventArgs : EventArgs
+    public class EditCommandParameter
     {
-        public string Name { get; }
-        public AddEventArgs(string name) => Name = name;
+        public object Item { get; set; }
+        public string NewName { get; set; }
     }
 
-    public class EditEventArgs : EventArgs
-    {
-        public object Item { get; }
-        public string NewName { get; }
-        public EditEventArgs(object item, string newName) { Item = item; NewName = newName; }
-    }
-
-    public class DeleteEventArgs : EventArgs
-    {
-        public object Item { get; }
-        public DeleteEventArgs(object item) => Item = item;
-    }
 }

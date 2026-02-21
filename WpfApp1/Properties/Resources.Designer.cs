@@ -72,9 +72,9 @@ namespace WpfApp1.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Добавить.
         /// </summary>
-        public static string Add {
+        public static string AddBth {
             get {
-                return ResourceManager.GetString("Add", resourceCulture);
+                return ResourceManager.GetString("AddBth", resourceCulture);
             }
         }
         
@@ -88,11 +88,38 @@ namespace WpfApp1.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Выбрать.
+        /// </summary>
+        public static string ChooseBtn {
+            get {
+                return ResourceManager.GetString("ChooseBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Удалить.
         /// </summary>
-        public static string Delete {
+        public static string DeleteBth {
             get {
-                return ResourceManager.GetString("Delete", resourceCulture);
+                return ResourceManager.GetString("DeleteBth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удалить выбранный элемент?.
+        /// </summary>
+        public static string DeleteSelectedItem {
+            get {
+                return ResourceManager.GetString("DeleteSelectedItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите название..
+        /// </summary>
+        public static string EnterName {
+            get {
+                return ResourceManager.GetString("EnterName", resourceCulture);
             }
         }
         
@@ -124,6 +151,15 @@ namespace WpfApp1.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Предупреждение.
+        /// </summary>
+        public static string MessageWarning {
+            get {
+                return ResourceManager.GetString("MessageWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Название.
         /// </summary>
         public static string NameElement {
@@ -133,7 +169,7 @@ namespace WpfApp1.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Программа проверки тормозных усилий.
+        ///   Ищет локализованную строку, похожую на ТехСто - Программа проверки тормозных усилий.
         /// </summary>
         public static string NameProgram {
             get {
@@ -151,6 +187,33 @@ namespace WpfApp1.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Необходимо выбрать марку машины..
+        /// </summary>
+        public static string SelectItemToChoose {
+            get {
+                return ResourceManager.GetString("SelectItemToChoose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выберите элемент для удаления..
+        /// </summary>
+        public static string SelectItemToDelete {
+            get {
+                return ResourceManager.GetString("SelectItemToDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выберите элемент для редактирования..
+        /// </summary>
+        public static string SelectItemToEdit {
+            get {
+                return ResourceManager.GetString("SelectItemToEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Установки.
         /// </summary>
         public static string Settings {
@@ -162,9 +225,9 @@ namespace WpfApp1.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Изменить.
         /// </summary>
-        public static string Update {
+        public static string UpdateBth {
             get {
-                return ResourceManager.GetString("Update", resourceCulture);
+                return ResourceManager.GetString("UpdateBth", resourceCulture);
             }
         }
     }

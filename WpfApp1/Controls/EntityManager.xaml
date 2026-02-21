@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:WpfApp1.Converters"
              x:Name="root"
-             Height="450" Width="350">
+             Height="450" Width="300">
     <UserControl.Resources>
         <converters:DisplayMemberMultiConverter x:Key="DisplayMemberMultiConverter"/>
     </UserControl.Resources>
@@ -43,7 +43,9 @@
                   SelectionMode="Single"
                   SelectionUnit="FullRow"
                   x:Name="DataGrid"
-                  SelectionChanged="DataGrid_SelectionChanged">
+                  SelectionChanged="DataGrid_SelectionChanged"
+                  MouseDoubleClick="DataGrid_MouseDoubleClick">        
+            
             <DataGrid.Columns>
                 <DataGridTextColumn Width="*">                 
                     <DataGridTextColumn.Binding>
@@ -56,16 +58,28 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- Кнопки -->
+        <!-- Кнопки -->                        
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
-            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="{Binding ButtonAdd, ElementName=root}" 
-                    Width="80" Height="30" Margin="5" Click="AddButton_Click"/>
-                <Button Content="{Binding ButtonUpdate, ElementName=root}" 
-                    Width="80" Height="30" Margin="5" Click="EditButton_Click"/>
-                <Button Content="{Binding ButtonDelete, ElementName=root}" 
-                    Width="80" Height="30" Margin="5" Click="DeleteButton_Click"/>
-            </StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>              
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" 
+                     Content="{Binding ButtonChoose, ElementName=root}" 
+                    Height="30" Margin="5" 
+                    HorizontalAlignment="Stretch"
+                    Click="ChooseButton_Click"/>
+
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="{Binding ButtonAdd, ElementName=root}" 
+                     Width="80" Height="30" Margin="5" Click="AddButton_Click"/>
+                        <Button Content="{Binding ButtonUpdate, ElementName=root}" 
+                     Width="80" Height="30" Margin="5" Click="EditButton_Click"/>
+                        <Button Content="{Binding ButtonDelete, ElementName=root}" 
+                     Width="80" Height="30" Margin="5" Click="DeleteButton_Click"/>
+                </StackPanel>               
+            </Grid>
         </StackPanel>
     </Grid>
 </UserControl>
