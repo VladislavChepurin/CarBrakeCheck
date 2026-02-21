@@ -33,29 +33,19 @@
 
         <!-- DataGrid с автогенерацией одной колонки -->
         <DataGrid  
-                  HeadersVisibility="None"
-                  Grid.Row="2"
-                  ItemsSource="{Binding ItemsSource, ElementName=root}"
-                  SelectedItem="{Binding SelectedItem, ElementName=root, Mode=TwoWay}"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  Margin="0,0,0,10"
-                  SelectionMode="Single"
-                  SelectionUnit="FullRow"
-                  x:Name="DataGrid"
-                  SelectionChanged="DataGrid_SelectionChanged"
-                  MouseDoubleClick="DataGrid_MouseDoubleClick">        
-            
-            <DataGrid.Columns>
-                <DataGridTextColumn Width="*">                 
-                    <DataGridTextColumn.Binding>
-                        <MultiBinding Converter="{StaticResource DisplayMemberMultiConverter}">
-                            <Binding Path="." />
-                            <Binding Path="DisplayMemberPath" ElementName="root" />
-                        </MultiBinding>
-                    </DataGridTextColumn.Binding>
-                </DataGridTextColumn>
-            </DataGrid.Columns>
+            HeadersVisibility="None"
+            Grid.Row="2"
+            ItemsSource="{Binding ItemsSource, ElementName=root}"
+            SelectedItem="{Binding SelectedItem, ElementName=root, Mode=TwoWay}"
+            AutoGenerateColumns="False"
+            IsReadOnly="True"
+            Margin="0,0,0,10"
+            SelectionMode="Single"
+            SelectionUnit="FullRow"
+            x:Name="DataGrid"
+            SelectionChanged="DataGrid_SelectionChanged"
+            MouseDoubleClick="DataGrid_MouseDoubleClick">
+            <!-- Колонки будут добавляться программно -->
         </DataGrid>
 
         <!-- Кнопки -->                        

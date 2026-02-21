@@ -13,8 +13,8 @@ namespace WpfApp1.ViewModels
         private readonly MainContext _context;       
         private CarBrandService _service;
         private Visibility _brandsVisibility = Visibility.Collapsed;
-        private ObservableCollection<CarBrand> _brands;
-        private CarBrand _selectedBrand;
+        private ObservableCollection<CarBrandViewModel> _brands;
+        private CarBrandViewModel _selectedBrand;
 
 
         public ICommand OpenCarBrandsCommand { get; }
@@ -29,14 +29,14 @@ namespace WpfApp1.ViewModels
             get => _brandsVisibility;
             set { _brandsVisibility = value; OnPropertyChanged(); }
         }
-        public ObservableCollection<CarBrand> Brands
+        public ObservableCollection<CarBrandViewModel> Brands
         {
             get => _brands;
             set { _brands = value; OnPropertyChanged(); }
         }
 
         // Выбранный бренд (привязка TwoWay с EntityManager)
-        public CarBrand SelectedBrand
+        public CarBrandViewModel SelectedBrand
         {
             get => _selectedBrand;
             set { _selectedBrand = value; OnPropertyChanged(); }
@@ -55,8 +55,11 @@ namespace WpfApp1.ViewModels
 
         private void ExecuteOpenCarBrands(object parameter)
         {
-            Brands = _service.GetLocalBrands(); // ObservableCollection
-            BrandsVisibility = Visibility.Visible;          
+            var brandsFromDb = _service.GetLocalBrands(); // List<CarBrand>
+            Brands = new ObservableCollection<CarBrandViewModel>(
+                brandsFromDb.Select(b => new CarBrandViewModel(b))
+            );
+            BrandsVisibility = Visibility.Visible;
         }
 
         private void AddBrand(object parameter)
@@ -65,26 +68,36 @@ namespace WpfApp1.ViewModels
             {
                 var brand = new CarBrand { BrandName = newName };
                 _service.Add(brand);
+                // Создаём ViewModel для нового бренда и добавляем в коллекцию
+                var newBrandVm = new CarBrandViewModel(brand);
+                Brands.Add(newBrandVm);
+
+                // Опционально: выбрать новый элемент
+                SelectedBrand = newBrandVm;
             }
         }
 
         private void EditBrand(object parameter)
         {
+            if (SelectedBrand == null) return;
             if (parameter is EditCommandParameter param)
             {
                 SelectedBrand.BrandName = param.NewName;
-                _service.Update(SelectedBrand);
+                _service.Update(SelectedBrand.Model);
             }
         }
 
         private void DeleteBrand(object parameter)
         {
-            if (SelectedBrand != null)
-                _service.Delete(SelectedBrand.Id);            
+            if (SelectedBrand == null) return;
+            _service.Delete(SelectedBrand.Id);
+            Brands.Remove(SelectedBrand);
+            SelectedBrand = null!; // сбрасываем выделение (опционально)
         }
 
         private void ChooseBrand(object parameter)
         {
+            if (SelectedBrand == null) return;
 
         }
     }

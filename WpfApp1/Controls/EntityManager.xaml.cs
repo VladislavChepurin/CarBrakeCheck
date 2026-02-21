@@ -1,6 +1,8 @@
 ﻿using System.Collections;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace WpfApp1.Controls
@@ -48,10 +50,6 @@ namespace WpfApp1.Controls
         // DependencyProperty: SelectedItem (текущий выбранный элемент)
         public static readonly DependencyProperty SelectedItemProperty =
             DependencyProperty.Register("SelectedItem", typeof(object), typeof(EntityManager), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-        // DependencyProperty: DisplayMemberPath (имя свойства для отображения)
-        public static readonly DependencyProperty DisplayMemberPathProperty =
-            DependencyProperty.Register("DisplayMemberPath", typeof(string), typeof(EntityManager), new PropertyMetadata(""));
 
         // DependencyProperty для сообщения о необходимости выбора элемента
         public static readonly DependencyProperty SelectItemToChooseProperty =
@@ -189,6 +187,37 @@ namespace WpfApp1.Controls
         public EntityManager()
         {
             InitializeComponent();
+            Loaded += EntityManager_Loaded;
+        }
+
+        private void EntityManager_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateDataGridColumn();
+        }
+
+        // Обновляем колонку при изменении DisplayMemberPath
+        public static readonly DependencyProperty DisplayMemberPathProperty =
+            DependencyProperty.Register("DisplayMemberPath", typeof(string), typeof(EntityManager),
+                new PropertyMetadata("", OnDisplayMemberPathChanged));
+
+        private static void OnDisplayMemberPathChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((EntityManager)d).UpdateDataGridColumn();
+        }
+
+        private void UpdateDataGridColumn()
+        {
+            DataGrid.Columns.Clear();
+
+            if (string.IsNullOrEmpty(DisplayMemberPath))
+                return;
+
+            var column = new DataGridTextColumn
+            {
+                Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                Binding = new Binding(DisplayMemberPath) { Mode = BindingMode.OneWay } // IsReadOnly=true, поэтому OneWay
+            };
+            DataGrid.Columns.Add(column);
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -144,7 +144,7 @@
                         <controls:EntityManager x:Name="BrandsManager"   
                                 Visibility="{Binding BrandsVisibility}" 
                                 ItemsSource="{Binding Brands}"   
-                                SelectedItem="{Binding SelectedBrand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"                
+                                SelectedItem="{Binding SelectedBrand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"               
                                 Title="{x:Static properties:Resources.BrandsWindowTitle}"
                                 ButtonAdd="{x:Static properties:Resources.AddBth}"
                                 ButtonUpdate="{x:Static properties:Resources.UpdateBth}"
