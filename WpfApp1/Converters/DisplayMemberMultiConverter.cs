@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Windows.Data;
 
-namespace WpfApp1.Converters
+namespace TechSto.Converters
 {
     public class DisplayMemberMultiConverter : IMultiValueConverter
     {

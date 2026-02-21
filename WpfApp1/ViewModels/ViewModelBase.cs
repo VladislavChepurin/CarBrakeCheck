@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace WpfApp1.ViewModels
+namespace TechSto.ViewModels
 {
     public class ViewModelBase : INotifyPropertyChanged
     {

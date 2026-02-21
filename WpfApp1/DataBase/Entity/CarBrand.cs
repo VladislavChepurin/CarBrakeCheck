@@ -1,4 +1,4 @@
-﻿namespace WpfApp1.DataBase.Entity
+﻿namespace TechSto.DataBase.Entity
 {
     public class CarBrand
     {

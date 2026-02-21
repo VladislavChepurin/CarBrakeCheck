@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace WpfApp1.Controls
+namespace TechSto.Controls
 {
     public partial class EntityManager : UserControl
     {

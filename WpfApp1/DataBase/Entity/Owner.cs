@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace WpfApp1.DataBase.Entity
+namespace TechSto.DataBase.Entity
 {
     public class Owner
     {

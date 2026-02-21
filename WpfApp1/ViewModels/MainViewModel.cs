@@ -2,11 +2,12 @@
 using System.Drawing.Drawing2D;
 using System.Windows;
 using System.Windows.Input;
-using WpfApp1.BusinessLayer;
-using WpfApp1.Controls;
-using WpfApp1.DataBase.Entity;
+using TechSto.BusinessLayer;
+using TechSto.Controls;
+using TechSto.DataBase.Entity;
+using TechSto.ViewModels;
 
-namespace WpfApp1.ViewModels
+namespace TechSto.ViewModels
 {
     class MainViewModel: ViewModelBase
     {

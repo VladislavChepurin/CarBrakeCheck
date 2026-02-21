@@ -2,10 +2,10 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using WpfApp1.DataBase.Entity;
-using WpfApp1.ViewModels;
+using TechSto.DataBase.Entity;
+using TechSto.ViewModels;
 
-namespace WpfApp1
+namespace TechSto
 {
     public partial class MainWindow : Window
     {

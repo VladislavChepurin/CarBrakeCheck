@@ -1,7 +1,7 @@
-﻿<UserControl x:Class="WpfApp1.Controls.EntityManager"
+﻿<UserControl x:Class="TechSto.Controls.EntityManager"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:converters="clr-namespace:WpfApp1.Converters"
+             xmlns:converters="clr-namespace:TechSto.Converters"
              x:Name="root"
              Height="450" Width="300">
     <UserControl.Resources>

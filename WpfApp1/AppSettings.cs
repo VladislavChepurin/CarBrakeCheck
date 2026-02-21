@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text.Json;
 
-namespace WpfApp1
+namespace TechSto
 {
     class AppSettings
     {

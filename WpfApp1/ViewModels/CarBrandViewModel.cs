@@ -1,38 +1,42 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using WpfApp1.DataBase.Entity;
+using TechSto.DataBase.Entity;
 
-public class CarBrandViewModel : INotifyPropertyChanged
+namespace TechSto.ViewModels
 {
-    private readonly CarBrand _model;
 
-    public CarBrandViewModel(CarBrand model)
+    public class CarBrandViewModel : INotifyPropertyChanged
     {
-        _model = model;
-    }
+        private readonly CarBrand _model;
 
-    public CarBrand Model => _model; // доступ к оригинальной модели
-
-    public int Id => _model.Id;
-
-    public string BrandName
-    {
-        get => _model.BrandName!;
-        set
+        public CarBrandViewModel(CarBrand model)
         {
-            if (_model.BrandName != value)
+            _model = model;
+        }
+
+        public CarBrand Model => _model; // доступ к оригинальной модели
+
+        public int Id => _model.Id;
+
+        public string BrandName
+        {
+            get => _model.BrandName!;
+            set
             {
-                _model.BrandName = value;
-                OnPropertyChanged();
+                if (_model.BrandName != value)
+                {
+                    _model.BrandName = value;
+                    OnPropertyChanged();
+                }
             }
         }
-    }
 
-    // Можно добавить другие свойства
+        // Можно добавить другие свойства
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-    protected void OnPropertyChanged([CallerMemberName] string propertyName = null!)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null!)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

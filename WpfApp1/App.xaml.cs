@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
 using System.Globalization;
-using System.Threading;
-using System.Windows;
-using Microsoft.Extensions.Configuration;
 using System.IO;
+using System.Windows;
 
-namespace WpfApp1
+namespace TechSto
 {
     public partial class App : Application
     {
@@ -36,7 +34,7 @@ namespace WpfApp1
 
                 // ПРАВИЛЬНЫЙ СПОСОБ: используем Properties.Resources напрямую
                 // (WpfApp1.Properties.Resources - это статический класс)
-                WpfApp1.Properties.Resources.Culture = culture;
+                TechSto.Properties.Resources.Culture = culture;
 
                 // Уведомляем все окна об изменении языка
                 LanguageChanged?.Invoke(null, EventArgs.Empty);
