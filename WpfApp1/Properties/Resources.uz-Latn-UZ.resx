@@ -174,4 +174,7 @@
   <data name="SelectItemToChoose" xml:space="preserve">
     <value>Siz mashinaning markasini tanlashingiz kerak.</value>
   </data>
+  <data name="SearchLabel" xml:space="preserve">
+    <value>Qidiruv</value>
+  </data>
 </root>

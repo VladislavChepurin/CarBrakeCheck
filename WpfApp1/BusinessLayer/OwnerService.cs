@@ -22,9 +22,7 @@ namespace TechSto.BusinessLayer
         {
             var query = _context.Owners.AsQueryable();
             if (includeCars)
-                query = query.Include(o => o.TheCars);
-            if (includeChecks)
-                query = query.Include(o => o.DataChecks);
+                query = query.Include(o => o.TheCars);           
             return query;
         }
 
@@ -40,7 +38,6 @@ namespace TechSto.BusinessLayer
         {
             return _context.Owners
                 .Include(o => o.TheCars)
-                .Include(o => o.DataChecks)
                 .FirstOrDefault(o => o.Id == id);
         }
 
@@ -52,7 +49,6 @@ namespace TechSto.BusinessLayer
             // Принудительно загружаем связанные данные, чтобы они были доступны в локальном кэше
             _context.Owners
                 .Include(o => o.TheCars)
-                .Include(o => o.DataChecks)
                 .Load();
             return _context.Owners.Local.ToObservableCollection();
         }
@@ -100,8 +96,7 @@ namespace TechSto.BusinessLayer
         public void UpdateFull(Owner updatedOwner)
         {
             var existing = _context.Owners
-                .Include(o => o.TheCars)
-                .Include(o => o.DataChecks)
+                .Include(o => o.TheCars)                
                 .FirstOrDefault(o => o.Id == updatedOwner.Id);
             if (existing == null)
                 throw new InvalidOperationException("Владелец не найден.");
@@ -132,29 +127,7 @@ namespace TechSto.BusinessLayer
                     if (existingCar != null)
                         _context.Entry(existingCar).CurrentValues.SetValues(updatedCar);
                 }
-            }
-
-            // Синхронизация проверок (DataChecks) – аналогично
-            foreach (var check in existing.DataChecks.ToList())
-            {
-                if (!updatedOwner.DataChecks.Any(c => c.Id == check.Id))
-                    _context.DataChecks.Remove(check);
-            }
-
-            foreach (var updatedCheck in updatedOwner.DataChecks)
-            {
-                if (updatedCheck.Id == 0)
-                {
-                    updatedCheck.OwnerId = existing.Id;
-                    _context.DataChecks.Add(updatedCheck);
-                }
-                else
-                {
-                    var existingCheck = existing.DataChecks.FirstOrDefault(c => c.Id == updatedCheck.Id);
-                    if (existingCheck != null)
-                        _context.Entry(existingCheck).CurrentValues.SetValues(updatedCheck);
-                }
-            }
+            }         
 
             _context.SaveChanges();
         }
@@ -205,14 +178,13 @@ namespace TechSto.BusinessLayer
         /// <summary>
         /// Добавить проверку существующему владельцу
         /// </summary>
-        public void AddDataCheck(int ownerId, DataCheck check)
+        public void AddDataCheck(int ownerId, Check check)
         {
             var owner = _context.Owners.Find(ownerId);
             if (owner == null)
                 throw new InvalidOperationException("Владелец не найден.");
-
-            check.OwnerId = ownerId;
-            _context.DataChecks.Add(check);
+                     
+            _context.Checks.Add(check);
             _context.SaveChanges();
         }
 
@@ -221,10 +193,10 @@ namespace TechSto.BusinessLayer
         /// </summary>
         public void DeleteDataCheck(int checkId)
         {
-            var check = _context.DataChecks.Find(checkId);
+            var check = _context.Checks.Find(checkId);
             if (check != null)
             {
-                _context.DataChecks.Remove(check);
+                _context.Checks.Remove(check);
                 _context.SaveChanges();
             }
         }

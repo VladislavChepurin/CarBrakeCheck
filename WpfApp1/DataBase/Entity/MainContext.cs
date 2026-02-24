@@ -9,7 +9,7 @@ namespace TechSto.DataBase.Entity
         public DbSet<CarСategory> CarСategories { get; set; }
         public DbSet<Owner> Owners { get; set; }
         public DbSet<TheCar> TheCars { get; set; }
-        public DbSet<DataCheck> DataChecks { get; set; }
+        public DbSet<Check> Checks { get; set; }
         public DbSet<Axle> Axles { get; set; }
 
         // Настройка подключения и параметров
@@ -29,11 +29,11 @@ namespace TechSto.DataBase.Entity
                 .HasForeignKey(t => t.OwnerId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Owner -> DataChecks
-            modelBuilder.Entity<DataCheck>()
-                .HasOne(d => d.Owner)
+            // TheCar -> Checks
+            modelBuilder.Entity<Check>()
+                .HasOne(d => d.TheCar)
                 .WithMany(o => o.DataChecks)
-                .HasForeignKey(d => d.OwnerId)
+                .HasForeignKey(d => d.TheCarId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // TheCar -> CarModel (многие к одному)

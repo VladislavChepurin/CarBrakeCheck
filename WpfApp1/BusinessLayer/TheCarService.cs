@@ -42,6 +42,7 @@ namespace TechSto.BusinessLayer
                 .Include(c => c.CarModel)
                 .ThenInclude(m => m.CarСategory)
                 .Include(c => c.Owner)
+                .Include(c => c.DataChecks)
                 .FirstOrDefault(c => c.Id == id);
         }
 
@@ -63,6 +64,7 @@ namespace TechSto.BusinessLayer
             _context.TheCars
                 .Include(c => c.CarModel)
                 .Include(c => c.Owner)
+                .Include(c => c.DataChecks)
                 .Load();
             return _context.TheCars.Local.ToObservableCollection();
         }
@@ -81,7 +83,7 @@ namespace TechSto.BusinessLayer
         /// <summary>
         /// Создать автомобиль с указанными параметрами
         /// </summary>
-        public TheCar CreateCar(string gosNumber, string vinCode, int carModelId, int ownerId)
+        public TheCar CreateCar(string gosNumber, string bodyNumber, string frameNumber, int carModelId, int ownerId)
         {
             var model = _context.CarModels.Find(carModelId);
             if (model == null)
@@ -93,7 +95,8 @@ namespace TechSto.BusinessLayer
             var car = new TheCar
             {
                 GosNumber = gosNumber,
-                VinCode = vinCode,
+                BodyNumber = bodyNumber,
+                FrameNumber = frameNumber,
                 CarModelId = carModelId,
                 OwnerId = ownerId
             };
@@ -114,7 +117,8 @@ namespace TechSto.BusinessLayer
                 throw new InvalidOperationException("Автомобиль не найден.");
 
             existing.GosNumber = updatedCar.GosNumber;
-            existing.VinCode = updatedCar.VinCode;
+            existing.BodyNumber = updatedCar.BodyNumber;
+            existing.FrameNumber = updatedCar.FrameNumber;
             existing.CarModelId = updatedCar.CarModelId;
             existing.OwnerId = updatedCar.OwnerId;
 

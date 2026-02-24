@@ -1,8 +1,12 @@
-﻿namespace TechSto.DataBase.Entity
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TechSto.DataBase.Entity
 {
     public class CarBrand
     {
         public int Id { get; set; }
+
+        [Required]
         public string? BrandName { get; set; }
 
         // Коллекция моделей для обратной навигации — virtual + инициализация

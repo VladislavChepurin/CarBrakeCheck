@@ -174,4 +174,7 @@
   <data name="SelectItemToChoose" xml:space="preserve">
     <value>Машинаның маркасын таңдау керек.</value>
   </data>
+  <data name="SearchLabel" xml:space="preserve">
+    <value>Іздеу</value>
+  </data>
 </root>

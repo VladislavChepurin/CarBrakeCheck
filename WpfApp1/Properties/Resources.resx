@@ -174,4 +174,7 @@
   <data name="SelectItemToChoose" xml:space="preserve">
     <value>Необходимо выбрать марку машины.</value>
   </data>
+  <data name="SearchLabel" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
 </root>

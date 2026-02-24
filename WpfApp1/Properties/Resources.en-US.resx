@@ -174,4 +174,7 @@
   <data name="SelectItemToChoose" xml:space="preserve">
     <value>You need to select the car brand.</value>
   </data>
+  <data name="SearchLabel" xml:space="preserve">
+    <value>Search</value>
+  </data>
 </root>

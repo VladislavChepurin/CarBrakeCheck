@@ -187,6 +187,15 @@ namespace TechSto.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Поиск.
+        /// </summary>
+        public static string SearchLabel {
+            get {
+                return ResourceManager.GetString("SearchLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Необходимо выбрать марку машины..
         /// </summary>
         public static string SelectItemToChoose {

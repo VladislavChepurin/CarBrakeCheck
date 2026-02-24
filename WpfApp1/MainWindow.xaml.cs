@@ -169,21 +169,26 @@ namespace TechSto
                 if (AboutTabText != null)
                     AboutTabText.Text = Properties.Resources.About;
 
-                if (BrandsManager != null)
-                {
-                    BrandsManager.Title = Properties.Resources.BrandsWindowTitle;
-                    BrandsManager.ButtonAdd = Properties.Resources.AddBth;
-                    BrandsManager.ButtonUpdate = Properties.Resources.UpdateBth;
-                    BrandsManager.ButtonDelete = Properties.Resources.DeleteBth;
-                    BrandsManager.ButtonChoose = Properties.Resources.ChooseBtn;
-                    BrandsManager.NameElement = Properties.Resources.NameElement;
-                    BrandsManager.EnterName = Properties.Resources.EnterName;
-                    BrandsManager.MessageWarning = Properties.Resources.MessageWarning;
-                    BrandsManager.SelectItemToEdit = Properties.Resources.SelectItemToEdit;
-                    BrandsManager.SelectItemToDelete = Properties.Resources.SelectItemToDelete;
-                    BrandsManager.DeleteSelectedItem = Properties.Resources.DeleteSelectedItem;
-                    BrandsManager.SelectItemToChoose = Properties.Resources.SelectItemToChoose;
-                }
+                if (SearchLabel != null)
+                    SearchLabel.Text = Properties.Resources.SearchLabel;
+
+
+
+                //if (BrandsManager != null)
+                //{
+                //    BrandsManager.Title = Properties.Resources.BrandsWindowTitle;
+                //    BrandsManager.ButtonAdd = Properties.Resources.AddBth;
+                //    BrandsManager.ButtonUpdate = Properties.Resources.UpdateBth;
+                //    BrandsManager.ButtonDelete = Properties.Resources.DeleteBth;
+                //    BrandsManager.ButtonChoose = Properties.Resources.ChooseBtn;
+                //    BrandsManager.NameElement = Properties.Resources.NameElement;
+                //    BrandsManager.EnterName = Properties.Resources.EnterName;
+                //    BrandsManager.MessageWarning = Properties.Resources.MessageWarning;
+                //    BrandsManager.SelectItemToEdit = Properties.Resources.SelectItemToEdit;
+                //    BrandsManager.SelectItemToDelete = Properties.Resources.SelectItemToDelete;
+                //    BrandsManager.DeleteSelectedItem = Properties.Resources.DeleteSelectedItem;
+                //    BrandsManager.SelectItemToChoose = Properties.Resources.SelectItemToChoose;
+                //}
 
                 // Обновляем заголовок окна
                 this.Title = Properties.Resources.NameProgram;
