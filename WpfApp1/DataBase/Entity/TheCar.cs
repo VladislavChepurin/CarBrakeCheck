@@ -10,9 +10,8 @@ namespace TechSto.DataBase.Entity
 
         [Required]
         public string GosNumber { get; set; }           // госномер
-        public string BodyNumber { get; set; }          // VIN-код
-        public string FrameNumber { get; set; }         // Номер рамы
-
+        public string VinСode { get; set; }          // VIN-код
+        
         [Required]
         // Внешний ключ к модели автомобиля (CarModel)
         public int CarModelId { get; set; }
@@ -25,6 +24,5 @@ namespace TechSto.DataBase.Entity
 
         // Навигационное свойство: список проверок автомобиля
         public virtual ICollection<Check> DataChecks { get; set; } = new ObservableCollection<Check>();
-
     }
 }

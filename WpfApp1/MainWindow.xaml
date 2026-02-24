@@ -164,7 +164,7 @@
                             </Grid>
 
                             <!-- DataGrid с нужными колонками -->
-                            <DataGrid Grid.Row="1"
+                            <DataGrid x:Name="MainTableWithClientData" Grid.Row="1"
                       ItemsSource="{Binding Cars}"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
@@ -174,20 +174,20 @@
                       RowHeaderWidth="0"
                       Margin="0,0,0,10">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Владелец" Binding="{Binding Owner}" Width="*"/>
-                                    <DataGridTextColumn Header="Гос номер" Binding="{Binding StateNumber}" Width="120"/>
-                                    <DataGridTextColumn Header="Vin номер" Binding="{Binding Vin}" Width="150"/>
-                                    <DataGridTextColumn Header="Марка" Binding="{Binding BrandName}" Width="100"/>
-                                    <DataGridTextColumn Header="Модель" Binding="{Binding Model}" Width="100"/>
-                                    <DataGridTextColumn Header="Дата последнего испытания" Binding="{Binding LastTestDate, StringFormat='dd.MM.yyyy'}" Width="140"/>
+                                    <DataGridTextColumn x:Name="DataDridColumnOnwer" Header="{x:Static properties:Resources.OnwerHeader}" Binding="{Binding Owner}" Width="*"/>
+                                    <DataGridTextColumn x:Name="DataDridColumnCarNumber" Header="{x:Static properties:Resources.CarNumberHeader}" Binding="{Binding StateNumber}" Width="120"/>
+                                    <DataGridTextColumn x:Name="DataDridColumnVinNumber" Header="{x:Static properties:Resources.VinNumberHeader}" Binding="{Binding Vin}" Width="150"/>
+                                    <DataGridTextColumn x:Name="DataDridColumnCarBrand" Header="{x:Static properties:Resources.CarBrandHeader}" Binding="{Binding BrandName}" Width="100"/>
+                                    <DataGridTextColumn x:Name="DataDridColumnCarModel" Header="{x:Static properties:Resources.CarModelHeader}" Binding="{Binding Model}" Width="100"/>
+                                    <DataGridTextColumn x:Name="DataDridColumnDateLastTest" Header="{x:Static properties:Resources.DateLastTestHeader}" Binding="{Binding LastTestDate, StringFormat='dd.MM.yyyy'}" Width="140"/>
                                 </DataGrid.Columns>
                             </DataGrid>
 
                             <!-- Панель кнопок -->
                             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-                                <Button Content="{x:Static properties:Resources.AddBth}" Width="100" Height="30" Margin="5"/>
-                                <Button Content="{x:Static properties:Resources.UpdateBth}" Width="100" Height="30" Margin="5"/>
-                                <Button Content="{x:Static properties:Resources.DeleteBth}" Width="100" Height="30" Margin="5"/>
+                                <Button x:Name="ButtonAddMain" Content="{x:Static properties:Resources.AddBth}" Width="100" Height="30" Margin="5"/>
+                                <Button x:Name="ButtonUpdateMain" Content="{x:Static properties:Resources.UpdateBth}" Width="100" Height="30" Margin="5"/>
+                                <Button x:Name="ButtonDeleteMain" Content="{x:Static properties:Resources.DeleteBth}" Width="100" Height="30" Margin="5"/>
                             </StackPanel>
                         </Grid>
                     </Border>

@@ -169,10 +169,42 @@ namespace TechSto
                 if (AboutTabText != null)
                     AboutTabText.Text = Properties.Resources.About;
 
+                // Обновляем текст в метке "Поиск" 
+
                 if (SearchLabel != null)
                     SearchLabel.Text = Properties.Resources.SearchLabel;
 
+                // Обновляем текст в кнопках 
 
+                if (ButtonAddMain != null)
+                    ButtonAddMain.Content = Properties.Resources.AddBth;
+
+                if (ButtonUpdateMain != null)
+                    ButtonUpdateMain.Content = Properties.Resources.UpdateBth;
+
+                if (ButtonDeleteMain != null)
+                    ButtonDeleteMain.Content = Properties.Resources.DeleteBth;
+
+                // Обновляем текст в главной таблице 
+
+                if (DataDridColumnOnwer != null)                
+                    DataDridColumnOnwer.Header = Properties.Resources.OnwerHeader;
+                
+                if (DataDridColumnCarNumber != null)                
+                    DataDridColumnCarNumber.Header = Properties.Resources.CarNumberHeader;
+                
+                if (DataDridColumnVinNumber != null)                
+                    DataDridColumnVinNumber.Header = Properties.Resources.VinNumberHeader;
+                
+                if (DataDridColumnCarBrand != null)                
+                    DataDridColumnCarBrand.Header = Properties.Resources.CarBrandHeader;
+                
+                if (DataDridColumnCarModel != null)
+                    DataDridColumnCarModel.Header = Properties.Resources.CarModelHeader;
+                
+                if (DataDridColumnDateLastTest != null)
+                    DataDridColumnDateLastTest.Header = Properties.Resources.DateLastTestHeader;
+                
 
                 //if (BrandsManager != null)
                 //{

@@ -177,4 +177,22 @@
   <data name="SearchLabel" xml:space="preserve">
     <value>Поиск</value>
   </data>
+  <data name="OnwerHeader" xml:space="preserve">
+    <value>Владелец</value>
+  </data>
+  <data name="CarNumberHeader" xml:space="preserve">
+    <value>Гос номер</value>
+  </data>
+  <data name="VinNumberHeader" xml:space="preserve">
+    <value>Vin номер</value>
+  </data>
+  <data name="CarBrandHeader" xml:space="preserve">
+    <value>Марка</value>
+  </data>
+  <data name="CarModelHeader" xml:space="preserve">
+    <value>Модель</value>
+  </data>
+  <data name="DateLastTestHeader" xml:space="preserve">
+    <value>Дата последнего испытания</value>
+  </data>
 </root>

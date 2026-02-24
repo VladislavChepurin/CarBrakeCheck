@@ -177,4 +177,22 @@
   <data name="SearchLabel" xml:space="preserve">
     <value>Іздеу</value>
   </data>
+  <data name="OnwerHeader" xml:space="preserve">
+    <value>Иесі</value>
+  </data>
+  <data name="CarNumberHeader" xml:space="preserve">
+    <value>Машина нөмірі</value>
+  </data>
+  <data name="VinNumberHeader" xml:space="preserve">
+    <value>Vin нөмірі</value>
+  </data>
+  <data name="CarBrandHeader" xml:space="preserve">
+    <value>Машина маркасы</value>
+  </data>
+  <data name="CarModelHeader" xml:space="preserve">
+    <value>Машина моделі</value>
+  </data>
+  <data name="DateLastTestHeader" xml:space="preserve">
+    <value>Соңғы сынақ күні</value>
+  </data>
 </root>

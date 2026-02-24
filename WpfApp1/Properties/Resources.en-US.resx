@@ -177,4 +177,22 @@
   <data name="SearchLabel" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="OnwerHeader" xml:space="preserve">
+    <value>Onwer</value>
+  </data>
+  <data name="CarNumberHeader" xml:space="preserve">
+    <value>Car number</value>
+  </data>
+  <data name="VinNumberHeader" xml:space="preserve">
+    <value>Vin number</value>
+  </data>
+  <data name="CarBrandHeader" xml:space="preserve">
+    <value>Car brand</value>
+  </data>
+  <data name="CarModelHeader" xml:space="preserve">
+    <value>Car model</value>
+  </data>
+  <data name="DateLastTestHeader" xml:space="preserve">
+    <value>Date of the last test</value>
+  </data>
 </root>

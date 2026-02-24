@@ -88,11 +88,47 @@ namespace TechSto.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Марка.
+        /// </summary>
+        public static string CarBrandHeader {
+            get {
+                return ResourceManager.GetString("CarBrandHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Модель.
+        /// </summary>
+        public static string CarModelHeader {
+            get {
+                return ResourceManager.GetString("CarModelHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Гос номер.
+        /// </summary>
+        public static string CarNumberHeader {
+            get {
+                return ResourceManager.GetString("CarNumberHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Выбрать.
         /// </summary>
         public static string ChooseBtn {
             get {
                 return ResourceManager.GetString("ChooseBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Дата последнего испытания.
+        /// </summary>
+        public static string DateLastTestHeader {
+            get {
+                return ResourceManager.GetString("DateLastTestHeader", resourceCulture);
             }
         }
         
@@ -178,6 +214,15 @@ namespace TechSto.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Владелец.
+        /// </summary>
+        public static string OnwerHeader {
+            get {
+                return ResourceManager.GetString("OnwerHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Отчеты.
         /// </summary>
         public static string Reports {
@@ -237,6 +282,15 @@ namespace TechSto.Properties {
         public static string UpdateBth {
             get {
                 return ResourceManager.GetString("UpdateBth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Vin номер.
+        /// </summary>
+        public static string VinNumberHeader {
+            get {
+                return ResourceManager.GetString("VinNumberHeader", resourceCulture);
             }
         }
     }

@@ -83,7 +83,7 @@ namespace TechSto.BusinessLayer
         /// <summary>
         /// Создать автомобиль с указанными параметрами
         /// </summary>
-        public TheCar CreateCar(string gosNumber, string bodyNumber, string frameNumber, int carModelId, int ownerId)
+        public TheCar CreateCar(string gosNumber, string vinСode, int carModelId, int ownerId)
         {
             var model = _context.CarModels.Find(carModelId);
             if (model == null)
@@ -95,8 +95,7 @@ namespace TechSto.BusinessLayer
             var car = new TheCar
             {
                 GosNumber = gosNumber,
-                BodyNumber = bodyNumber,
-                FrameNumber = frameNumber,
+                VinСode = vinСode,              
                 CarModelId = carModelId,
                 OwnerId = ownerId
             };
@@ -117,8 +116,7 @@ namespace TechSto.BusinessLayer
                 throw new InvalidOperationException("Автомобиль не найден.");
 
             existing.GosNumber = updatedCar.GosNumber;
-            existing.BodyNumber = updatedCar.BodyNumber;
-            existing.FrameNumber = updatedCar.FrameNumber;
+            existing.VinСode = updatedCar.VinСode;           
             existing.CarModelId = updatedCar.CarModelId;
             existing.OwnerId = updatedCar.OwnerId;
 

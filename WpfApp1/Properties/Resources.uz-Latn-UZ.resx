@@ -177,4 +177,22 @@
   <data name="SearchLabel" xml:space="preserve">
     <value>Qidiruv</value>
   </data>
+  <data name="OnwerHeader" xml:space="preserve">
+    <value>Egasi</value>
+  </data>
+  <data name="CarNumberHeader" xml:space="preserve">
+    <value>Avtomobil raqami</value>
+  </data>
+  <data name="VinNumberHeader" xml:space="preserve">
+    <value>Vin raqami</value>
+  </data>
+  <data name="CarBrandHeader" xml:space="preserve">
+    <value>Avtomobil markasi</value>
+  </data>
+  <data name="CarModelHeader" xml:space="preserve">
+    <value>Avtomobil modeli</value>
+  </data>
+  <data name="DateLastTestHeader" xml:space="preserve">
+    <value>Oxirgi sinov sanasi</value>
+  </data>
 </root>
