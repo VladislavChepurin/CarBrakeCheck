@@ -20,6 +20,11 @@ namespace TechSto.DataBase.Entity
             optionsBuilder.UseLazyLoadingProxies(); // обязательно для ленивой загрузки
         }
 
+        public MainContext()
+        {
+            Database.EnsureCreated(); // создаст БД и таблицы, если их нет
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Owner -> TheCars

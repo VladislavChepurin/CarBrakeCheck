@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace TechSto.SecondWindow
 {
     /// <summary>
-    /// Логика взаимодействия для AddRecord.xaml
+    /// Логика взаимодействия для AddClientWindow.xaml
     /// </summary>
-    public partial class AddRecord : Window
+    public partial class AddClientWindow : Window
     {
-        public AddRecord()
+        public AddClientWindow()
         {
             InitializeComponent();
         }

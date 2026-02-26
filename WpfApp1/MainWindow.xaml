@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TechSto"
-        xmlns:controls="clr-namespace:TechSto.Controls"
         xmlns:properties="clr-namespace:TechSto.Properties"
         mc:Ignorable="d"
         Title="Приложение"        
@@ -164,15 +163,15 @@
                             </Grid>
 
                             <!-- DataGrid с нужными колонками -->
-                            <DataGrid x:Name="MainTableWithClientData" Grid.Row="1"
-                      ItemsSource="{Binding Cars}"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="False"
-                      IsReadOnly="True"
-                      GridLinesVisibility="None"
-                      AlternatingRowBackground="#F5F5F5"
-                      RowHeaderWidth="0"
-                      Margin="0,0,0,10">
+                            <DataGrid x:Name="MainTableWithClientData" Grid.Row="1"    
+                                 ItemsSource="{Binding ClientRecords}"
+                                 AutoGenerateColumns="False"
+                                 CanUserAddRows="False"
+                                 IsReadOnly="True"
+                                 GridLinesVisibility="None"
+                                 AlternatingRowBackground="#F5F5F5"
+                                 RowHeaderWidth="0"
+                                 Margin="0,0,0,10">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn x:Name="DataDridColumnOnwer" Header="{x:Static properties:Resources.OnwerHeader}" Binding="{Binding Owner}" Width="*"/>
                                     <DataGridTextColumn x:Name="DataDridColumnCarNumber" Header="{x:Static properties:Resources.CarNumberHeader}" Binding="{Binding StateNumber}" Width="120"/>
@@ -198,31 +197,14 @@
                             <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                         </Border.Effect>
                         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="15,0,0,0">
-                            <!--<Button x:Name="SelectBrandButton" 
-                        Content="Выбрать марку машины" 
-                        Command="{Binding OpenCarBrandsCommand}"
-                        Margin="0,5"/>
-                            <controls:EntityManager x:Name="BrandsManager"   
-                                        Visibility="{Binding BrandsVisibility}" 
-                                        ItemsSource="{Binding Brands}"   
-                                        SelectedItem="{Binding SelectedBrand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"               
-                                        Title="{x:Static properties:Resources.BrandsWindowTitle}"
-                                        ButtonAdd="{x:Static properties:Resources.AddBth}"
-                                        ButtonUpdate="{x:Static properties:Resources.UpdateBth}"
-                                        ButtonDelete="{x:Static properties:Resources.DeleteBth}"
-                                        ButtonChoose="{x:Static properties:Resources.ChooseBtn}"        
-                                        NameElement ="{x:Static properties:Resources.NameElement}" 
-                                        MessageWarning="{x:Static properties:Resources.MessageWarning}"              
-                                        EnterName ="{x:Static properties:Resources.EnterName}"                                        
-                                        SelectItemToEdit ="{x:Static properties:Resources.SelectItemToEdit}"                   
-                                        SelectItemToDelete ="{x:Static properties:Resources.SelectItemToDelete}"                                
-                                        DeleteSelectedItem ="{x:Static properties:Resources.DeleteSelectedItem}"  
-                                        SelectItemToChoose="{x:Static properties:Resources.SelectItemToChoose}"                
-                                        DisplayMemberPath="BrandName"
-                                        AddCommand="{Binding AddBrandCommand}"
-                                        EditCommand="{Binding EditBrandCommand}"
-                                        DeleteCommand="{Binding DeleteBrandCommand}"
-                                        ChooseCommand="{Binding ChooseBrandCommand}"/>-->
+                       
+                            
+                            
+                                                                                    
+                            
+                            
+                            
+                            
                         </StackPanel>
                     </Border>
                 </Grid>

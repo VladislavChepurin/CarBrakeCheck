@@ -23,9 +23,9 @@ namespace TechSto.BusinessLayer
             var query = _context.TheCars.AsQueryable();
             if (includeModel)
                 query = query.Include(c => c.CarModel)
-                             .ThenInclude(m => m.CarBrand)
+                             .ThenInclude(m => m!.CarBrand)
                              .Include(c => c.CarModel)
-                             .ThenInclude(m => m.CarСategory);
+                             .ThenInclude(m => m!.CarСategory);
             if (includeOwner)
                 query = query.Include(c => c.Owner);
             return query;
@@ -34,13 +34,13 @@ namespace TechSto.BusinessLayer
         /// <summary>
         /// Получить автомобиль по Id с загрузкой связанных данных
         /// </summary>
-        public TheCar GetById(int id)
+        public TheCar? GetById(int id)
         {
             return _context.TheCars
+                .Include(c => c.CarModel)  
+                .ThenInclude(m => m!.CarBrand)  //Разыменование вероятной пустой ссылки.
                 .Include(c => c.CarModel)
-                .ThenInclude(m => m.CarBrand)
-                .Include(c => c.CarModel)
-                .ThenInclude(m => m.CarСategory)
+                .ThenInclude(m => m!.CarСategory) //Разыменование вероятной пустой ссылки.
                 .Include(c => c.Owner)
                 .Include(c => c.DataChecks)
                 .FirstOrDefault(c => c.Id == id);

@@ -9,10 +9,10 @@ namespace TechSto
 {
     public partial class MainWindow : Window
     {
-        private Border _selectedTab;
-        private AppSettings _settings;
-        private Dictionary<string, (Border tab, FrameworkElement content)> _tabMapping;
-        private readonly MainContext _context;
+        private Border? _selectedTab;
+        private AppSettings? _settings;
+        private Dictionary<string, (Border tab, FrameworkElement content)>? _tabMapping;
+        private readonly MainContext? _context;
                
         public MainWindow()
         {
@@ -34,8 +34,13 @@ namespace TechSto
             {
                 MessageBox.Show($"Ошибка при инициализации окна: {ex.Message}",
                     "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }                 
+                _settings = new AppSettings();
+                _context = null;   // явная инициализация null
+                Application.Current.Shutdown();  // закрываем приложение, т.к. без контекста работать нельзя
+                return;            // прерываем выполнение конструктора
+            }      
         }
+
 
         private void InitializeSettings()
         {
@@ -43,10 +48,7 @@ namespace TechSto
             _settings = AppSettings.Load();
 
             // Дополнительная проверка (на всякий случай)
-            if (_settings == null)
-            {
-                _settings = new AppSettings();
-            }
+            _settings ??= new AppSettings();
         }
 
         private void InitializeTabMapping()
@@ -137,7 +139,7 @@ namespace TechSto
 
         // ========== МЕТОДЫ ДЛЯ РАБОТЫ С ЯЗЫКОМ ==========
 
-        private void OnLanguageChanged(object sender, EventArgs e)
+        private void OnLanguageChanged(object? sender, EventArgs e)
         {
             try
             {
@@ -203,24 +205,7 @@ namespace TechSto
                     DataDridColumnCarModel.Header = Properties.Resources.CarModelHeader;
                 
                 if (DataDridColumnDateLastTest != null)
-                    DataDridColumnDateLastTest.Header = Properties.Resources.DateLastTestHeader;
-                
-
-                //if (BrandsManager != null)
-                //{
-                //    BrandsManager.Title = Properties.Resources.BrandsWindowTitle;
-                //    BrandsManager.ButtonAdd = Properties.Resources.AddBth;
-                //    BrandsManager.ButtonUpdate = Properties.Resources.UpdateBth;
-                //    BrandsManager.ButtonDelete = Properties.Resources.DeleteBth;
-                //    BrandsManager.ButtonChoose = Properties.Resources.ChooseBtn;
-                //    BrandsManager.NameElement = Properties.Resources.NameElement;
-                //    BrandsManager.EnterName = Properties.Resources.EnterName;
-                //    BrandsManager.MessageWarning = Properties.Resources.MessageWarning;
-                //    BrandsManager.SelectItemToEdit = Properties.Resources.SelectItemToEdit;
-                //    BrandsManager.SelectItemToDelete = Properties.Resources.SelectItemToDelete;
-                //    BrandsManager.DeleteSelectedItem = Properties.Resources.DeleteSelectedItem;
-                //    BrandsManager.SelectItemToChoose = Properties.Resources.SelectItemToChoose;
-                //}
+                    DataDridColumnDateLastTest.Header = Properties.Resources.DateLastTestHeader;                              
 
                 // Обновляем заголовок окна
                 this.Title = Properties.Resources.NameProgram;
@@ -349,7 +334,7 @@ namespace TechSto
             }
         }
 
-        private void ApplySelectedTabStyle(Border tab)
+        private static void ApplySelectedTabStyle(Border tab)
         {
             if (tab == null) return;
 
@@ -378,7 +363,7 @@ namespace TechSto
             }
         }
 
-        private void ResetTabStyle(Border tab)
+        private static void ResetTabStyle(Border tab)
         {
             if (tab == null) return;
 

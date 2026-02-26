@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace TechSto
 {
-    class AppSettings
+    public class AppSettings
     {
         public string Language { get; set; } = "ru-RU";
         public string LastSelectedTab { get; set; } = "Settings";
@@ -13,10 +13,12 @@ namespace TechSto
         public double WindowLeft { get; set; } = 100;
         public double WindowTop { get; set; } = 100;
 
-
         private static readonly string SettingsPath =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "WpfApp1", "settings.json");
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "WpfApp1", "settings.json");
+
+        // Кэшированный экземпляр JsonSerializerOptions
+        private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
 
         public static AppSettings Load()
         {
@@ -30,10 +32,8 @@ namespace TechSto
             }
             catch (Exception ex)
             {
-                // Логирование ошибки
                 Console.WriteLine($"Error loading settings: {ex.Message}");
             }
-
             return new AppSettings();
         }
 
@@ -41,16 +41,15 @@ namespace TechSto
         {
             try
             {
-                string directory = Path.GetDirectoryName(SettingsPath);
-                if (!Directory.Exists(directory))
+                string? directory = Path.GetDirectoryName(SettingsPath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                     Directory.CreateDirectory(directory);
 
-                string json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+                string json = JsonSerializer.Serialize(this, _jsonOptions);
                 File.WriteAllText(SettingsPath, json);
             }
             catch (Exception ex)
             {
-                // Логирование ошибки
                 Console.WriteLine($"Error saving settings: {ex.Message}");
             }
         }
