@@ -26,7 +26,7 @@ namespace TechSto
                 InitializeSettings();
                 InitializeTabMapping();
                 SubscribeToEvents();
-                ApplyWindowSettings();
+                //ApplyWindowSettings();
                 InitializeLanguage();
                
             }
@@ -68,16 +68,16 @@ namespace TechSto
             App.LanguageChanged += OnLanguageChanged;
         }
 
-        private void ApplyWindowSettings()
-        {
-            if (_settings == null) return;
+        //private void ApplyWindowSettings()
+        //{
+        //    if (_settings == null) return;
 
-            this.Width = _settings.WindowWidth;
-            this.Height = _settings.WindowHeight;
-            this.Left = _settings.WindowLeft;
-            this.Top = _settings.WindowTop;
-            this.WindowState = _settings.IsMaximized ? WindowState.Maximized : WindowState.Normal;
-        }
+        //    this.Width = _settings.WindowWidth;
+        //    this.Height = _settings.WindowHeight;
+        //    this.Left = _settings.WindowLeft;
+        //    this.Top = _settings.WindowTop;
+        //    this.WindowState = _settings.IsMaximized ? WindowState.Maximized : WindowState.Normal;
+        //}
 
         private void InitializeLanguage()
         {
@@ -101,7 +101,7 @@ namespace TechSto
             {
                 if (_settings != null)
                 {
-                    SaveWindowSettings();
+                    //SaveWindowSettings();
                 }
             }
             catch (Exception ex)
@@ -115,27 +115,27 @@ namespace TechSto
             }
         }
 
-        private void SaveWindowSettings()
-        {
-            if (_settings == null) return;
+        //private void SaveWindowSettings()
+        //{
+        //    if (_settings == null) return;
 
-            try
-            {
-                if (this.WindowState == WindowState.Normal)
-                {
-                    _settings.WindowWidth = this.Width;
-                    _settings.WindowHeight = this.Height;
-                    _settings.WindowLeft = this.Left;
-                    _settings.WindowTop = this.Top;
-                }
-                _settings.IsMaximized = this.WindowState == WindowState.Maximized;
-                _settings.Save();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error saving window settings: {ex.Message}");
-            }
-        }
+        //    try
+        //    {
+        //        if (this.WindowState == WindowState.Normal)
+        //        {
+        //            _settings.WindowWidth = this.Width;
+        //            _settings.WindowHeight = this.Height;
+        //            _settings.WindowLeft = this.Left;
+        //            _settings.WindowTop = this.Top;
+        //        }
+        //        _settings.IsMaximized = this.WindowState == WindowState.Maximized;
+        //        _settings.Save();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        System.Diagnostics.Debug.WriteLine($"Error saving window settings: {ex.Message}");
+        //    }
+        //}
 
         // ========== МЕТОДЫ ДЛЯ РАБОТЫ С ЯЗЫКОМ ==========
 

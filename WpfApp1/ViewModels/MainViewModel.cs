@@ -9,7 +9,9 @@ namespace TechSto.ViewModels
 {
     class MainViewModel: ViewModelBase
     {
-        private readonly MainContext _context;      
+        private readonly MainContext _context;
+        private readonly AppSettings? _settings;
+
         private Visibility _brandsVisibility = Visibility.Collapsed;
         private ObservableCollection<ClientRecordDto> _clientRecords = [];
         public ICommand OpenAddClientCommand { get; }
@@ -41,8 +43,8 @@ namespace TechSto.ViewModels
         }
 
         private void OpenAddClientWindow()
-        {           
-            var addWindow = new AddClientWindow();
+        {
+            var addWindow = new ClientWindow(_context);
             if (addWindow.ShowDialog() == true)
             {
                 LoadData(); // Обновляем таблицу после закрытия окна

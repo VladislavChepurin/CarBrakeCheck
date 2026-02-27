@@ -16,7 +16,7 @@ namespace TechSto.DataBase.Entity
         // Существующие технические характеристики
         public int? MaxMass { get; set; }    //максимльная масса
         public int? CurbMass { get; set; }   //снаряженная масса   
-        public int? BrakeForceDifference { get; set; }   //Разница в тормозном усилии
+        public float? BrakeForceDifference { get; set; }   //Разница в тормозном усилии
         public ParkingBrakeType? ParkingBrake { get; set; }
         public ReserveBrakeSystem? ReserveBrake { get; set; }
 

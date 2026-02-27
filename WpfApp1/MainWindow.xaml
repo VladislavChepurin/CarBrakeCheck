@@ -7,7 +7,7 @@
         xmlns:properties="clr-namespace:TechSto.Properties"
         mc:Ignorable="d"
         Title="Приложение"        
-        MaxWidth="1920" MaxHeight="1080"
+        MaxWidth="1366" MaxHeight="768"
         MinWidth="1366" MinHeight="768"
         
         Loaded="Window_Loaded">
@@ -184,7 +184,7 @@
 
                             <!-- Панель кнопок -->
                             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-                                <Button x:Name="ButtonAddMain" Content="{x:Static properties:Resources.AddBth}" Width="100" Height="30" Margin="5"/>
+                                <Button x:Name="ButtonAddMain" Content="{x:Static properties:Resources.AddBth}" Command="{Binding OpenAddClientCommand}" Width="100" Height="30" Margin="5"/>
                                 <Button x:Name="ButtonUpdateMain" Content="{x:Static properties:Resources.UpdateBth}" Width="100" Height="30" Margin="5"/>
                                 <Button x:Name="ButtonDeleteMain" Content="{x:Static properties:Resources.DeleteBth}" Width="100" Height="30" Margin="5"/>
                             </StackPanel>
@@ -198,7 +198,6 @@
                         </Border.Effect>
                         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="15,0,0,0">
                        
-                            
                             
                                                                                     
                             

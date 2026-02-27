@@ -8,10 +8,10 @@ namespace TechSto
         public string Language { get; set; } = "ru-RU";
         public string LastSelectedTab { get; set; } = "Settings";
         public bool IsMaximized { get; set; } = false;
-        public double WindowWidth { get; set; } = 1200;
-        public double WindowHeight { get; set; } = 650;
-        public double WindowLeft { get; set; } = 100;
-        public double WindowTop { get; set; } = 100;
+        //public double WindowWidth { get; set; } = 1200;
+        //public double WindowHeight { get; set; } = 650;
+        //public double WindowLeft { get; set; } = 100;
+        //public double WindowTop { get; set; } = 100;
 
         private static readonly string SettingsPath =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
