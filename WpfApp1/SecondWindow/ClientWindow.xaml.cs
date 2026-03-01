@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Windows;
-using TechSto.DataBase.Entity;
-using TechSto.ViewModels;
+using TechSto.WPF.ViewModels;
+using TechSto.WPF.DataBase.Entity;
 
-namespace TechSto.SecondWindow
+namespace TechSto.WPF.SecondWindow
 {
     /// <summary>
     /// Логика взаимодействия для lientWindow.xaml

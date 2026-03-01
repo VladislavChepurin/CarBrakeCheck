@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 
-namespace TechSto.DataBase.Entity
+namespace TechSto.WPF.DataBase.Entity
 {
     public class Check
     {
@@ -18,7 +18,7 @@ namespace TechSto.DataBase.Entity
         [NotMapped]
         public DateTime? DataDateTime
         {
-            get => DateTime.TryParseExact(Data, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date) ? date : (DateTime?)null;
+            get => DateTime.TryParseExact(Data, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date) ? date : null;
             set => Data = value?.ToString("yyyy-MM-dd HH:mm:ss") ?? throw new ArgumentNullException(nameof(value));
         }
 

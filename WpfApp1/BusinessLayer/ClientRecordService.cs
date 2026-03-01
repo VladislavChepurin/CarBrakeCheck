@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Globalization;
-using TechSto.DataBase.Entity;
+using TechSto.WPF.DataBase.Entity;
 
-namespace TechSto.BusinessLayer
+namespace TechSto.WPF.BusinessLayer
 {
     public class ClientRecordService
     {

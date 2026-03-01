@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using TechSto.DataBase.Entity;
+using TechSto.WPF.DataBase.Entity;
 
-namespace TechSto.ViewModels
+namespace TechSto.WPF.ViewModels
 {
 
     public class CarBrandViewModel : INotifyPropertyChanged

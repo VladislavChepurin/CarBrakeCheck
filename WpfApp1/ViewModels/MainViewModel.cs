@@ -1,20 +1,25 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using TechSto.BusinessLayer;
-using TechSto.DataBase.Entity;
-using TechSto.SecondWindow;
-
-namespace TechSto.ViewModels
+using TechSto.WPF.BusinessLayer;
+using TechSto.WPF.SecondWindow;
+using TechSto.WPF.DataBase.Entity;
+namespace TechSto.WPF.ViewModels
 {
     class MainViewModel: ViewModelBase
     {
         private readonly MainContext _context;
-        private readonly AppSettings? _settings;
-
+    
+        private bool _isDeviceConnected;
         private Visibility _brandsVisibility = Visibility.Collapsed;
         private ObservableCollection<ClientRecordDto> _clientRecords = [];
         public ICommand OpenAddClientCommand { get; }
+
+        public bool IsDeviceConnected
+        {
+            get => _isDeviceConnected;
+            set { _isDeviceConnected = value; OnPropertyChanged(); }
+        }
 
         public Visibility BrandsVisibility
         {
@@ -32,6 +37,13 @@ namespace TechSto.ViewModels
         {
             _context = context;        
             OpenAddClientCommand = new RelayCommand(OpenAddClientWindow);
+                       
+            //if (DeviceConnectionService.Instance != null)
+            //{
+            //    DeviceConnectionService.Instance.ConnectionStateChanged += OnConnectionStateChanged;
+            //    IsDeviceConnected = DeviceConnectionService.Instance.IsConnected;
+            //}
+
             LoadData();
         }
 
@@ -40,6 +52,11 @@ namespace TechSto.ViewModels
             var service = new ClientRecordService(_context);
             var list = service.LoadClientRecords();
             ClientRecords = new ObservableCollection<ClientRecordDto>(list);
+        }
+
+        private void OnConnectionStateChanged(bool isConnected)
+        {
+            IsDeviceConnected = isConnected;
         }
 
         private void OpenAddClientWindow()

@@ -1,4 +1,4 @@
-﻿namespace TechSto.BusinessLayer
+﻿namespace TechSto.WPF.BusinessLayer
 {
     public class ClientRecordDto
     {

@@ -1,6 +1,6 @@
-﻿using TechSto.DataBase.Entity;
+﻿using TechSto.WPF.DataBase.Entity;
 
-namespace TechSto.ViewModels
+namespace TechSto.WPF.ViewModels
 {
     public class ClientViewModel: ViewModelBase
     {

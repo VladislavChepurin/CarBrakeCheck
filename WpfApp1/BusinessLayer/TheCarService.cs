@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
-using TechSto.DataBase.Entity;
+using TechSto.WPF.DataBase.Entity;
 
-namespace TechSto.BusinessLayer
+namespace TechSto.WPF.BusinessLayer
 {
     public class TheCarService
     {

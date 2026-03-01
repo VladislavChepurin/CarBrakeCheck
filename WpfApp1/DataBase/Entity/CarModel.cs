@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using TechSto.WPF.DataBase.Entity;
 
-namespace TechSto.DataBase.Entity
+namespace TechSto.WPF.DataBase.Entity
 {
     public class CarModel
     {
