@@ -13,14 +13,14 @@ namespace TechSto.WPF.DataBase.Entity
         public DbSet<Axle> Axles { get; set; }
 
         // Настройка подключения и параметров
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
 
-            optionsBuilder.UseSqlite("Data Source=DataBase/DataBase.db");
-            optionsBuilder.UseLazyLoadingProxies(); // обязательно для ленивой загрузки
-        }
+        //    optionsBuilder.UseSqlite("Data Source=DataBase/DataBase.db");
+        //    optionsBuilder.UseLazyLoadingProxies(); // обязательно для ленивой загрузки
+        //}
 
-        public MainContext()
+        public MainContext(DbContextOptions<MainContext> options) : base(options)
         {
             Database.EnsureCreated(); // создаст БД и таблицы, если их нет
         }

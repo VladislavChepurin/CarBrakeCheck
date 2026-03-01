@@ -3,13 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TechSto"
+        xmlns:local="clr-namespace:TechSto.WPF"
         xmlns:properties="clr-namespace:TechSto.WPF.Properties"
         mc:Ignorable="d"
         Title="Приложение"    
         Width="1366" Height="768"
-        ResizeMode="NoResize"        
-        Loaded="Window_Loaded">
+        ResizeMode="NoResize">
 
     <Grid Background="#F0F8FF">
         <Grid.ColumnDefinitions>
@@ -256,7 +255,7 @@
                         <ComboBox x:Name="LanguageComboBox" 
                       Style="{StaticResource ComboBoxStyle}"
                       SelectionChanged="LanguageComboBox_SelectionChanged">
-                            <ComboBoxItem Tag="ru-RU" IsSelected="True">🇷🇺 Русский</ComboBoxItem>
+                            <ComboBoxItem Tag="ru-RU">🇷🇺 Русский</ComboBoxItem>
                             <ComboBoxItem Tag="en-US">🇬🇧 English</ComboBoxItem>
                             <ComboBoxItem Tag="kk-KZ">🇰🇿 Қазақша</ComboBoxItem>
                             <ComboBoxItem Tag="uz-Latn-UZ">🇺🇿 O'zbekcha</ComboBoxItem>

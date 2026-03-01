@@ -1,19 +1,24 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using TechSto.Core.Interfaces;
+using TechSto.Core.Models;
 using TechSto.WPF.BusinessLayer;
-using TechSto.WPF.SecondWindow;
 using TechSto.WPF.DataBase.Entity;
+using TechSto.WPF.SecondWindow;
 namespace TechSto.WPF.ViewModels
 {
-    class MainViewModel: ViewModelBase
-    {
-        private readonly MainContext _context;
-    
+    public class MainViewModel: ViewModelBase
+    {            
         private bool _isDeviceConnected;
         private Visibility _brandsVisibility = Visibility.Collapsed;
         private ObservableCollection<ClientRecordDto> _clientRecords = [];
         public ICommand OpenAddClientCommand { get; }
+
+        private readonly IAppSettingsService _appSettingsService;
+        private readonly ILocalizationService _localizationService;
+        private readonly MainContext _context;
+        private AppSettings _settings;
 
         public bool IsDeviceConnected
         {
@@ -33,17 +38,34 @@ namespace TechSto.WPF.ViewModels
             set { _clientRecords = value; OnPropertyChanged(); }
         }
 
-        public MainViewModel(MainContext context)
+        public AppSettings SettingsModel
         {
-            _context = context;        
+            get => _settings;
+            private set => SetProperty(ref _settings, value);
+        }
+
+
+        public MainViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService, MainContext context)
+        {
+            _appSettingsService = appSettingsService;
+            _localizationService = localizationService;
+            _context = context;
+
+
             OpenAddClientCommand = new RelayCommand(OpenAddClientWindow);
-                       
+
             //if (DeviceConnectionService.Instance != null)
             //{
             //    DeviceConnectionService.Instance.ConnectionStateChanged += OnConnectionStateChanged;
             //    IsDeviceConnected = DeviceConnectionService.Instance.IsConnected;
             //}
 
+            // Загружаем настройки
+            SettingsModel = _appSettingsService.Load();
+
+            // Устанавливаем язык из настроек
+            _localizationService.SetLanguage(SettingsModel.Language);
+                        
             LoadData();
         }
 
@@ -66,6 +88,11 @@ namespace TechSto.WPF.ViewModels
             {
                 LoadData(); // Обновляем таблицу после закрытия окна
             }
-        }      
+        }    
+        
+
+
+
+
     }
 }

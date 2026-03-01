@@ -2,54 +2,35 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using TechSto.WPF.DataBase.Entity;
+using TechSto.Core.Interfaces;
 using TechSto.WPF.ViewModels;
 
 namespace TechSto.WPF
 {
     public partial class MainWindow : Window
     {
-        private Border? _selectedTab;
-        private AppSettings? _settings;
+        private Border? _selectedTab;       
         private Dictionary<string, (Border tab, FrameworkElement content)>? _tabMapping;
-        private readonly MainContext? _context;
-               
-        public MainWindow()
+        private readonly MainViewModel _viewModel;
+        private readonly IAppSettingsService _appSettingsService;
+        private readonly ILocalizationService _localizationService;
+
+        public MainWindow(MainViewModel viewModel, IAppSettingsService appSettingsService, ILocalizationService localizationService)
         {
             InitializeComponent();
+            _viewModel = viewModel;
+            _appSettingsService = appSettingsService;
+            _localizationService = localizationService;
+            DataContext = _viewModel;
 
-            try
-            {
-                _context = new MainContext();
-                DataContext = new MainViewModel(_context);
-                // Инициализация в правильном порядке
-                InitializeSettings();
-                InitializeTabMapping();
-                SubscribeToEvents();
-                //ApplyWindowSettings();
-                InitializeLanguage();
-               
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при инициализации окна: {ex.Message}",
-                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                _settings = new AppSettings();
-                _context = null;   // явная инициализация null
-                Application.Current.Shutdown();  // закрываем приложение, т.к. без контекста работать нельзя
-                return;            // прерываем выполнение конструктора
-            }      
-        }
+            // Остальная инициализация
+            InitializeTabMapping();
+            SubscribeToEvents();
+            InitializeLanguage();
 
-
-        private void InitializeSettings()
-        {
-            // Всегда получаем валидный объект настроек
-            _settings = AppSettings.Load();
-
-            // Дополнительная проверка (на всякий случай)
-            _settings ??= new AppSettings();
-        }
+            Loaded += OnLoaded;
+            Closed += OnClosed;
+        }           
 
         private void InitializeTabMapping()
         {
@@ -63,45 +44,55 @@ namespace TechSto.WPF
             };
         }
 
+
         private void SubscribeToEvents()
         {
-            App.LanguageChanged += OnLanguageChanged;
+            _localizationService.LanguageChanged += OnLanguageChanged;
         }
-
-        //private void ApplyWindowSettings()
-        //{
-        //    if (_settings == null) return;
-
-        //    this.Width = _settings.WindowWidth;
-        //    this.Height = _settings.WindowHeight;
-        //    this.Left = _settings.WindowLeft;
-        //    this.Top = _settings.WindowTop;
-        //    this.WindowState = _settings.IsMaximized ? WindowState.Maximized : WindowState.Normal;
-        //}
 
         private void InitializeLanguage()
         {
-            if (_settings == null) return;
+            if (_viewModel.SettingsModel == null) return;
 
-            App.SetLanguage(_settings.Language);
+            // Устанавливаем язык из настроек через сервис локализации
+            _localizationService.SetLanguage(_viewModel.SettingsModel.Language);
             SetSelectedLanguage();
-        }
+        }    
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_settings != null)
+            if (_viewModel.SettingsModel != null)
             {
+                // Восстанавливаем размеры окна из настроек
+                var settings = _viewModel.SettingsModel;
+                //Width = settings.WindowWidth;
+                //Height = settings.WindowHeight;
+                //Left = settings.WindowLeft;
+                //Top = settings.WindowTop;
+                WindowState = settings.IsMaximized ? WindowState.Maximized : WindowState.Normal;
+
+                // Восстанавливаем последнюю вкладку
                 RestoreLastSelectedTab();
             }
-        }              
+        }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void OnClosed(object sender, EventArgs e)
         {
             try
             {
-                if (_settings != null)
+                if (_viewModel.SettingsModel != null)
                 {
-                    //SaveWindowSettings();
+                    // Сохраняем размеры окна
+                    var settings = _viewModel.SettingsModel;
+                    if (WindowState == WindowState.Normal)
+                    {
+                        //settings.WindowWidth = Width;
+                        //settings.WindowHeight = Height;
+                        //settings.WindowLeft = Left;
+                        //settings.WindowTop = Top;
+                    }
+                    settings.IsMaximized = WindowState == WindowState.Maximized;
+                    _appSettingsService.Save(settings);
                 }
             }
             catch (Exception ex)
@@ -110,32 +101,10 @@ namespace TechSto.WPF
             }
             finally
             {
-                App.LanguageChanged -= OnLanguageChanged;
-                _context?.Dispose();
+                _localizationService.LanguageChanged -= OnLanguageChanged;
+                //_viewModel.Dispose(); // если MainWindowViewModel реализует IDisposable
             }
         }
-
-        //private void SaveWindowSettings()
-        //{
-        //    if (_settings == null) return;
-
-        //    try
-        //    {
-        //        if (this.WindowState == WindowState.Normal)
-        //        {
-        //            _settings.WindowWidth = this.Width;
-        //            _settings.WindowHeight = this.Height;
-        //            _settings.WindowLeft = this.Left;
-        //            _settings.WindowTop = this.Top;
-        //        }
-        //        _settings.IsMaximized = this.WindowState == WindowState.Maximized;
-        //        _settings.Save();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine($"Error saving window settings: {ex.Message}");
-        //    }
-        //}
 
         // ========== МЕТОДЫ ДЛЯ РАБОТЫ С ЯЗЫКОМ ==========
 
@@ -143,7 +112,7 @@ namespace TechSto.WPF
         {
             try
             {
-                UpdateAllTexts();                
+                UpdateAllTexts();
             }
             catch (Exception ex)
             {
@@ -171,13 +140,11 @@ namespace TechSto.WPF
                 if (AboutTabText != null)
                     AboutTabText.Text = Properties.Resources.About;
 
-                // Обновляем текст в метке "Поиск" 
-
+                // Обновляем текст в метке "Поиск"
                 if (SearchLabel != null)
                     SearchLabel.Text = Properties.Resources.SearchLabel;
 
-                // Обновляем текст в кнопках 
-
+                // Обновляем текст в кнопках
                 if (ButtonAddMain != null)
                     ButtonAddMain.Content = Properties.Resources.AddBth;
 
@@ -187,28 +154,27 @@ namespace TechSto.WPF
                 if (ButtonDeleteMain != null)
                     ButtonDeleteMain.Content = Properties.Resources.DeleteBth;
 
-                // Обновляем текст в главной таблице 
-
-                if (DataDridColumnOnwer != null)                
+                // Обновляем заголовки колонок таблицы
+                if (DataDridColumnOnwer != null)
                     DataDridColumnOnwer.Header = Properties.Resources.OnwerHeader;
-                
-                if (DataDridColumnCarNumber != null)                
+
+                if (DataDridColumnCarNumber != null)
                     DataDridColumnCarNumber.Header = Properties.Resources.CarNumberHeader;
-                
-                if (DataDridColumnVinNumber != null)                
+
+                if (DataDridColumnVinNumber != null)
                     DataDridColumnVinNumber.Header = Properties.Resources.VinNumberHeader;
-                
-                if (DataDridColumnCarBrand != null)                
+
+                if (DataDridColumnCarBrand != null)
                     DataDridColumnCarBrand.Header = Properties.Resources.CarBrandHeader;
-                
+
                 if (DataDridColumnCarModel != null)
                     DataDridColumnCarModel.Header = Properties.Resources.CarModelHeader;
-                
+
                 if (DataDridColumnDateLastTest != null)
-                    DataDridColumnDateLastTest.Header = Properties.Resources.DateLastTestHeader;                              
+                    DataDridColumnDateLastTest.Header = Properties.Resources.DateLastTestHeader;
 
                 // Обновляем заголовок окна
-                this.Title = Properties.Resources.NameProgram;
+                Title = Properties.Resources.NameProgram;
             }
             catch (Exception ex)
             {
@@ -218,13 +184,13 @@ namespace TechSto.WPF
 
         private void SetSelectedLanguage()
         {
-            if (_settings == null || LanguageComboBox == null) return;
+            if (_viewModel.SettingsModel == null || LanguageComboBox == null) return;
 
             try
             {
                 foreach (ComboBoxItem item in LanguageComboBox.Items)
                 {
-                    if (item.Tag?.ToString() == _settings.Language)
+                    if (item.Tag?.ToString() == _viewModel.SettingsModel.Language)
                     {
                         LanguageComboBox.SelectedItem = item;
                         break;
@@ -237,18 +203,22 @@ namespace TechSto.WPF
             }
         }
 
-        private void LanguageComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_settings == null) return;
+            if (_viewModel.SettingsModel == null) return;
 
             try
             {
                 if (LanguageComboBox.SelectedItem is ComboBoxItem selectedItem)
                 {
                     string cultureCode = selectedItem.Tag?.ToString() ?? "ru-RU";
-                    _settings.Language = cultureCode;
-                    _settings.Save();
-                    App.SetLanguage(cultureCode);
+
+                    // Сохраняем язык в настройках
+                    _viewModel.SettingsModel.Language = cultureCode;
+                    _appSettingsService.Save(_viewModel.SettingsModel);
+
+                    // Меняем язык через сервис локализации
+                    _localizationService.SetLanguage(cultureCode);
                 }
             }
             catch (Exception ex)
@@ -262,11 +232,11 @@ namespace TechSto.WPF
 
         private void RestoreLastSelectedTab()
         {
-            if (_settings == null || _tabMapping == null) return;
+            if (_viewModel.SettingsModel == null || _tabMapping == null) return;
 
             try
             {
-                if (_tabMapping.TryGetValue(_settings.LastSelectedTab, out var tabInfo))
+                if (_tabMapping.TryGetValue(_viewModel.SettingsModel.LastSelectedTab, out var tabInfo))
                 {
                     SelectTab(tabInfo.tab, tabInfo.content);
                 }
@@ -292,15 +262,17 @@ namespace TechSto.WPF
 
         private void SwitchTab(Border clickedTab, string tabName)
         {
-            if (_settings == null || _tabMapping == null) return;
+            if (_viewModel.SettingsModel == null || _tabMapping == null) return;
 
             try
             {
                 if (_tabMapping.TryGetValue(tabName, out var tabInfo))
                 {
                     SelectTab(tabInfo.tab, tabInfo.content);
-                    _settings.LastSelectedTab = tabName;
-                    _settings.Save();
+
+                    // Сохраняем последнюю вкладку в настройках
+                    _viewModel.SettingsModel.LastSelectedTab = tabName;
+                    _appSettingsService.Save(_viewModel.SettingsModel);
                 }
             }
             catch (Exception ex)
@@ -314,17 +286,13 @@ namespace TechSto.WPF
             try
             {
                 if (_selectedTab != null)
-                {
                     ResetTabStyle(_selectedTab);
-                }
 
                 ApplySelectedTabStyle(tab);
                 HideAllContent();
 
                 if (content != null)
-                {
                     content.Visibility = Visibility.Visible;
-                }
 
                 _selectedTab = tab;
             }

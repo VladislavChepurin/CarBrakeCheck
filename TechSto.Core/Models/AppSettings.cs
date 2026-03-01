@@ -1,7 +1,6 @@
-﻿using System.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
 
-namespace TechSto.WPF
+namespace TechSto.Core.Models
 {
     public class AppSettings
     {
