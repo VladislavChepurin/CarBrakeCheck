@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TechSto.WPF.DataBase.Entity
+namespace TechSto.Core.Entities
 {
     public class CarBrand
     {

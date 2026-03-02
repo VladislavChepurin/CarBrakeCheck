@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TechSto.Core.Entities;
 
-namespace TechSto.WPF.DataBase.Entity
+namespace TechSto.Infrastructure.Data
 {
     public class MainContext : DbContext
     {      

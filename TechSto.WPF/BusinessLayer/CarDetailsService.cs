@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TechSto.WPF.DataBase.Entity;
+using TechSto.Infrastructure.Data;
 
 namespace TechSto.WPF.BusinessLayer
 {

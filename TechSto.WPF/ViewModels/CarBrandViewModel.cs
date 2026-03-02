@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using TechSto.WPF.DataBase.Entity;
+using TechSto.Core.Entities;
 
 namespace TechSto.WPF.ViewModels
 {

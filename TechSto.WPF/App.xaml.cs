@@ -6,8 +6,8 @@ using System.Globalization;
 using System.IO;
 using System.Windows;
 using TechSto.Core.Interfaces;
+using TechSto.Infrastructure.Data;
 using TechSto.Infrastructure.Services;
-using TechSto.WPF.DataBase.Entity;
 using TechSto.WPF.SecondWindow;
 using TechSto.WPF.ViewModels;
 
@@ -35,7 +35,8 @@ namespace TechSto.WPF
 
                     // DbContext
                     services.AddDbContext<MainContext>(options =>
-                        options.UseSqlite("Data Source=DataBase.db"));
+                        options.UseSqlite("Data Source=DataBase.db")
+                        .UseLazyLoadingProxies());
 
                     //// Репозитории
                     //services.AddScoped<IClientRecordRepository, ClientRecordRepository>();
@@ -52,13 +53,12 @@ namespace TechSto.WPF
                     // Сервис выбора (для связи между вкладками)
                     //services.AddSingleton<ISelectionService, SelectionService>();
 
-                    //// ViewModel
-                    //services.AddTransient<SettingsViewModel>();
-                    //services.AddTransient<MeasurementsViewModel>();
-                    //services.AddTransient<ReportsViewModel>();
-                    //services.AddTransient<HelpViewModel>();
-                    //services.AddTransient<AboutViewModel>();
-                    services.AddTransient<MainViewModel>();
+                    //// ViewModel                    
+                    services.AddTransient<MeasurementsViewModel>();
+                    services.AddTransient<ReportsViewModel>();
+                    services.AddTransient<HelpViewModel>();
+                    services.AddTransient<AboutViewModel>();
+                    services.AddTransient<SettingsViewModel>();
                     services.AddTransient<ClientViewModel>(); // если есть
 
                     // Окна

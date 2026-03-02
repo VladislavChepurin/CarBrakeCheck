@@ -11,11 +11,11 @@ namespace TechSto.WPF
     {
         private Border? _selectedTab;       
         private Dictionary<string, (Border tab, FrameworkElement content)>? _tabMapping;
-        private readonly MainViewModel _viewModel;
+        private readonly SettingsViewModel _viewModel;
         private readonly IAppSettingsService _appSettingsService;
         private readonly ILocalizationService _localizationService;
-
-        public MainWindow(MainViewModel viewModel, IAppSettingsService appSettingsService, ILocalizationService localizationService)
+              
+        public MainWindow(SettingsViewModel viewModel, IAppSettingsService appSettingsService, ILocalizationService localizationService)
         {
             InitializeComponent();
             _viewModel = viewModel;
@@ -24,12 +24,12 @@ namespace TechSto.WPF
             DataContext = _viewModel;
 
             // Остальная инициализация
-            InitializeTabMapping();
-            SubscribeToEvents();
+            InitializeTabMapping();   
             InitializeLanguage();
 
             Loaded += OnLoaded;
             Closed += OnClosed;
+             
         }           
 
         private void InitializeTabMapping()
@@ -42,14 +42,8 @@ namespace TechSto.WPF
                 ["Help"] = (HelpTab, HelpContent),
                 ["About"] = (AboutTab, AboutContent)
             };
-        }
-
-
-        private void SubscribeToEvents()
-        {
-            _localizationService.LanguageChanged += OnLanguageChanged;
-        }
-
+        }        
+        
         private void InitializeLanguage()
         {
             if (_viewModel.SettingsModel == null) return;
@@ -61,19 +55,18 @@ namespace TechSto.WPF
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_viewModel.SettingsModel != null)
-            {
-                // Восстанавливаем размеры окна из настроек
-                var settings = _viewModel.SettingsModel;
-                //Width = settings.WindowWidth;
-                //Height = settings.WindowHeight;
-                //Left = settings.WindowLeft;
-                //Top = settings.WindowTop;
-                WindowState = settings.IsMaximized ? WindowState.Maximized : WindowState.Normal;
+            SelectFirstTab();
 
-                // Восстанавливаем последнюю вкладку
-                RestoreLastSelectedTab();
-            }
+            //if (_viewModel.SettingsModel != null)
+            //{
+            //    Восстанавливаем размеры окна из настроек
+            //   var settings = _viewModel.SettingsModel;
+            //    Width = settings.WindowWidth;
+            //    Height = settings.WindowHeight;
+            //    Left = settings.WindowLeft;
+            //    Top = settings.WindowTop;
+            //    WindowState = settings.IsMaximized ? WindowState.Maximized : WindowState.Normal;
+            //}
         }
 
         private void OnClosed(object sender, EventArgs e)
@@ -100,87 +93,12 @@ namespace TechSto.WPF
                 System.Diagnostics.Debug.WriteLine($"Error saving settings: {ex.Message}");
             }
             finally
-            {
-                _localizationService.LanguageChanged -= OnLanguageChanged;
+            {                
                 //_viewModel.Dispose(); // если MainWindowViewModel реализует IDisposable
             }
         }
 
         // ========== МЕТОДЫ ДЛЯ РАБОТЫ С ЯЗЫКОМ ==========
-
-        private void OnLanguageChanged(object? sender, EventArgs e)
-        {
-            try
-            {
-                UpdateAllTexts();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error updating texts: {ex.Message}");
-            }
-        }
-
-        private void UpdateAllTexts()
-        {
-            try
-            {
-                // Обновляем текст вкладок
-                if (SettingsTabText != null)
-                    SettingsTabText.Text = Properties.Resources.Settings;
-
-                if (MeasurementsTabText != null)
-                    MeasurementsTabText.Text = Properties.Resources.Measurements;
-
-                if (ReportsTabText != null)
-                    ReportsTabText.Text = Properties.Resources.Reports;
-
-                if (HelpTabText != null)
-                    HelpTabText.Text = Properties.Resources.Help;
-
-                if (AboutTabText != null)
-                    AboutTabText.Text = Properties.Resources.About;
-
-                // Обновляем текст в метке "Поиск"
-                if (SearchLabel != null)
-                    SearchLabel.Text = Properties.Resources.SearchLabel;
-
-                // Обновляем текст в кнопках
-                if (ButtonAddMain != null)
-                    ButtonAddMain.Content = Properties.Resources.AddBth;
-
-                if (ButtonUpdateMain != null)
-                    ButtonUpdateMain.Content = Properties.Resources.UpdateBth;
-
-                if (ButtonDeleteMain != null)
-                    ButtonDeleteMain.Content = Properties.Resources.DeleteBth;
-
-                // Обновляем заголовки колонок таблицы
-                if (DataDridColumnOnwer != null)
-                    DataDridColumnOnwer.Header = Properties.Resources.OnwerHeader;
-
-                if (DataDridColumnCarNumber != null)
-                    DataDridColumnCarNumber.Header = Properties.Resources.CarNumberHeader;
-
-                if (DataDridColumnVinNumber != null)
-                    DataDridColumnVinNumber.Header = Properties.Resources.VinNumberHeader;
-
-                if (DataDridColumnCarBrand != null)
-                    DataDridColumnCarBrand.Header = Properties.Resources.CarBrandHeader;
-
-                if (DataDridColumnCarModel != null)
-                    DataDridColumnCarModel.Header = Properties.Resources.CarModelHeader;
-
-                if (DataDridColumnDateLastTest != null)
-                    DataDridColumnDateLastTest.Header = Properties.Resources.DateLastTestHeader;
-
-                // Обновляем заголовок окна
-                Title = Properties.Resources.NameProgram;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error updating texts: {ex.Message}");
-            }
-        }
 
         private void SetSelectedLanguage()
         {
@@ -229,29 +147,6 @@ namespace TechSto.WPF
         }
 
         // ========== МЕТОДЫ ДЛЯ РАБОТЫ С ВКЛАДКАМИ ==========
-
-        private void RestoreLastSelectedTab()
-        {
-            if (_viewModel.SettingsModel == null || _tabMapping == null) return;
-
-            try
-            {
-                if (_tabMapping.TryGetValue(_viewModel.SettingsModel.LastSelectedTab, out var tabInfo))
-                {
-                    SelectTab(tabInfo.tab, tabInfo.content);
-                }
-                else
-                {
-                    SelectTab(SettingsTab, SettingsContent);
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error restoring tab: {ex.Message}");
-                SelectTab(SettingsTab, SettingsContent);
-            }
-        }
-
         private void Tab_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is Border tab && tab.Tag is string tabName)
@@ -270,9 +165,9 @@ namespace TechSto.WPF
                 {
                     SelectTab(tabInfo.tab, tabInfo.content);
 
-                    // Сохраняем последнюю вкладку в настройках
-                    _viewModel.SettingsModel.LastSelectedTab = tabName;
-                    _appSettingsService.Save(_viewModel.SettingsModel);
+                    //// Сохраняем последнюю вкладку в настройках
+                    //_viewModel.SettingsModel.LastSelectedTab = tabName;
+                    //_appSettingsService.Save(_viewModel.SettingsModel);
                 }
             }
             catch (Exception ex)
@@ -300,6 +195,15 @@ namespace TechSto.WPF
             {
                 System.Diagnostics.Debug.WriteLine($"Error selecting tab: {ex.Message}");
             }
+        }
+
+        private void SelectFirstTab()
+        {
+            if (_tabMapping == null || _tabMapping.Count == 0) return;
+
+            // Берём первую вкладку из словаря (например, "Settings")
+            var firstTab = _tabMapping.First().Value;
+            SelectTab(firstTab.tab, firstTab.content);
         }
 
         private static void ApplySelectedTabStyle(Border tab)
@@ -365,8 +269,6 @@ namespace TechSto.WPF
             {
                 System.Diagnostics.Debug.WriteLine($"Error hiding content: {ex.Message}");
             }
-        }
-
-       
+        }       
     }
 }

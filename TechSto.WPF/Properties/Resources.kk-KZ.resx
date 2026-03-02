@@ -195,4 +195,10 @@
   <data name="DateLastTestHeader" xml:space="preserve">
     <value>Соңғы сынақ күні</value>
   </data>
+  <data name="EquipmentIsConnected" xml:space="preserve">
+    <value>Жабдық қосылған</value>
+  </data>
+  <data name="EquipmentIsNotConnected" xml:space="preserve">
+    <value>Жабдық қосылмаған</value>
+  </data>
 </root>

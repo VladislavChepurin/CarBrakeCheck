@@ -160,6 +160,24 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Оборудование подключено.
+        /// </summary>
+        public static string EquipmentIsConnected {
+            get {
+                return ResourceManager.GetString("EquipmentIsConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Оборудование не подключено.
+        /// </summary>
+        public static string EquipmentIsNotConnected {
+            get {
+                return ResourceManager.GetString("EquipmentIsNotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Справка.
         /// </summary>
         public static string Help {

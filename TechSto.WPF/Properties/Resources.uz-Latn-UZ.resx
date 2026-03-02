@@ -195,4 +195,10 @@
   <data name="DateLastTestHeader" xml:space="preserve">
     <value>Oxirgi sinov sanasi</value>
   </data>
+  <data name="EquipmentIsConnected" xml:space="preserve">
+    <value>Uskuna ulangan</value>
+  </data>
+  <data name="EquipmentIsNotConnected" xml:space="preserve">
+    <value>Uskuna ulanmagan</value>
+  </data>
 </root>

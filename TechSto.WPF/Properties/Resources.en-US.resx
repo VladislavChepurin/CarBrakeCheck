@@ -195,4 +195,10 @@
   <data name="DateLastTestHeader" xml:space="preserve">
     <value>Date of the last test</value>
   </data>
+  <data name="EquipmentIsConnected" xml:space="preserve">
+    <value>The equipment is connected</value>
+  </data>
+  <data name="EquipmentIsNotConnected" xml:space="preserve">
+    <value>The equipment is not connected</value>
+  </data>
 </root>

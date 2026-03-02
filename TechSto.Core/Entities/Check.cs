@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 
-namespace TechSto.WPF.DataBase.Entity
+namespace TechSto.Core.Entities
 {
     public class Check
     {

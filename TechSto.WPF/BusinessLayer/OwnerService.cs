@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
-using TechSto.WPF.DataBase.Entity;
+using TechSto.Core.Entities;
+using TechSto.Infrastructure.Data;
 
 namespace TechSto.WPF.BusinessLayer
 {

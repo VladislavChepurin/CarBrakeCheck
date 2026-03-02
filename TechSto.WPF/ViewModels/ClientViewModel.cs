@@ -1,4 +1,4 @@
-﻿using TechSto.WPF.DataBase.Entity;
+﻿using TechSto.Infrastructure.Data;
 
 namespace TechSto.WPF.ViewModels
 {

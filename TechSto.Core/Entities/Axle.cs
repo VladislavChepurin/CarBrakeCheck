@@ -1,5 +1,4 @@
-﻿
-namespace TechSto.WPF.DataBase.Entity
+﻿namespace TechSto.Core.Entities
 {
     public class Axle
     {

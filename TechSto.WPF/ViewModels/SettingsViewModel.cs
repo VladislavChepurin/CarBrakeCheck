@@ -3,12 +3,13 @@ using System.Windows;
 using System.Windows.Input;
 using TechSto.Core.Interfaces;
 using TechSto.Core.Models;
+using TechSto.Infrastructure.Data;
 using TechSto.WPF.BusinessLayer;
-using TechSto.WPF.DataBase.Entity;
 using TechSto.WPF.SecondWindow;
+using TechSto.WPF.Services;
 namespace TechSto.WPF.ViewModels
 {
-    public class MainViewModel: ViewModelBase
+    public class SettingsViewModel: ViewModelBase
     {            
         private bool _isDeviceConnected;
         private Visibility _brandsVisibility = Visibility.Collapsed;
@@ -44,12 +45,17 @@ namespace TechSto.WPF.ViewModels
             private set => SetProperty(ref _settings, value);
         }
 
+        public LocalizationProvider LocalizationProvider { get; }
 
-        public MainViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService, MainContext context)
+        public SettingsViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService, MainContext context)
         {
+           
             _appSettingsService = appSettingsService;
             _localizationService = localizationService;
             _context = context;
+
+            _localizationService = localizationService;
+            LocalizationProvider = new LocalizationProvider(_localizationService);
 
 
             OpenAddClientCommand = new RelayCommand(OpenAddClientWindow);
@@ -88,11 +94,6 @@ namespace TechSto.WPF.ViewModels
             {
                 LoadData(); // Обновляем таблицу после закрытия окна
             }
-        }    
-        
-
-
-
-
+        }          
     }
 }

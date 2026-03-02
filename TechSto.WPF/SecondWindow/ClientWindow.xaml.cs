@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using TechSto.WPF.ViewModels;
-using TechSto.WPF.DataBase.Entity;
+using TechSto.Infrastructure.Data;
 
 namespace TechSto.WPF.SecondWindow
 {

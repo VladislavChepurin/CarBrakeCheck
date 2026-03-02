@@ -5,19 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TechSto.WPF"
         xmlns:properties="clr-namespace:TechSto.WPF.Properties"
+        xmlns:helpers="clr-namespace:TechSto.WPF.Helpers"
         mc:Ignorable="d"
-        Title="Приложение"    
+        Title="{Binding LocalizationProvider[NameProgram]}"    
         Width="1366" Height="768"
         ResizeMode="NoResize">
 
+    <Window.Resources>
+        <helpers:BindingProxy x:Key="Proxy" Data="{Binding}" />
+    </Window.Resources>
+
+
     <Grid Background="#F0F8FF">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="46.5"/>
+            <ColumnDefinition Width="153.5"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Панель вкладок слева -->
-        <Grid Grid.Column="0">
+        <Grid Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -32,10 +39,10 @@
                     Grid.Row="0" 
                     Style="{StaticResource SelectedTabStyleSet}"                                      
                     MouseDown="Tab_MouseDown"
-                    Tag="Settings">              
+                    Tag="Settings">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
                     <TextBlock Text="📋" Style="{StaticResource TabIconStyle}"/>
-                    <TextBlock x:Name="SettingsTabText" Text="{x:Static properties:Resources.Settings}" Style="{StaticResource TabTextStyle}"/>                    
+                    <TextBlock x:Name="SettingsTabText" Text="{Binding LocalizationProvider[Settings]}" Style="{StaticResource TabTextStyle}"/>
                 </StackPanel>
             </Border>
 
@@ -49,10 +56,10 @@
                     Grid.Row="1" 
                     Style="{StaticResource SelectedTabStyle}"                     
                     MouseDown="Tab_MouseDown"
-                    Tag="Measurements">                
+                    Tag="Measurements">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
                     <TextBlock Text="📊" Style="{StaticResource TabIconStyle}"/>
-                    <TextBlock x:Name="MeasurementsTabText" Text="{x:Static properties:Resources.Measurements}" Style="{StaticResource TabTextStyle}"/>
+                    <TextBlock x:Name="MeasurementsTabText" Text="{Binding LocalizationProvider[Measurements]}" Style="{StaticResource TabTextStyle}"/>
                 </StackPanel>
             </Border>
 
@@ -61,15 +68,15 @@
                     Style="{StaticResource DividerStyle}"
                     Margin="10,62,10,0"/>
 
-            <!-- Вкладка "Отчеты" --> 
+            <!-- Вкладка "Отчеты" -->
             <Border x:Name="ReportsTab" 
                     Grid.Row="2" 
                     Style="{StaticResource SelectedTabStyle}"  
                     MouseDown="Tab_MouseDown"
-                    Tag="Reports">               
+                    Tag="Reports">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
                     <TextBlock Text="📈" Style="{StaticResource TabIconStyle}"/>
-                    <TextBlock x:Name="ReportsTabText" Text="{x:Static properties:Resources.Reports}" Style="{StaticResource TabTextStyle}"/>
+                    <TextBlock x:Name="ReportsTabText" Text="{Binding LocalizationProvider[Reports]}" Style="{StaticResource TabTextStyle}"/>
                 </StackPanel>
             </Border>
 
@@ -83,10 +90,10 @@
                     Grid.Row="3" 
                    Style="{StaticResource SelectedTabStyle}"  
                     MouseDown="Tab_MouseDown"
-                    Tag="Help">            
+                    Tag="Help">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
                     <TextBlock Text="❓" Style="{StaticResource TabIconStyle}"/>
-                    <TextBlock x:Name="HelpTabText" Text="{x:Static properties:Resources.Help}" Style="{StaticResource TabTextStyle}"/>
+                    <TextBlock x:Name="HelpTabText" Text="{Binding LocalizationProvider[Help]}" Style="{StaticResource TabTextStyle}"/>
                 </StackPanel>
             </Border>
 
@@ -100,10 +107,10 @@
                     Grid.Row="4"  
                     Style="{StaticResource SelectedTabStyle}"  
                     MouseDown="Tab_MouseDown"
-                    Tag="About">               
+                    Tag="About">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
                     <TextBlock Text="ℹ️" Style="{StaticResource TabIconStyle}"/>
-                    <TextBlock x:Name="AboutTabText" Text="{x:Static properties:Resources.About}" Style="{StaticResource TabTextStyle}"/>
+                    <TextBlock x:Name="AboutTabText" Text="{Binding LocalizationProvider[About]}" Style="{StaticResource TabTextStyle}"/>
                 </StackPanel>
             </Border>
 
@@ -112,12 +119,8 @@
                     Style="{StaticResource DividerStyle}"
                     Margin="10,62,10,0"/>
 
-            <Border Grid.Row="5" 
-                VerticalAlignment="Bottom" 
-                Margin="10,0,10,20"
-                Height="Auto">
+            <Border Grid.Row="5" VerticalAlignment="Bottom" Margin="10,0,10,20" Height="Auto">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <!-- Круг, меняющий цвет в зависимости от состояния -->
                     <Ellipse Width="12" Height="12" Margin="0,0,5,0" VerticalAlignment="Center">
                         <Ellipse.Style>
                             <Style TargetType="Ellipse">
@@ -130,14 +133,13 @@
                             </Style>
                         </Ellipse.Style>
                     </Ellipse>
-                    <!-- Текст, меняющийся в зависимости от состояния -->
                     <TextBlock VerticalAlignment="Center" Foreground="#333333">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="Стенд не подключен"/>
+                                <Setter Property="Text" Value="{Binding LocalizationProvider[EquipmentIsNotConnected]}"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsDeviceConnected}" Value="True">
-                                        <Setter Property="Text" Value="Стенд подключен"/>
+                                        <Setter Property="Text" Value="{Binding LocalizationProvider[EquipmentIsConnected]}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -148,9 +150,9 @@
         </Grid>
 
         <!-- Основная область контента -->
-        <Grid x:Name="ContentArea" Grid.Column="1" Background="#F0F8FF">
+        <Grid x:Name="ContentArea" Grid.Column="2" Background="#F0F8FF">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>   
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!-- Контент для Установки -->
@@ -190,7 +192,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock x:Name="SearchLabel"  Grid.Column="0" Text="{x:Static properties:Resources.SearchLabel}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <TextBlock x:Name="SearchLabel"  Grid.Column="0" Text="{Binding LocalizationProvider[SearchLabel]}" VerticalAlignment="Center" Margin="0,0,10,0"/>
                                 <TextBox Grid.Column="1" x:Name="InputTextBox" Height="25" Padding="3"/>
                             </Grid>
 
@@ -205,20 +207,20 @@
                                  RowHeaderWidth="0"
                                  Margin="0,0,0,10">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn x:Name="DataDridColumnOnwer" Header="{x:Static properties:Resources.OnwerHeader}" Binding="{Binding Owner}" Width="*"/>
-                                    <DataGridTextColumn x:Name="DataDridColumnCarNumber" Header="{x:Static properties:Resources.CarNumberHeader}" Binding="{Binding StateNumber}" Width="120"/>
-                                    <DataGridTextColumn x:Name="DataDridColumnVinNumber" Header="{x:Static properties:Resources.VinNumberHeader}" Binding="{Binding Vin}" Width="150"/>
-                                    <DataGridTextColumn x:Name="DataDridColumnCarBrand" Header="{x:Static properties:Resources.CarBrandHeader}" Binding="{Binding BrandName}" Width="100"/>
-                                    <DataGridTextColumn x:Name="DataDridColumnCarModel" Header="{x:Static properties:Resources.CarModelHeader}" Binding="{Binding Model}" Width="100"/>
-                                    <DataGridTextColumn x:Name="DataDridColumnDateLastTest" Header="{x:Static properties:Resources.DateLastTestHeader}" Binding="{Binding LastTestDate, StringFormat='dd.MM.yyyy'}" Width="140"/>
+                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[OnwerHeader], Source={StaticResource Proxy}}" Binding="{Binding Owner}" Width="*"/>
+                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarNumberHeader], Source={StaticResource Proxy}}" Binding="{Binding StateNumber}" Width="120"/>
+                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[VinNumberHeader], Source={StaticResource Proxy}}" Binding="{Binding Vin}" Width="150"/>
+                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarBrandHeader], Source={StaticResource Proxy}}"  Binding="{Binding BrandName}" Width="100"/>
+                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarModelHeader], Source={StaticResource Proxy}}"  Binding="{Binding Model}" Width="100"/>
+                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[DateLastTestHeader], Source={StaticResource Proxy}}" Binding="{Binding LastTestDate, StringFormat='dd.MM.yyyy'}" Width="140"/>
                                 </DataGrid.Columns>
                             </DataGrid>
 
                             <!-- Панель кнопок -->
                             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-                                <Button x:Name="ButtonAddMain" Content="{x:Static properties:Resources.AddBth}" Command="{Binding OpenAddClientCommand}" Width="100" Height="30" Margin="5"/>
-                                <Button x:Name="ButtonUpdateMain" Content="{x:Static properties:Resources.UpdateBth}" Width="100" Height="30" Margin="5"/>
-                                <Button x:Name="ButtonDeleteMain" Content="{x:Static properties:Resources.DeleteBth}" Width="100" Height="30" Margin="5"/>
+                                <Button Content="{Binding LocalizationProvider[AddBth]}" Command="{Binding OpenAddClientCommand}" Width="100" Height="30" Margin="5"/>
+                                <Button Content="{Binding LocalizationProvider[UpdateBth]}" Width="100" Height="30" Margin="5"/>
+                                <Button Content="{Binding LocalizationProvider[DeleteBth]}" Width="100" Height="30" Margin="5"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -229,13 +231,13 @@
                             <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                         </Border.Effect>
                         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="15,0,0,0">
-                            
-                            
-                                                                                    
-                            
-                            
-                            
-                            
+
+
+
+
+
+
+
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -299,7 +301,7 @@
                         <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                     </Border.Effect>
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                         <TextBlock Text="Документация и помощь по использованию" 
+                        <TextBlock Text="Документация и помощь по использованию" 
                                    FontSize="18" 
                                    Foreground="#666666"/>
                     </StackPanel>
@@ -313,7 +315,7 @@
                         <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                     </Border.Effect>
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                         <TextBlock Text="Версия 1.0.0\n© 2024 Все права защищены" 
+                        <TextBlock Text="Версия 1.0.0\n© 2024 Все права защищены" 
                                    FontSize="18" 
                                    Foreground="#666666"
                                    TextAlignment="Center"/>
