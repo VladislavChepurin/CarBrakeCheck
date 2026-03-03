@@ -1,10 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using TechSto.Core.DTOs;
 using TechSto.Core.Interfaces;
 using TechSto.Core.Models;
-using TechSto.Infrastructure.Data;
-using TechSto.WPF.BusinessLayer;
 using TechSto.WPF.SecondWindow;
 using TechSto.WPF.Services;
 namespace TechSto.WPF.ViewModels
@@ -18,7 +17,7 @@ namespace TechSto.WPF.ViewModels
 
         private readonly IAppSettingsService _appSettingsService;
         private readonly ILocalizationService _localizationService;
-        private readonly MainContext _context;
+        private readonly IClientRecordService _clientRecordService;       
         private AppSettings _settings;
 
         public bool IsDeviceConnected
@@ -47,12 +46,12 @@ namespace TechSto.WPF.ViewModels
 
         public LocalizationProvider LocalizationProvider { get; }
 
-        public SettingsViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService, MainContext context)
+        public SettingsViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService, IClientRecordService clientRecordService)
         {
            
             _appSettingsService = appSettingsService;
             _localizationService = localizationService;
-            _context = context;
+            _clientRecordService = clientRecordService;           
 
             _localizationService = localizationService;
             LocalizationProvider = new LocalizationProvider(_localizationService);
@@ -77,9 +76,8 @@ namespace TechSto.WPF.ViewModels
 
         private void LoadData()
         {
-            var service = new ClientRecordService(_context);
-            var list = service.LoadClientRecords();
-            ClientRecords = new ObservableCollection<ClientRecordDto>(list);
+            var records = _clientRecordService.LoadClientRecords();
+            ClientRecords = new ObservableCollection<ClientRecordDto>(records);
         }
 
         private void OnConnectionStateChanged(bool isConnected)
@@ -89,7 +87,7 @@ namespace TechSto.WPF.ViewModels
 
         private void OpenAddClientWindow()
         {
-            var addWindow = new ClientWindow(_context);
+            var addWindow = new ClientWindow();
             if (addWindow.ShowDialog() == true)
             {
                 LoadData(); // Обновляем таблицу после закрытия окна

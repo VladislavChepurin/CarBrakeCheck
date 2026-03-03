@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using TechSto.Core.Entities;
 using TechSto.Infrastructure.Data;
 
-namespace TechSto.WPF.BusinessLayer
+namespace TechSto.Infrastructure.Services
 {
     public class OwnerService
     {

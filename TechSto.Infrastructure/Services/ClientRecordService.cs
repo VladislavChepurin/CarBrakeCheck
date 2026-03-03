@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using TechSto.Core.DTOs;
+using TechSto.Core.Interfaces;
 using TechSto.Infrastructure.Data;
 
-namespace TechSto.WPF.BusinessLayer
+namespace TechSto.Infrastructure.Services
 {
-    public class ClientRecordService
+    public class ClientRecordService: IClientRecordService
     {
         private readonly MainContext _context;
 
@@ -54,6 +56,5 @@ namespace TechSto.WPF.BusinessLayer
 
             return records;
         }
-
     }
 }

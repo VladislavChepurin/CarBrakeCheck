@@ -5,21 +5,13 @@ namespace TechSto.Infrastructure.Data
 {
     public class MainContext : DbContext
     {      
-        public DbSet<CarBrand> CarBrands { get; set; }
-        public DbSet<CarModel> CarModels { get; set; }
-        public DbSet<CarСategory> CarСategories { get; set; }
-        public DbSet<Owner> Owners { get; set; }
-        public DbSet<TheCar> TheCars { get; set; }
-        public DbSet<Check> Checks { get; set; }
-        public DbSet<Axle> Axles { get; set; }
-
-        // Настройка подключения и параметров
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-
-        //    optionsBuilder.UseSqlite("Data Source=DataBase/DataBase.db");
-        //    optionsBuilder.UseLazyLoadingProxies(); // обязательно для ленивой загрузки
-        //}
+        public DbSet<CarBrand>? CarBrands { get; set; }
+        public DbSet<CarModel>? CarModels { get; set; }
+        public DbSet<CarСategory>? CarСategories { get; set; }
+        public DbSet<Owner>? Owners { get; set; }
+        public DbSet<TheCar>? TheCars { get; set; }
+        public DbSet<Check>? Checks { get; set; }
+        public DbSet<Axle>? Axles { get; set; }       
 
         public MainContext(DbContextOptions<MainContext> options) : base(options)
         {

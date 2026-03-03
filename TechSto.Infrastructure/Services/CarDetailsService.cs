@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TechSto.Infrastructure.Data;
 
-namespace TechSto.WPF.BusinessLayer
+namespace TechSto.Infrastructure.Services
 {
     public class CarDetailsService
     {

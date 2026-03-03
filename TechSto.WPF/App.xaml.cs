@@ -38,11 +38,11 @@ namespace TechSto.WPF
                         options.UseSqlite("Data Source=DataBase.db")
                         .UseLazyLoadingProxies());
 
-                    //// Репозитории
+                    // Репозитории
                     //services.AddScoped<IClientRecordRepository, ClientRecordRepository>();
 
-                    //// Сервисы приложения
-                    //services.AddScoped<ClientRecordService>();
+                    // Сервисы приложения
+                    services.AddScoped<IClientRecordService, ClientRecordService>();
                     //services.AddScoped<ICarDetailsService, CarDetailsService>(); // если есть
 
                     // Сервисы инфраструктуры
@@ -74,7 +74,7 @@ namespace TechSto.WPF
 
             // Подписка на изменение языка для обновления ресурсов
             _localizationService = _host.Services.GetRequiredService<ILocalizationService>();
-            _localizationService.LanguageChanged += OnLanguageChanged;
+            _localizationService.LanguageChanged += OnLanguageChanged!;
             ApplyResourcesCulture(_localizationService.CurrentCulture);
 
             var mainWindow = _host.Services.GetRequiredService<MainWindow>();
@@ -94,7 +94,7 @@ namespace TechSto.WPF
 
         protected override async void OnExit(ExitEventArgs e)
         {
-            _localizationService.LanguageChanged -= OnLanguageChanged;
+            _localizationService.LanguageChanged -= OnLanguageChanged!;
             await _host.StopAsync();
             _host.Dispose();
             base.OnExit(e);
