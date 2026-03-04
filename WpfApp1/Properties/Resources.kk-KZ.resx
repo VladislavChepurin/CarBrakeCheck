@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -177,22 +177,220 @@
   <data name="SearchLabel" xml:space="preserve">
     <value>Іздеу</value>
   </data>
-  <data name="OnwerHeader" xml:space="preserve">
-    <value>Иесі</value>
+  <data name="AddClientWindowTitle" xml:space="preserve">
+    <value>Lorem ipsum dolor sit amet</value>
   </data>
-  <data name="CarNumberHeader" xml:space="preserve">
-    <value>Машина нөмірі</value>
+  <data name="SectionOwner" xml:space="preserve">
+    <value>Lorem ipsum</value>
   </data>
-  <data name="VinNumberHeader" xml:space="preserve">
-    <value>Vin нөмірі</value>
+  <data name="SectionCar" xml:space="preserve">
+    <value>Lorem ipsum</value>
   </data>
-  <data name="CarBrandHeader" xml:space="preserve">
-    <value>Машина маркасы</value>
+  <data name="SectionNewModel" xml:space="preserve">
+    <value>Lorem ipsum dolor</value>
   </data>
-  <data name="CarModelHeader" xml:space="preserve">
-    <value>Машина моделі</value>
+  <data name="NewOwner" xml:space="preserve">
+    <value>Lorem</value>
   </data>
-  <data name="DateLastTestHeader" xml:space="preserve">
-    <value>Соңғы сынақ күні</value>
+  <data name="ExistingOwner" xml:space="preserve">
+    <value>Lorem ipsum dolor</value>
+  </data>
+  <data name="OwnerNameLabel" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="StsNumberLabel" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="GosNumberLabel" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="VinNumberLabel" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="ModelLabel" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="NewModelBtn" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="BrandLabel" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="NewBrandBtn" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="BrandNameLabel" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="CategoryLabel" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="MaxMassLabel" xml:space="preserve">
+    <value>Lorem ipsum (kg)</value>
+  </data>
+  <data name="CurbMassLabel" xml:space="preserve">
+    <value>Lorem ipsum (kg)</value>
+  </data>
+  <data name="BrakeDiffLabel" xml:space="preserve">
+    <value>Lorem ipsum dolor</value>
+  </data>
+  <data name="ParkingBrakeLabel" xml:space="preserve">
+    <value>Lorem ipsum dolor</value>
+  </data>
+  <data name="ReserveBrakeLabel" xml:space="preserve">
+    <value>Lorem ipsum dolor</value>
+  </data>
+  <data name="AxleCountLabel" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="AxleDirection" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="AxleParkingBrake" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="AxleBrakeType" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="AxleRegulator" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="CreateModelBtn" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="CreateBrandBtn" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="AddAnotherCarBtn" xml:space="preserve">
+    <value>Lorem ipsum dolor sit</value>
+  </data>
+  <data name="SaveAllBtn" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="ColOwner" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="ColStateNumber" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="ColVin" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="ColBrand" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="ColModel" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="ColLastTest" xml:space="preserve">
+    <value>Lorem ipsum dolor</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="ConfirmTitle" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="ErrorLoadData" xml:space="preserve">
+    <value>Lorem ipsum: {0}</value>
+  </data>
+  <data name="WarnEnterBrandName" xml:space="preserve">
+    <value>Lorem ipsum.</value>
+  </data>
+  <data name="WarnEnterModelName" xml:space="preserve">
+    <value>Lorem ipsum.</value>
+  </data>
+  <data name="WarnSelectBrand" xml:space="preserve">
+    <value>Lorem ipsum.</value>
+  </data>
+  <data name="ErrorCreateModel" xml:space="preserve">
+    <value>Lorem ipsum: {0}</value>
+  </data>
+  <data name="WarnEnterGosNumber" xml:space="preserve">
+    <value>Lorem ipsum.</value>
+  </data>
+  <data name="WarnSelectCarModel" xml:space="preserve">
+    <value>Lorem ipsum dolor.</value>
+  </data>
+  <data name="WarnEnterOwnerName" xml:space="preserve">
+    <value>Lorem ipsum.</value>
+  </data>
+  <data name="WarnSelectOwner" xml:space="preserve">
+    <value>Lorem ipsum dolor.</value>
+  </data>
+  <data name="WarnAddAtLeastOneCar" xml:space="preserve">
+    <value>Lorem ipsum dolor.</value>
+  </data>
+  <data name="ErrorSaveData" xml:space="preserve">
+    <value>Lorem ipsum: {0}</value>
+  </data>
+  <data name="ErrorCarNotFound" xml:space="preserve">
+    <value>Lorem ipsum.</value>
+  </data>
+  <data name="ErrorWindowInit" xml:space="preserve">
+    <value>Lorem ipsum: {0}</value>
+  </data>
+  <data name="ErrorLanguageSwitch" xml:space="preserve">
+    <value>Lorem ipsum: {0}</value>
+  </data>
+  <data name="WarnSelectRowToEdit" xml:space="preserve">
+    <value>Lorem ipsum dolor.</value>
+  </data>
+  <data name="WarnSelectRowToDelete" xml:space="preserve">
+    <value>Lorem ipsum dolor.</value>
+  </data>
+  <data name="ConfirmDeleteCar" xml:space="preserve">
+    <value>Lorem ipsum {0}?</value>
+  </data>
+  <data name="PreviewSectionOwner" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="PreviewOwnerName" xml:space="preserve">
+    <value>Lorem:</value>
+  </data>
+  <data name="PreviewOwnerSts" xml:space="preserve">
+    <value>Lorem:</value>
+  </data>
+  <data name="PreviewSectionCar" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="PreviewCarGos" xml:space="preserve">
+    <value>Lorem ipsum:</value>
+  </data>
+  <data name="PreviewCarVin" xml:space="preserve">
+    <value>Lorem:</value>
+  </data>
+  <data name="PreviewCarBrand" xml:space="preserve">
+    <value>Lorem:</value>
+  </data>
+  <data name="PreviewCarModel" xml:space="preserve">
+    <value>Lorem:</value>
+  </data>
+  <data name="PreviewSectionSpecs" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="PreviewCategory" xml:space="preserve">
+    <value>Lorem:</value>
+  </data>
+  <data name="PreviewMaxMass" xml:space="preserve">
+    <value>Lorem ipsum:</value>
+  </data>
+  <data name="PreviewCurbMass" xml:space="preserve">
+    <value>Lorem ipsum:</value>
+  </data>
+  <data name="PreviewBrakeDiff" xml:space="preserve">
+    <value>Lorem ipsum:</value>
+  </data>
+  <data name="PreviewParkingBrake" xml:space="preserve">
+    <value>Lorem:</value>
+  </data>
+  <data name="PreviewReserveBrake" xml:space="preserve">
+    <value>Lorem:</value>
+  </data>
+  <data name="PreviewSectionAxles" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="PreviewLastCheck" xml:space="preserve">
+    <value>Lorem ipsum:</value>
   </data>
 </root>

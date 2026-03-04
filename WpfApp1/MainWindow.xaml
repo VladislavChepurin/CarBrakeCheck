@@ -1,13 +1,14 @@
-﻿<Window x:Class="TechSto.MainWindow"
+<Window x:Class="TechSto.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TechSto"
+        xmlns:controls="clr-namespace:TechSto.Controls"
         xmlns:properties="clr-namespace:TechSto.Properties"
         mc:Ignorable="d"
         Title="Приложение"        
-        MaxWidth="1366" MaxHeight="768"
+        MaxWidth="1920" MaxHeight="1080"
         MinWidth="1366" MinHeight="768"
         
         Loaded="Window_Loaded">
@@ -159,34 +160,39 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock x:Name="SearchLabel"  Grid.Column="0" Text="{x:Static properties:Resources.SearchLabel}" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                <TextBox Grid.Column="1" x:Name="InputTextBox" Height="25" Padding="3"/>
+                                <TextBox Grid.Column="1"
+                                         x:Name="InputTextBox"
+                                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                         Height="25" Padding="3"/>
                             </Grid>
 
                             <!-- DataGrid с нужными колонками -->
-                            <DataGrid x:Name="MainTableWithClientData" Grid.Row="1"    
-                                 ItemsSource="{Binding ClientRecords}"
-                                 AutoGenerateColumns="False"
-                                 CanUserAddRows="False"
-                                 IsReadOnly="True"
-                                 GridLinesVisibility="None"
-                                 AlternatingRowBackground="#F5F5F5"
-                                 RowHeaderWidth="0"
-                                 Margin="0,0,0,10">
+                            <DataGrid Grid.Row="1"
+                      x:Name="CarsDataGrid"
+                      ItemsSource="{Binding CarsView}"
+                      SelectedItem="{Binding SelectedCar, Mode=TwoWay}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      IsReadOnly="True"
+                      GridLinesVisibility="None"
+                      AlternatingRowBackground="#F5F5F5"
+                      RowHeaderWidth="0"
+                      Margin="0,0,0,10">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn x:Name="DataDridColumnOnwer" Header="{x:Static properties:Resources.OnwerHeader}" Binding="{Binding Owner}" Width="*"/>
-                                    <DataGridTextColumn x:Name="DataDridColumnCarNumber" Header="{x:Static properties:Resources.CarNumberHeader}" Binding="{Binding StateNumber}" Width="120"/>
-                                    <DataGridTextColumn x:Name="DataDridColumnVinNumber" Header="{x:Static properties:Resources.VinNumberHeader}" Binding="{Binding Vin}" Width="150"/>
-                                    <DataGridTextColumn x:Name="DataDridColumnCarBrand" Header="{x:Static properties:Resources.CarBrandHeader}" Binding="{Binding BrandName}" Width="100"/>
-                                    <DataGridTextColumn x:Name="DataDridColumnCarModel" Header="{x:Static properties:Resources.CarModelHeader}" Binding="{Binding Model}" Width="100"/>
-                                    <DataGridTextColumn x:Name="DataDridColumnDateLastTest" Header="{x:Static properties:Resources.DateLastTestHeader}" Binding="{Binding LastTestDate, StringFormat='dd.MM.yyyy'}" Width="140"/>
+                                    <DataGridTextColumn x:Name="ColOwnerHeader" Header="Владелец" Binding="{Binding Owner}" Width="*"/>
+                                    <DataGridTextColumn x:Name="ColStateNumberHeader" Header="Гос номер" Binding="{Binding StateNumber}" Width="120"/>
+                                    <DataGridTextColumn x:Name="ColVinHeader" Header="Vin номер" Binding="{Binding Vin}" Width="150"/>
+                                    <DataGridTextColumn x:Name="ColBrandHeader" Header="Марка" Binding="{Binding BrandName}" Width="100"/>
+                                    <DataGridTextColumn x:Name="ColModelHeader" Header="Модель" Binding="{Binding Model}" Width="100"/>
+                                    <DataGridTextColumn x:Name="ColLastTestHeader" Header="Дата последнего испытания" Binding="{Binding LastTestDate, StringFormat='dd.MM.yyyy'}" Width="140"/>
                                 </DataGrid.Columns>
                             </DataGrid>
 
                             <!-- Панель кнопок -->
                             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-                                <Button x:Name="ButtonAddMain" Content="{x:Static properties:Resources.AddBth}" Command="{Binding OpenAddClientCommand}" Width="100" Height="30" Margin="5"/>
-                                <Button x:Name="ButtonUpdateMain" Content="{x:Static properties:Resources.UpdateBth}" Width="100" Height="30" Margin="5"/>
-                                <Button x:Name="ButtonDeleteMain" Content="{x:Static properties:Resources.DeleteBth}" Width="100" Height="30" Margin="5"/>
+                                <Button x:Name="AddBtn" Width="100" Height="30" Margin="5" Click="AddButton_Click"/>
+                                <Button x:Name="EditBtn" Width="100" Height="30" Margin="5" Click="EditButton_Click"/>
+                                <Button x:Name="DeleteBtn" Width="100" Height="30" Margin="5" Click="DeleteButton_Click"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -196,15 +202,101 @@
                         <Border.Effect>
                             <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                         </Border.Effect>
-                        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="15,0,0,0">
-                       
-                            
-                                                                                    
-                            
-                            
-                            
-                            
-                        </StackPanel>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="12">
+                            <StackPanel>
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasSelectedCar}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                <TextBlock x:Name="PreviewSectionOwnerLabel" Text="Владелец" FontWeight="SemiBold" Margin="0,2,0,4"/>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock x:Name="PreviewOwnerNameLabel" Text="Имя:" Foreground="#555"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding PreviewOwner}"/>
+                                    <TextBlock x:Name="PreviewOwnerStsLabel" Grid.Row="1" Text="СТС:" Foreground="#555" Margin="0,4,0,0"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PreviewOwnerSts}" Margin="0,4,0,0"/>
+                                </Grid>
+
+                                <TextBlock x:Name="PreviewSectionCarLabel" Text="Автомобиль" FontWeight="SemiBold" Margin="0,2,0,4"/>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock x:Name="PreviewGosLabel" Text="Госномер:" Foreground="#555"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding PreviewGos}"/>
+                                    <TextBlock x:Name="PreviewVinLabel" Grid.Row="1" Text="VIN:" Foreground="#555" Margin="0,4,0,0"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PreviewVin}" Margin="0,4,0,0"/>
+                                    <TextBlock x:Name="PreviewBrandLabel" Grid.Row="2" Text="Марка:" Foreground="#555" Margin="0,4,0,0"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding PreviewBrand}" Margin="0,4,0,0"/>
+                                    <TextBlock x:Name="PreviewModelLabel" Grid.Row="3" Text="Модель:" Foreground="#555" Margin="0,4,0,0"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding PreviewModel}" Margin="0,4,0,0"/>
+                                </Grid>
+
+                                <TextBlock x:Name="PreviewSectionSpecsLabel" Text="Характеристики" FontWeight="SemiBold" Margin="0,2,0,4"/>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock x:Name="PreviewCategoryLabel" Text="Категория:" Foreground="#555"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding PreviewCategory}"/>
+                                    <TextBlock x:Name="PreviewMaxMassLabel" Grid.Row="1" Text="Макс. масса:" Foreground="#555" Margin="0,4,0,0"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PreviewMaxMass}" Margin="0,4,0,0"/>
+                                    <TextBlock x:Name="PreviewCurbMassLabel" Grid.Row="2" Text="Снаряж. масса:" Foreground="#555" Margin="0,4,0,0"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding PreviewCurbMass}" Margin="0,4,0,0"/>
+                                    <TextBlock x:Name="PreviewBrakeDiffLabel" Grid.Row="3" Text="Разн. торм.:" Foreground="#555" Margin="0,4,0,0"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding PreviewBrakeDiff}" Margin="0,4,0,0"/>
+                                    <TextBlock x:Name="PreviewParkingBrakeLabel" Grid.Row="4" Text="Стояночный:" Foreground="#555" Margin="0,4,0,0"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding PreviewParkingBrake}" Margin="0,4,0,0"/>
+                                    <TextBlock x:Name="PreviewReserveBrakeLabel" Grid.Row="5" Text="Резервный:" Foreground="#555" Margin="0,4,0,0"/>
+                                    <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding PreviewReserveBrake}" Margin="0,4,0,0"/>
+                                </Grid>
+
+                                <TextBlock x:Name="PreviewSectionAxlesLabel" Text="Оси" FontWeight="SemiBold" Margin="0,2,0,4"/>
+                                <ItemsControl ItemsSource="{Binding PreviewAxles}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" Margin="0,1"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                    <TextBlock x:Name="PreviewLastCheckCaptionLabel"
+                                               Text="Последняя проверка:"
+                                               Foreground="#555"/>
+                                    <TextBlock Text="{Binding PreviewLastTest}" Foreground="#555" Margin="4,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
                     </Border>
                 </Grid>
 
@@ -281,7 +373,7 @@
                         <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                     </Border.Effect>
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                         <TextBlock Text="Версия 1.0.0\n© 2024 Все права защищены" 
+                         <TextBlock Text="Версия 1.0.0 ©2026" 
                                    FontSize="18" 
                                    Foreground="#666666"
                                    TextAlignment="Center"/>

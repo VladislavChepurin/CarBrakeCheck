@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="TechSto.Controls.EntityManager"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:TechSto.Converters"
+             x:Name="root"
+             Height="450" Width="300">
+    <UserControl.Resources>
+        <converters:DisplayMemberMultiConverter x:Key="DisplayMemberMultiConverter"/>
+    </UserControl.Resources>
+
+    <Grid Background="#F0F8FF" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" Text="{Binding Title, ElementName=root}" 
+                   FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+            
+
+        <!-- Поле ввода -->
+        <Grid Grid.Row="1" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{Binding NameElement, ElementName=root}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <TextBox Grid.Column="1" x:Name="InputTextBox" Height="25" Padding="3"/>
+        </Grid>
+
+        <DataGrid  
+            HeadersVisibility="None"
+            Grid.Row="2"
+            ItemsSource="{Binding ItemsSource, ElementName=root}"
+            SelectedItem="{Binding SelectedItem, ElementName=root, Mode=TwoWay}"
+            AutoGenerateColumns="False"
+            IsReadOnly="True"
+            Margin="0,0,0,10"
+            SelectionMode="Single"
+            SelectionUnit="FullRow"
+            x:Name="DataGrid"
+            SelectionChanged="DataGrid_SelectionChanged"
+            MouseDoubleClick="DataGrid_MouseDoubleClick">
+        </DataGrid>
+
+        <!-- Кнопки -->                        
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>              
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" 
+                     Content="{Binding ButtonChoose, ElementName=root}" 
+                    Height="30" Margin="5" 
+                    HorizontalAlignment="Stretch"
+                    Click="ChooseButton_Click"/>
+
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="{Binding ButtonAdd, ElementName=root}" 
+                     Width="80" Height="30" Margin="5" Click="AddButton_Click"/>
+                        <Button Content="{Binding ButtonUpdate, ElementName=root}" 
+                     Width="80" Height="30" Margin="5" Click="EditButton_Click"/>
+                        <Button Content="{Binding ButtonDelete, ElementName=root}" 
+                     Width="80" Height="30" Margin="5" Click="DeleteButton_Click"/>
+                </StackPanel>               
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

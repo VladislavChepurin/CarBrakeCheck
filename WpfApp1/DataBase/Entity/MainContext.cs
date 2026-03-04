@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace TechSto.DataBase.Entity
 {
@@ -15,14 +15,11 @@ namespace TechSto.DataBase.Entity
         // Настройка подключения и параметров
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
-            optionsBuilder.UseSqlite("Data Source=DataBase/DataBase.db");
-            optionsBuilder.UseLazyLoadingProxies(); // обязательно для ленивой загрузки
-        }
-
-        public MainContext()
-        {
-            Database.EnsureCreated(); // создаст БД и таблицы, если их нет
+            var dbDir = System.IO.Path.Combine(AppContext.BaseDirectory, "DataBase");
+            System.IO.Directory.CreateDirectory(dbDir);
+            var dbPath = System.IO.Path.Combine(dbDir, "DataBase.db");
+            optionsBuilder.UseSqlite($"Data Source={dbPath}");
+            optionsBuilder.UseLazyLoadingProxies();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

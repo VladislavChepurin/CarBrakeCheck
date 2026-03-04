@@ -1,7 +1,8 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Microsoft.EntityFrameworkCore;
 using TechSto.DataBase.Entity;
 using TechSto.ViewModels;
 
@@ -9,10 +10,10 @@ namespace TechSto
 {
     public partial class MainWindow : Window
     {
-        private Border? _selectedTab;
-        private AppSettings? _settings;
-        private Dictionary<string, (Border tab, FrameworkElement content)>? _tabMapping;
-        private readonly MainContext? _context;
+        private Border _selectedTab;
+        private AppSettings _settings;
+        private Dictionary<string, (Border tab, FrameworkElement content)> _tabMapping;
+        private readonly MainContext _context;
                
         public MainWindow()
         {
@@ -21,26 +22,22 @@ namespace TechSto
             try
             {
                 _context = new MainContext();
+                _context.Database.Migrate();
                 DataContext = new MainViewModel(_context);
                 // Инициализация в правильном порядке
                 InitializeSettings();
                 InitializeTabMapping();
                 SubscribeToEvents();
-                //ApplyWindowSettings();
+                ApplyWindowSettings();
                 InitializeLanguage();
                
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при инициализации окна: {ex.Message}",
-                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                _settings = new AppSettings();
-                _context = null;   // явная инициализация null
-                Application.Current.Shutdown();  // закрываем приложение, т.к. без контекста работать нельзя
-                return;            // прерываем выполнение конструктора
-            }      
+                MessageBox.Show(string.Format(Properties.Resources.ErrorWindowInit, ex.Message),
+                    Properties.Resources.ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+            }                 
         }
-
 
         private void InitializeSettings()
         {
@@ -48,7 +45,10 @@ namespace TechSto
             _settings = AppSettings.Load();
 
             // Дополнительная проверка (на всякий случай)
-            _settings ??= new AppSettings();
+            if (_settings == null)
+            {
+                _settings = new AppSettings();
+            }
         }
 
         private void InitializeTabMapping()
@@ -68,16 +68,16 @@ namespace TechSto
             App.LanguageChanged += OnLanguageChanged;
         }
 
-        //private void ApplyWindowSettings()
-        //{
-        //    if (_settings == null) return;
+        private void ApplyWindowSettings()
+        {
+            if (_settings == null) return;
 
-        //    this.Width = _settings.WindowWidth;
-        //    this.Height = _settings.WindowHeight;
-        //    this.Left = _settings.WindowLeft;
-        //    this.Top = _settings.WindowTop;
-        //    this.WindowState = _settings.IsMaximized ? WindowState.Maximized : WindowState.Normal;
-        //}
+            this.Width = _settings.WindowWidth;
+            this.Height = _settings.WindowHeight;
+            this.Left = _settings.WindowLeft;
+            this.Top = _settings.WindowTop;
+            this.WindowState = _settings.IsMaximized ? WindowState.Maximized : WindowState.Normal;
+        }
 
         private void InitializeLanguage()
         {
@@ -87,7 +87,7 @@ namespace TechSto
             SetSelectedLanguage();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object? sender, RoutedEventArgs e)
         {
             if (_settings != null)
             {
@@ -95,13 +95,13 @@ namespace TechSto
             }
         }              
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void Window_Closed(object? sender, EventArgs e)
         {
             try
             {
                 if (_settings != null)
                 {
-                    //SaveWindowSettings();
+                    SaveWindowSettings();
                 }
             }
             catch (Exception ex)
@@ -115,27 +115,27 @@ namespace TechSto
             }
         }
 
-        //private void SaveWindowSettings()
-        //{
-        //    if (_settings == null) return;
+        private void SaveWindowSettings()
+        {
+            if (_settings == null) return;
 
-        //    try
-        //    {
-        //        if (this.WindowState == WindowState.Normal)
-        //        {
-        //            _settings.WindowWidth = this.Width;
-        //            _settings.WindowHeight = this.Height;
-        //            _settings.WindowLeft = this.Left;
-        //            _settings.WindowTop = this.Top;
-        //        }
-        //        _settings.IsMaximized = this.WindowState == WindowState.Maximized;
-        //        _settings.Save();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine($"Error saving window settings: {ex.Message}");
-        //    }
-        //}
+            try
+            {
+                if (this.WindowState == WindowState.Normal)
+                {
+                    _settings.WindowWidth = this.Width;
+                    _settings.WindowHeight = this.Height;
+                    _settings.WindowLeft = this.Left;
+                    _settings.WindowTop = this.Top;
+                }
+                _settings.IsMaximized = this.WindowState == WindowState.Maximized;
+                _settings.Save();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error saving window settings: {ex.Message}");
+            }
+        }
 
         // ========== МЕТОДЫ ДЛЯ РАБОТЫ С ЯЗЫКОМ ==========
 
@@ -171,43 +171,38 @@ namespace TechSto
                 if (AboutTabText != null)
                     AboutTabText.Text = Properties.Resources.About;
 
-                // Обновляем текст в метке "Поиск" 
-
                 if (SearchLabel != null)
                     SearchLabel.Text = Properties.Resources.SearchLabel;
 
-                // Обновляем текст в кнопках 
+                if (AddBtn != null) AddBtn.Content = Properties.Resources.AddBth;
+                if (EditBtn != null) EditBtn.Content = Properties.Resources.UpdateBth;
+                if (DeleteBtn != null) DeleteBtn.Content = Properties.Resources.DeleteBth;
 
-                if (ButtonAddMain != null)
-                    ButtonAddMain.Content = Properties.Resources.AddBth;
+                if (ColOwnerHeader != null) ColOwnerHeader.Header = Properties.Resources.ColOwner;
+                if (ColStateNumberHeader != null) ColStateNumberHeader.Header = Properties.Resources.ColStateNumber;
+                if (ColVinHeader != null) ColVinHeader.Header = Properties.Resources.ColVin;
+                if (ColBrandHeader != null) ColBrandHeader.Header = Properties.Resources.ColBrand;
+                if (ColModelHeader != null) ColModelHeader.Header = Properties.Resources.ColModel;
+                if (ColLastTestHeader != null) ColLastTestHeader.Header = Properties.Resources.ColLastTest;
 
-                if (ButtonUpdateMain != null)
-                    ButtonUpdateMain.Content = Properties.Resources.UpdateBth;
+                if (PreviewSectionOwnerLabel != null) PreviewSectionOwnerLabel.Text = Properties.Resources.PreviewSectionOwner;
+                if (PreviewOwnerNameLabel != null) PreviewOwnerNameLabel.Text = Properties.Resources.PreviewOwnerName;
+                if (PreviewOwnerStsLabel != null) PreviewOwnerStsLabel.Text = Properties.Resources.PreviewOwnerSts;
+                if (PreviewSectionCarLabel != null) PreviewSectionCarLabel.Text = Properties.Resources.PreviewSectionCar;
+                if (PreviewGosLabel != null) PreviewGosLabel.Text = Properties.Resources.PreviewCarGos;
+                if (PreviewVinLabel != null) PreviewVinLabel.Text = Properties.Resources.PreviewCarVin;
+                if (PreviewBrandLabel != null) PreviewBrandLabel.Text = Properties.Resources.PreviewCarBrand;
+                if (PreviewModelLabel != null) PreviewModelLabel.Text = Properties.Resources.PreviewCarModel;
+                if (PreviewSectionSpecsLabel != null) PreviewSectionSpecsLabel.Text = Properties.Resources.PreviewSectionSpecs;
+                if (PreviewCategoryLabel != null) PreviewCategoryLabel.Text = Properties.Resources.PreviewCategory;
+                if (PreviewMaxMassLabel != null) PreviewMaxMassLabel.Text = Properties.Resources.PreviewMaxMass;
+                if (PreviewCurbMassLabel != null) PreviewCurbMassLabel.Text = Properties.Resources.PreviewCurbMass;
+                if (PreviewBrakeDiffLabel != null) PreviewBrakeDiffLabel.Text = Properties.Resources.PreviewBrakeDiff;
+                if (PreviewParkingBrakeLabel != null) PreviewParkingBrakeLabel.Text = Properties.Resources.PreviewParkingBrake;
+                if (PreviewReserveBrakeLabel != null) PreviewReserveBrakeLabel.Text = Properties.Resources.PreviewReserveBrake;
+                if (PreviewSectionAxlesLabel != null) PreviewSectionAxlesLabel.Text = Properties.Resources.PreviewSectionAxles;
+                if (PreviewLastCheckCaptionLabel != null) PreviewLastCheckCaptionLabel.Text = Properties.Resources.PreviewLastCheck;
 
-                if (ButtonDeleteMain != null)
-                    ButtonDeleteMain.Content = Properties.Resources.DeleteBth;
-
-                // Обновляем текст в главной таблице 
-
-                if (DataDridColumnOnwer != null)                
-                    DataDridColumnOnwer.Header = Properties.Resources.OnwerHeader;
-                
-                if (DataDridColumnCarNumber != null)                
-                    DataDridColumnCarNumber.Header = Properties.Resources.CarNumberHeader;
-                
-                if (DataDridColumnVinNumber != null)                
-                    DataDridColumnVinNumber.Header = Properties.Resources.VinNumberHeader;
-                
-                if (DataDridColumnCarBrand != null)                
-                    DataDridColumnCarBrand.Header = Properties.Resources.CarBrandHeader;
-                
-                if (DataDridColumnCarModel != null)
-                    DataDridColumnCarModel.Header = Properties.Resources.CarModelHeader;
-                
-                if (DataDridColumnDateLastTest != null)
-                    DataDridColumnDateLastTest.Header = Properties.Resources.DateLastTestHeader;                              
-
-                // Обновляем заголовок окна
                 this.Title = Properties.Resources.NameProgram;
             }
             catch (Exception ex)
@@ -253,8 +248,8 @@ namespace TechSto
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при смене языка: {ex.Message}",
-                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.ErrorLanguageSwitch, ex.Message),
+                    Properties.Resources.ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -334,7 +329,7 @@ namespace TechSto
             }
         }
 
-        private static void ApplySelectedTabStyle(Border tab)
+        private void ApplySelectedTabStyle(Border tab)
         {
             if (tab == null) return;
 
@@ -363,7 +358,7 @@ namespace TechSto
             }
         }
 
-        private static void ResetTabStyle(Border tab)
+        private void ResetTabStyle(Border tab)
         {
             if (tab == null) return;
 
@@ -399,6 +394,51 @@ namespace TechSto
             }
         }
 
-       
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new AddClientCarWindow(_context) { Owner = this };
+            win.ShowDialog();
+            (DataContext as ViewModels.MainViewModel)?.LoadCars();
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainViewModel;
+            if (vm?.SelectedCar == null)
+            {
+                System.Windows.MessageBox.Show(Properties.Resources.WarnSelectRowToEdit, Properties.Resources.MessageWarning,
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            var car = _context.TheCars.Find(vm.SelectedCar.CarId);
+            if (car == null) return;
+            var owner = _context.Owners.Find(car.OwnerId);
+            var win = new AddClientCarWindow(_context, owner, car) { Owner = this };
+            win.ShowDialog();
+            vm.LoadCars();
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainViewModel;
+            if (vm?.SelectedCar == null)
+            {
+                System.Windows.MessageBox.Show(Properties.Resources.WarnSelectRowToDelete, Properties.Resources.MessageWarning,
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            var result = System.Windows.MessageBox.Show(
+                string.Format(Properties.Resources.ConfirmDeleteCar, vm.SelectedCar.StateNumber),
+                Properties.Resources.ConfirmTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result != MessageBoxResult.Yes) return;
+
+            var car = _context.TheCars.Find(vm.SelectedCar.CarId);
+            if (car != null)
+            {
+                _context.TheCars.Remove(car);
+                _context.SaveChanges();
+                vm.LoadCars();
+            }
+        }
     }
 }

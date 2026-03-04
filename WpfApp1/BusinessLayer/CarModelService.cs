@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using TechSto.DataBase.Entity;
 
@@ -71,7 +71,29 @@ namespace TechSto.BusinessLayer
             return _context.CarModels.Local.ToObservableCollection();
         }
 
+        // загружаем с брендом для отображения в комбобоксе
+        public List<CarModel> GetAllWithBrands()
+        {
+            return _context.CarModels
+                .Include(m => m.CarBrand)
+                .Include(m => m.Axles)
+                .ToList();
+        }
+
         // ---------- Создание ----------
+
+        // сохраняем модель вместе с осями из DataGrid
+        public CarModel AddModelWithAxles(CarModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.ModelName))
+                throw new ArgumentException("Название модели обязательно.");
+            if (model.CarBrandId == null)
+                throw new ArgumentException("Марка обязательна.");
+
+            _context.CarModels.Add(model);
+            _context.SaveChanges();
+            return model;
+        }
 
         /// <summary>
         /// Создать новую модель с указанным количеством осей (по умолчанию 2)
@@ -128,7 +150,10 @@ namespace TechSto.BusinessLayer
             // Проверяем, что модель существует
             var existingModel = _context.CarModels
                 .Include(m => m.Axles)
-                .FirstOrDefault(m => m.Id == updatedModel.Id) ?? throw new InvalidOperationException("Модель не найдена.");
+                .FirstOrDefault(m => m.Id == updatedModel.Id);
+
+            if (existingModel == null)
+                throw new InvalidOperationException("Модель не найдена.");
 
             // Обновляем скалярные свойства
             _context.Entry(existingModel).CurrentValues.SetValues(updatedModel);
@@ -192,7 +217,8 @@ namespace TechSto.BusinessLayer
         /// </summary>
         public void AddAxle(int carModelId, Axle axle)
         {
-            _ = _context.CarModels.Find(carModelId) ?? throw new InvalidOperationException("Модель не найдена.");
+            var model = _context.CarModels.Find(carModelId);
+            if (model == null) throw new InvalidOperationException("Модель не найдена.");
             axle.CarModelId = carModelId;
             _context.Axles.Add(axle);
             _context.SaveChanges();
