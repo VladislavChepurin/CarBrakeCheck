@@ -10,5 +10,7 @@
         public string? Model { get; set; }
         public string? LastTestDateString { get; set; } 
         public DateTime? LastTestDate { get; set; }      // преобразованная дата для привязки
+        public string? CategoryName { get; set; }
+        public int AxlesCount { get; set; }
     }
 }

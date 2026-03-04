@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TechSto.WPF"
+        xmlns:converters="clr-namespace:TechSto.WPF.Converters"
         xmlns:properties="clr-namespace:TechSto.WPF.Properties"
         xmlns:helpers="clr-namespace:TechSto.WPF.Helpers"
         mc:Ignorable="d"
@@ -13,6 +14,10 @@
 
     <Window.Resources>
         <helpers:BindingProxy x:Key="Proxy" Data="{Binding}" />
+
+        <converters:EqualityToBooleanConverter x:Key="EqualityToBooleanConverter"/>
+        <converters:GreaterThanZeroConverter x:Key="GreaterThanZero"/>
+        <converters:ModeToColorConverter x:Key="ModeToColorConverter"/>
     </Window.Resources>
 
 
@@ -199,6 +204,7 @@
                             <!-- DataGrid с нужными колонками -->
                             <DataGrid x:Name="MainTableWithClientData" Grid.Row="1"    
                                  ItemsSource="{Binding ClientRecords}"
+                                 SelectedItem="{Binding SelectedClientRecord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"     
                                  AutoGenerateColumns="False"
                                  CanUserAddRows="False"
                                  IsReadOnly="True"
@@ -226,27 +232,71 @@
                     </Border>
 
                     <!-- Правая панель -->
-                    <Border Grid.Column="1" Background="White" CornerRadius="5">
+                    <Border Grid.Column="1" CornerRadius="5">
                         <Border.Effect>
                             <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                         </Border.Effect>
-                        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="15,0,0,0">
 
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <!-- Заполнитель, если нужно прижать кнопку к низу -->
+                            </Grid.RowDefinitions>
 
+                            <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">                              
+                                <StackPanel>
+                                    <TextBlock Text="Выбранное АТС" Style="{StaticResource RightColumnHeaderTextStyle}"/>
+                                    <TextBlock Text="{Binding SelectedCarDisplay}" Style="{StaticResource RightColumnTextStyle}"/>
+                                    <TextBlock Text="{Binding CarCategory, StringFormat='Категория: {0}'}" Style="{StaticResource RightColumnTextStyle}"/>
+                                    <TextBlock Text="{Binding AxlesCount, StringFormat='Кол-во осей: {0}'}" Style="{StaticResource RightColumnTextStyle}"/>
+                                    <CheckBox Content="Относительно разницы производителя" IsChecked="{Binding IsRelativeDifference}" Style="{StaticResource RightColumnCheckBoxStyle}"/>
+                                </StackPanel>
+                            </Border>
 
+                            <!-- Блок 2: Режим измерений -->
+                            <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}">                             
+                                <StackPanel>
+                                    <TextBlock Text="Режим измерений" Style="{StaticResource RightColumnHeaderTextStyle}"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,5">
+                                        <Button Content="Ручной" Command="{Binding ManualModeCommand}" Width="80" Margin="2" 
+                            Background="{Binding SelectedMeasurementMode, Converter={StaticResource ModeToColorConverter}, ConverterParameter=0}"/>
+                                        <Button Content="Автомат" Command="{Binding AutoModeCommand}" Width="80" Margin="2" 
+                            Background="{Binding SelectedMeasurementMode, Converter={StaticResource ModeToColorConverter}, ConverterParameter=1}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
 
+                            <!-- Блок 3: Вид измерений -->
+                            <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}">                               
+                                <StackPanel>
+                                    <TextBlock Text="Вид измерений" Style="{StaticResource RightColumnHeaderTextStyle}"/>
+                                    <ComboBox ItemsSource="{Binding AxleItems}" SelectedItem="{Binding SelectedAxle}" 
+                          Margin="0,5" IsEnabled="{Binding AxlesCount, Converter={StaticResource GreaterThanZero}}"/>
+                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="5,0,0,0">
+                                        <RadioButton GroupName="MeasurementType" Content="Въезд/Просушка"  
+                                 IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=0}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+                                        <RadioButton GroupName="MeasurementType" Content="Полная загрузка" 
+                                 IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=1}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+                                        <RadioButton GroupName="MeasurementType" Content="Стояночная ТС"   
+                                 IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=2}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+                                        <RadioButton GroupName="MeasurementType" Content="Выезд"           
+                                 IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=3}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
 
-
-
-                        </StackPanel>
+                            <!-- Блок 4: Кнопка Старт -->
+                            <Button Grid.Row="3" Content="Старт" Command="{Binding StartCommand}" 
+                Height="40" Background="{StaticResource PrimaryLightBrush}" Foreground="{StaticResource CommonTextBrush}" FontSize="16" Margin="0,0,0,10"/>
+                        </Grid>
                     </Border>
                 </Grid>
-
                 <!-- Разделительная линия -->
-                <Border Grid.Row="1" 
-            Style="{StaticResource DividerStyle}"
-            Margin="10,0,10,10"
-            VerticalAlignment="Top"/>
+                <Border Grid.Row="1" Style="{StaticResource DividerStyle}" Margin="10,0,10,10" VerticalAlignment="Top"/>
 
                 <!-- Нижняя панель с выбором языка -->
                 <Border Grid.Row="1" Background="White" CornerRadius="5" Margin="0,5,0,0">

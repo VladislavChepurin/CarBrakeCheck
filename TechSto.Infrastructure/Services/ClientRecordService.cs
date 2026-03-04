@@ -6,7 +6,7 @@ using TechSto.Infrastructure.Data;
 
 namespace TechSto.Infrastructure.Services
 {
-    public class ClientRecordService: IClientRecordService
+    public class ClientRecordService : IClientRecordService
     {
         private readonly MainContext _context;
 
@@ -21,27 +21,28 @@ namespace TechSto.Infrastructure.Services
         public List<ClientRecordDto> LoadClientRecords()
         {
             var records = _context.TheCars
-                .Include(c => c.Owner)
-                .Include(c => c.CarModel).ThenInclude(m => m!.CarBrand)
-                .Select(c => new ClientRecordDto
-                {
-                    CarId = c.Id,
-                    // Если Owner нет, вернём null
-                    Owner = c.Owner != null ? c.Owner.Name : null,
-                    StateNumber = c.GosNumber,
-                    Vin = c.VinСode,
-                    // Проверяем всю цепочку: CarModel и CarBrand
-                    BrandName = c.CarModel != null && c.CarModel.CarBrand != null
-                        ? c.CarModel.CarBrand.BrandName
-                        : null,
-                    Model = c.CarModel != null ? c.CarModel.ModelName : null,
-                    // Безопасно получаем последнюю дату (строка может быть null)
-                    LastTestDateString = c.DataChecks
-                        .OrderByDescending(d => d.Data)
-                        .Select(d => d.Data)
-                        .FirstOrDefault()
-                })
-                .ToList();
+            .Include(c => c.Owner)
+            .Include(c => c.CarModel).ThenInclude(m => m!.CarBrand)
+            .Include(c => c.CarModel).ThenInclude(m => m!.CarСategory) // для категории
+            .Include(c => c.CarModel).ThenInclude(m => m!.Axles)       // для подсчёта осей
+            .Select(c => new ClientRecordDto
+            {
+                CarId = c.Id,
+                Owner = c.Owner != null ? c.Owner.Name : null,
+                StateNumber = c.GosNumber,
+                Vin = c.VinСode,
+                BrandName = c.CarModel != null && c.CarModel.CarBrand != null
+                    ? c.CarModel.CarBrand.BrandName : null,
+                Model = c.CarModel != null ? c.CarModel.ModelName : null,
+                CategoryName = c.CarModel != null && c.CarModel.CarСategory != null
+                    ? c.CarModel.CarСategory.CategoryName : null,
+                AxlesCount = c.CarModel != null ? c.CarModel.Axles.Count : 0,
+                LastTestDateString = c.DataChecks
+                    .OrderByDescending(d => d.Data)
+                    .Select(d => d.Data)
+                    .FirstOrDefault()
+            })
+            .ToList();
 
             // Преобразование строки в DateTime
             foreach (var record in records)

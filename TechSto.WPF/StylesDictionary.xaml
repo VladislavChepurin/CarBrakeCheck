@@ -41,10 +41,59 @@
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/> 
+        <Setter Property="Margin" Value="10,0,0,0"/>
+    </Style>
+
+    <!-- Стиль для карточек правой панели Settings -->
+    <Style x:Key="CardBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="Margin" Value="0,0,0,5"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Стиль заголовочных надписей в правой колонке Settings -->
+    <Style x:Key="RightColumnHeaderTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Margin" Value="10,0,0,0"/>
     </Style>
 
+    <!-- Стиль надписей в правой колонке Settings -->
+    <Style x:Key="RightColumnTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Foreground" Value="{StaticResource CommonTextBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,2,0,0"/>
+    </Style>
+
+    <!-- Стиль для RadioButton в правой колонке Settings-->
+    <Style x:Key="RightColumnRadioButtonStyle" TargetType="RadioButton" BasedOn="{StaticResource {x:Type RadioButton}}">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Foreground" Value="{StaticResource CommonTextBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,2,0,0"/>
+    </Style>
+
+    <!-- Стиль для CheckBox в правой колонке  Settings-->
+    <Style x:Key="RightColumnCheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Foreground" Value="{StaticResource CommonTextBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,2,0,0"/>
+    </Style>
+    
     <!-- Стиль для иконок вкладок -->
     <Style x:Key="TabIconStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="18"/>
