@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TechSto.Core.Entities;
 
 namespace TechSto.Infrastructure.Data

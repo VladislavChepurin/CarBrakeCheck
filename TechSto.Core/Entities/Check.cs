@@ -9,7 +9,7 @@ namespace TechSto.Core.Entities
         public int Id { get; set; }
 
         [Required]
-        public string? Data { get; set; }
+        public string Data { get; set; }
 
         public int CarMileage { get; set; }
 
@@ -24,7 +24,7 @@ namespace TechSto.Core.Entities
 
         // Внешний ключ к автомобилю
         public int TheCarId { get; set; }
-        public virtual TheCar? TheCar { get; set; }
+        public virtual TheCar TheCar { get; set; }
     }
 
     public enum CheckResultType { No, Yes }

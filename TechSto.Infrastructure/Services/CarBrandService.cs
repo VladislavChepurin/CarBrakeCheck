@@ -21,7 +21,7 @@ namespace TechSto.Infrastructure.Services
         }
 
         // Получить марку по Id
-        public CarBrand? GetById(int id)
+        public CarBrand GetById(int id)
         {
             return _context.CarBrands.Find(id);
         }

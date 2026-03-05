@@ -27,7 +27,7 @@ namespace TechSto.Infrastructure.Services
             return query;
         }
 
-        public Owner? GetById(int id)
+        public Owner GetById(int id)
         {
             return GetById(id, _context);
         }
@@ -35,7 +35,7 @@ namespace TechSto.Infrastructure.Services
         /// <summary>
         /// Получить владельца по Id с загрузкой автомобилей и проверок
         /// </summary>
-        public Owner? GetById(int id, MainContext _context)
+        public Owner GetById(int id, MainContext _context)
         {
             return _context.Owners
                 .Include(o => o.TheCars)

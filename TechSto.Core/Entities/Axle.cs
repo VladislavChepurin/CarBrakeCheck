@@ -6,7 +6,7 @@
 
         // Внешний ключ к модели автомобиля
         public int CarModelId { get; set; }
-        public virtual CarModel? CarModel { get; set; }
+        public virtual CarModel CarModel { get; set; }
 
         /// <summary>
         /// Номер оси (1,2,3...). Оси в рамках одной модели нумеруются по порядку.

@@ -12,9 +12,9 @@
         public virtual CarСategory? CarСategory { get; set; }
 
         // Существующие технические характеристики
-        public int? MaxMass { get; set; }    //максимльная масса
-        public int? CurbMass { get; set; }   //снаряженная масса   
-        public float? BrakeForceDifference { get; set; }   //Разница в тормозном усилии
+        public int? MaxMass { get; set; }
+        public int? CurbMass { get; set; }
+        public int? BrakeForceDifference { get; set; }
         public ParkingBrakeType? ParkingBrake { get; set; }
         public ReserveBrakeSystem? ReserveBrake { get; set; }
 
@@ -25,6 +25,6 @@
         public virtual ICollection<Axle> Axles { get; set; } = new HashSet<Axle>();
     }
 
-    public enum ParkingBrakeType { Foot, Hand, Electronic }
+    public enum ParkingBrakeType { Foot, Hand }
     public enum ReserveBrakeSystem { None, Hand, Foot }
 }
