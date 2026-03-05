@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:properties="clr-namespace:TechSto.WPF.Properties"
         xmlns:entity="clr-namespace:TechSto.Core.Entities"
-"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Title="{x:Static properties:Resources.AddClientWindowTitle}"
         WindowStyle="ToolWindow"

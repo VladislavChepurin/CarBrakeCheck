@@ -5,7 +5,7 @@
         public int CarId { get; set; }
         public string? Owner { get; set; }
         public string? StateNumber { get; set; }
-        public string? Vin { get; set; }
+        public string? VinСode { get; set; }
         public string? BrandName { get; set; }
         public string? Model { get; set; }
         public string? LastTestDateString { get; set; } 

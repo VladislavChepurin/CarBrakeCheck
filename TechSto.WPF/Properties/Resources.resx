@@ -393,4 +393,10 @@
   <data name="PreviewLastCheck" xml:space="preserve">
     <value>Последняя проверка:</value>
   </data>
+  <data name="EquipmentIsConnected" xml:space="preserve">
+    <value>Стенд подключен</value>
+  </data>
+  <data name="EquipmentIsNotConnected" xml:space="preserve">
+    <value>Стенд не подключен</value>
+  </data>
 </root>
