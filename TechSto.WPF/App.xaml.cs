@@ -46,7 +46,7 @@ namespace TechSto.WPF
 
                     // Сервисы инфраструктуры
                     services.AddSingleton<ILocalizationService, LocalizationService>();
-                    //services.AddSingleton<IAppSettingsService, AppSettingsService>();
+                    services.AddSingleton<IAppSettingsService, AppSettingsService>();
 
 
                     // Сервис выбора (для связи между вкладками)

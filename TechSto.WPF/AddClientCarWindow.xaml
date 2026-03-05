@@ -1,19 +1,19 @@
-<Window x:Class="TechSto.AddClientCarWindow"
+<Window x:Class="TechSto.WPF.AddClientCarWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:properties="clr-namespace:TechSto.WPF.Properties"
-        xmlns:entity="clr-namespace:TechSto.Core.Entities"
+        xmlns:properties="clr-namespace:TechSto.WPF.Properties"                
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="{x:Static properties:Resources.AddClientWindowTitle}"
+        Title="{Binding LocalizationProvider[AddClientWindowTitle]}"     
         WindowStyle="ToolWindow"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
         Background="#F0F8FF">
+                
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
-        <ObjectDataProvider x:Key="RotationDirections" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+        <!--<ObjectDataProvider x:Key="RotationDirections" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="entity:RotationDirection"/>
             </ObjectDataProvider.MethodParameters>
@@ -22,7 +22,7 @@
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="entity:BrakeType"/>
             </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
+        </ObjectDataProvider>-->
     </Window.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="860">
@@ -34,15 +34,15 @@
                     <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                 </Border.Effect>
                 <StackPanel>
-                    <TextBlock Text="{x:Static properties:Resources.SectionOwner}"
+                    <TextBlock Text="{Binding LocalizationProvider[SectionOwner]}"
                                FontSize="14" FontWeight="Bold" Foreground="#0066CC" Margin="0,0,0,10"/>
 
                     <!-- радиокнопки -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <RadioButton Content="{x:Static properties:Resources.NewOwner}"
+                        <RadioButton Content="{Binding LocalizationProvider[NewOwner]}"
                                      IsChecked="{Binding IsNewOwner, Mode=TwoWay}"
                                      Margin="0,0,20,0" VerticalContentAlignment="Center"/>
-                        <RadioButton Content="{x:Static properties:Resources.ExistingOwner}"
+                        <RadioButton Content="{Binding LocalizationProvider[ExistingOwner]}"
                                      IsChecked="{Binding IsExistingOwner, Mode=TwoWay}"
                                      VerticalContentAlignment="Center"/>
                     </StackPanel>
@@ -54,7 +54,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.OwnerNameLabel}"
+                            <TextBlock Text="{Binding LocalizationProvider[OwnerNameLabel]}"
                                        VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding OwnerName, UpdateSourceTrigger=PropertyChanged}"
@@ -65,7 +65,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.StsNumberLabel}"
+                            <TextBlock Text="{Binding LocalizationProvider[StsNumberLabel]}"
                                        VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding STSNumber, UpdateSourceTrigger=PropertyChanged}"
@@ -91,7 +91,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.OwnerNameLabel}" Foreground="#666" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[OwnerNameLabel]}" Foreground="#666" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="1"
                                        Text="{Binding SelectedExistingOwner.Name}"
                                        FontWeight="SemiBold" VerticalAlignment="Center"/>
@@ -101,7 +101,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.StsNumberLabel}" Foreground="#666" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[StsNumberLabel]}" Foreground="#666" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="1"
                                        Text="{Binding SelectedExistingOwner.STSNumber}"
                                        FontWeight="SemiBold" VerticalAlignment="Center"/>
@@ -116,7 +116,7 @@
                     <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                 </Border.Effect>
                 <StackPanel>
-                    <TextBlock Text="{x:Static properties:Resources.SectionCar}"
+                    <TextBlock Text="{Binding LocalizationProvider[SectionCar]}"
                                FontSize="14" FontWeight="Bold" Foreground="#0066CC" Margin="0,0,0,10"/>
 
                     <Grid Margin="0,0,0,8">
@@ -124,7 +124,7 @@
                             <ColumnDefinition Width="140"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static properties:Resources.GosNumberLabel}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding LocalizationProvider[GosNumberLabel]}" VerticalAlignment="Center"/>
                         <TextBox Grid.Column="1"
                                  Text="{Binding GosNumber, UpdateSourceTrigger=PropertyChanged}"
                                  Height="26" Padding="4,3"/>
@@ -135,7 +135,7 @@
                             <ColumnDefinition Width="140"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static properties:Resources.VinNumberLabel}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding LocalizationProvider[VinNumberLabel]}" VerticalAlignment="Center"/>
                         <TextBox Grid.Column="1"
                                  Text="{Binding Vin, UpdateSourceTrigger=PropertyChanged}"
                                  Height="26" Padding="4,3"/>
@@ -147,7 +147,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static properties:Resources.ModelLabel}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding LocalizationProvider[ModelLabel]}" VerticalAlignment="Center"/>
                         <ComboBox Grid.Column="1"
                                   ItemsSource="{Binding CarModels}"
                                   SelectedItem="{Binding SelectedCarModel}"
@@ -164,7 +164,7 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                         <Button Grid.Column="2"
-                                Content="{x:Static properties:Resources.NewModelBtn}"
+                                Content="{Binding LocalizationProvider[NewModelBtn]}"
                                 Command="{Binding ToggleNewModelCommand}"
                                 Height="28" Padding="10,0"/>
                     </Grid>
@@ -179,21 +179,21 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
                                 <TextBlock Foreground="#555" FontSize="11">
-                                    <Run Text="{x:Static properties:Resources.MaxMassLabel}"/><Run Text=": "/>
+                                    <Run Text="{Binding LocalizationProvider[MaxMassLabel]}"/><Run Text=": "/>
                                     <Run Text="{Binding SelectedCarModel.MaxMass}"/>
                                 </TextBlock>
                                 <TextBlock Foreground="#555" FontSize="11">
-                                    <Run Text="{x:Static properties:Resources.CurbMassLabel}"/><Run Text=": "/>
+                                    <Run Text="{Binding LocalizationProvider[CurbMassLabel]}"/><Run Text=": "/>
                                     <Run Text="{Binding SelectedCarModel.CurbMass}"/>
                                 </TextBlock>
                             </StackPanel>
                             <StackPanel Grid.Column="1">
                                 <TextBlock Foreground="#555" FontSize="11">
-                                    <Run Text="{x:Static properties:Resources.BrakeDiffLabel}"/><Run Text=": "/>
+                                    <Run Text="{Binding LocalizationProvider[BrakeDiffLabel]}"/><Run Text=": "/>
                                     <Run Text="{Binding SelectedCarModel.BrakeForceDifference}"/>
                                 </TextBlock>
                                 <TextBlock Foreground="#555" FontSize="11">
-                                    <Run Text="{x:Static properties:Resources.CategoryLabel}"/><Run Text=": "/>
+                                    <Run Text="{Binding LocalizationProvider[CategoryLabel]}"/><Run Text=": "/>
                                     <Run Text="{Binding SelectedCarModel.CarСategory.CategoryName}"/>
                                 </TextBlock>
                             </StackPanel>
@@ -213,7 +213,7 @@
                     </Style>
                 </Expander.Style>
                 <Expander.Header>
-                    <TextBlock Text="{x:Static properties:Resources.SectionNewModel}"
+                    <TextBlock Text="{Binding LocalizationProvider[SectionNewModel]}"
                                FontSize="13" FontWeight="Bold" Foreground="#0066CC" Margin="4,0"/>
                 </Expander.Header>
                 <Border Padding="15,10" Background="White">
@@ -226,7 +226,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.BrandLabel}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[BrandLabel]}" VerticalAlignment="Center"/>
                             <ComboBox Grid.Column="1"
                                       ItemsSource="{Binding Brands}"
                                       SelectedItem="{Binding SelectedBrand}"
@@ -234,7 +234,7 @@
                                       Height="28"
                                       Margin="0,0,8,0"/>
                             <Button Grid.Column="2"
-                                    Content="{x:Static properties:Resources.NewBrandBtn}"
+                                    Content="{Binding LocalizationProvider[NewBrandBtn]}"
                                     Command="{Binding ToggleNewBrandCommand}"
                                     Height="28" Padding="10,0"/>
                         </Grid>
@@ -247,12 +247,12 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.BrandNameLabel}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[BrandNameLabel]}" VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding NewBrandName, UpdateSourceTrigger=PropertyChanged}"
                                      Height="26" Padding="4,3" Margin="0,0,8,0"/>
                             <Button Grid.Column="2"
-                                    Content="{x:Static properties:Resources.CreateBrandBtn}"
+                                    Content="{Binding LocalizationProvider[CreateBrandBtn]}"
                                     Command="{Binding CreateBrandCommand}"
                                     Height="28" Padding="10,0"/>
                         </Grid>
@@ -263,7 +263,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.ModelLabel}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[ModelLabel]}" VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding NewModelName, UpdateSourceTrigger=PropertyChanged}"
                                      Height="26" Padding="4,3"/>
@@ -275,7 +275,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.CategoryLabel}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[CategoryLabel]}" VerticalAlignment="Center"/>
                             <ComboBox Grid.Column="1"
                                       ItemsSource="{Binding Categories}"
                                       SelectedItem="{Binding SelectedCategory}"
@@ -289,7 +289,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.MaxMassLabel}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[MaxMassLabel]}" VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding MaxMass, UpdateSourceTrigger=PropertyChanged}"
                                      Height="26" Padding="4,3"/>
@@ -301,7 +301,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.CurbMassLabel}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[CurbMassLabel]}" VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding CurbMass, UpdateSourceTrigger=PropertyChanged}"
                                      Height="26" Padding="4,3"/>
@@ -313,7 +313,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.BrakeDiffLabel}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[BrakeDiffLabel]}" VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding BrakeForceDiff, UpdateSourceTrigger=PropertyChanged}"
                                      Height="26" Padding="4,3"/>
@@ -325,7 +325,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.ParkingBrakeLabel}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[ParkingBrakeLabel]}" VerticalAlignment="Center"/>
                             <ComboBox Grid.Column="1"
                                       ItemsSource="{Binding ParkingBrakeChoices}"
                                       SelectedItem="{Binding SelectedParkingBrake}"
@@ -355,7 +355,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.ReserveBrakeLabel}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[ReserveBrakeLabel]}" VerticalAlignment="Center"/>
                             <ComboBox Grid.Column="1"
                                       ItemsSource="{Binding ReserveBrakeChoices}"
                                       SelectedItem="{Binding SelectedReserveBrake}"
@@ -387,7 +387,7 @@
                                 <ColumnDefinition Width="40"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Static properties:Resources.AxleCountLabel}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[AxleCountLabel]}" VerticalAlignment="Center"/>
                             <Button Grid.Column="1"
                                     Content="−"
                                     Command="{Binding DecreaseAxleCountCommand}"
@@ -418,14 +418,17 @@
                                   MinHeight="50"
                                   MaxHeight="200"
                                   Margin="0,0,0,12"
-                                  PreviewMouseLeftButtonDown="AxlesGrid_PreviewMouseLeftButtonDown">
+                                 >
+
+                            <!--PreviewMouseLeftButtonDown="AxlesGrid_PreviewMouseLeftButtonDown"-->
+
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="№"
                                                     Binding="{Binding Order}"
                                                     IsReadOnly="True"
                                                     Width="38"/>
 
-                                <DataGridTemplateColumn Header="{x:Static properties:Resources.AxleDirection}" Width="115">
+                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleDirection]}" Width="115">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding RotationDirection}"
@@ -435,13 +438,13 @@
                                     <DataGridTemplateColumn.CellEditingTemplate>
                                         <DataTemplate>
                                             <ComboBox SelectedItem="{Binding RotationDirection, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                      ItemsSource="{Binding Source={StaticResource RotationDirections}}"
-                                                      Height="24"/>
+                                                ItemsSource="{Binding DataContext.RotationDirections, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                Height="24"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellEditingTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Header="{x:Static properties:Resources.AxleParkingBrake}" Width="80">
+                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleParkingBrake]}" Width="80">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <CheckBox IsChecked="{Binding HasParkingBrake, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -450,7 +453,7 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Header="{x:Static properties:Resources.AxleBrakeType}" Width="100">
+                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleBrakeType]}" Width="100">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding BrakeType}"
@@ -460,13 +463,13 @@
                                     <DataGridTemplateColumn.CellEditingTemplate>
                                         <DataTemplate>
                                             <ComboBox SelectedItem="{Binding BrakeType, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                      ItemsSource="{Binding Source={StaticResource BrakeTypes}}"
+                                                      ItemsSource="{Binding DataContext.BrakeTypes, RelativeSource={RelativeSource AncestorType=Window}}"
                                                       Height="24"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellEditingTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Header="{x:Static properties:Resources.AxleRegulator}" Width="80">
+                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleRegulator]}" Width="80">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <CheckBox IsChecked="{Binding HasRegulator, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -477,7 +480,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <Button Content="{x:Static properties:Resources.CreateModelBtn}"
+                        <Button Content="{Binding LocalizationProvider[CreateModelBtn]}"
                                 Command="{Binding CreateModelCommand}"
                                 HorizontalAlignment="Left"
                                 Height="30" Padding="18,0"/>
@@ -512,11 +515,11 @@
                     <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                 </Border.Effect>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Content="{x:Static properties:Resources.AddAnotherCarBtn}"
+                    <Button Content="{Binding LocalizationProvider[AddAnotherCarBtn]}"
                             Command="{Binding AddAnotherCarCommand}"
                             Visibility="{Binding IsNotEditMode, Converter={StaticResource BoolToVis}}"
                             Height="32" Padding="15,0" Margin="5"/>
-                    <Button Content="{x:Static properties:Resources.SaveAllBtn}"
+                    <Button Content="{Binding LocalizationProvider[SaveAllBtn]}"
                             Command="{Binding SaveCommand}"
                             Height="32" Padding="15,0" Margin="5"/>
                 </StackPanel>

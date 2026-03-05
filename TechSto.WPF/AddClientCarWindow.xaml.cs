@@ -21,8 +21,8 @@ namespace TechSto.WPF
             _isEditMode = existingCar != null;
             Title = _isEditMode ? $"{Properties.Resources.UpdateBth}: {Properties.Resources.AddClientWindowTitle}" : Properties.Resources.AddClientWindowTitle;
 
-            App.LanguageChanged += OnLangChanged;
-            Closed += (_, _) => App.LanguageChanged -= OnLangChanged;
+            //App.LanguageChanged += OnLangChanged;
+            //Closed += (_, _) => App.LanguageChanged -= OnLangChanged;
         }
 
         private void OnLangChanged(object? sender, EventArgs e)

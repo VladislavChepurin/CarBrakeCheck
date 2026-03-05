@@ -28,8 +28,7 @@ namespace TechSto.WPF
             InitializeLanguage();
 
             Loaded += OnLoaded;
-            Closed += OnClosed;
-             
+            Closed += OnClosed;             
         }           
 
         private void InitializeTabMapping()

@@ -54,6 +54,12 @@ namespace TechSto.WPF.ViewModels
         private ObservableCollection<CarСategory> _categories = new();
         private ObservableCollection<PendingCarItem> _pendingCars = new();
 
+        public ObservableCollection<RotationDirection> RotationDirections { get; }
+    = new ObservableCollection<RotationDirection>(Enum.GetValues(typeof(RotationDirection)).Cast<RotationDirection>());
+        public ObservableCollection<BrakeType> BrakeTypes { get; }
+            = new ObservableCollection<BrakeType>(Enum.GetValues(typeof(BrakeType)).Cast<BrakeType>());
+
+
         public bool IsNewOwner
         {
             get => _isNewOwner;
