@@ -8,7 +8,6 @@ using System.Windows;
 using TechSto.Core.Interfaces;
 using TechSto.Infrastructure.Data;
 using TechSto.Infrastructure.Services;
-using TechSto.WPF.SecondWindow;
 using TechSto.WPF.ViewModels;
 
 namespace TechSto.WPF
@@ -47,7 +46,7 @@ namespace TechSto.WPF
 
                     // Сервисы инфраструктуры
                     services.AddSingleton<ILocalizationService, LocalizationService>();
-                    services.AddSingleton<IAppSettingsService, AppSettingsService>();
+                    //services.AddSingleton<IAppSettingsService, AppSettingsService>();
 
 
                     // Сервис выбора (для связи между вкладками)
@@ -63,7 +62,7 @@ namespace TechSto.WPF
 
                     // Окна
                     services.AddTransient<MainWindow>();
-                    services.AddTransient<ClientWindow>();
+                    //services.AddTransient<ClientWindow>();
                 })
                 .Build();
         }

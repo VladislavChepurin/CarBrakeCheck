@@ -84,7 +84,7 @@ namespace TechSto.WPF
                         //settings.WindowLeft = Left;
                         //settings.WindowTop = Top;
                     }
-                    settings.IsMaximized = WindowState == WindowState.Maximized;
+                    //settings.IsMaximized = WindowState == WindowState.Maximized;
                     _appSettingsService.Save(settings);
                 }
             }

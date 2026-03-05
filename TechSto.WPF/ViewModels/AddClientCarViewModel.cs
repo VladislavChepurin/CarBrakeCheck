@@ -1,10 +1,11 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using TechSto.BusinessLayer;
-using TechSto.DataBase.Entity;
+using TechSto.Core.Entities;
+using TechSto.Infrastructure.Data;
+using TechSto.Infrastructure.Services;
 
-namespace TechSto.ViewModels
+namespace TechSto.WPF.ViewModels
 {
     public class PendingCarItem
     {
@@ -287,7 +288,7 @@ namespace TechSto.ViewModels
                 OwnerName = SelectedExistingOwner?.Name ?? "";
                 STSNumber = SelectedExistingOwner?.STSNumber ?? "";
                 GosNumber = existingCar.GosNumber;
-                Vin = existingCar.BodyNumber;
+                Vin = existingCar.VinCode;
                 SelectedCarModel = CarModels.FirstOrDefault(m => m.Id == existingCar.CarModelId);
             }
             else if (existingOwner != null)
@@ -487,7 +488,7 @@ namespace TechSto.ViewModels
                     }
 
                     car.GosNumber = GosNumber;
-                    car.BodyNumber = Vin ?? "";
+                    car.VinCode = Vin ?? "";
                     car.CarModelId = SelectedCarModel!.Id;
 
                     if (SelectedExistingOwner != null)
@@ -515,7 +516,7 @@ namespace TechSto.ViewModels
                         var car = new TheCar
                         {
                             GosNumber = pending.GosNumber,
-                            BodyNumber = pending.Vin ?? "",
+                            VinCode = pending.Vin ?? "",
                             FrameNumber = "",
                             CarModelId = pending.CarModelId
                         };

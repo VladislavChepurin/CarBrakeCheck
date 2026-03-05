@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using System.Windows.Controls;
 
 namespace TechSto.Core.Entities
 {
@@ -10,7 +9,7 @@ namespace TechSto.Core.Entities
 
         [Required]
         public string GosNumber { get; set; }           // госномер
-        public string BodyNumber { get; set; }          // VIN-код
+        public string VinCode { get; set; }          // VIN-код
         public string FrameNumber { get; set; }         // Номер рамы
 
         [Required]

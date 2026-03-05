@@ -4,7 +4,7 @@ using System.Windows.Input;
 using TechSto.Core.DTOs;
 using TechSto.Core.Interfaces;
 using TechSto.Core.Models;
-using TechSto.WPF.SecondWindow;
+
 using TechSto.WPF.Services;
 namespace TechSto.WPF.ViewModels
 {
@@ -119,8 +119,8 @@ namespace TechSto.WPF.ViewModels
 
             OpenAddClientCommand = new RelayCommand(OpenAddClientWindow);
             StartCommand = new RelayCommand(ExecuteStart, CanExecuteStart);
-            ManualModeCommand = new RelayCommand(() => SelectedMeasurementMode = 0);
-            AutoModeCommand = new RelayCommand(() => SelectedMeasurementMode = 1);
+            //ManualModeCommand = new RelayCommand(() => SelectedMeasurementMode = 0);
+            //AutoModeCommand = new RelayCommand(() => SelectedMeasurementMode = 1);
 
             //if (DeviceConnectionService.Instance != null)
             //{
@@ -148,13 +148,13 @@ namespace TechSto.WPF.ViewModels
             IsDeviceConnected = isConnected;
         }
 
-        private void OpenAddClientWindow()
+        private void OpenAddClientWindow(object e)
         {
-            var addWindow = new ClientWindow();
-            if (addWindow.ShowDialog() == true)
-            {
+            //var addWindow = new ClientWindow();
+            //if (addWindow.ShowDialog() == true)
+            //{
                 LoadData(); // Обновляем таблицу после закрытия окна
-            }
+            //}
         }
 
         private void OnSelectedClientRecordChanged()

@@ -1,6 +1,7 @@
-using TechSto.DataBase.Entity;
+using TechSto.Core.Entities;
+using TechSto.Infrastructure.Data;
 
-namespace TechSto.BusinessLayer
+namespace TechSto.Infrastructure.Services
 {
     public class CarCategoryService
     {

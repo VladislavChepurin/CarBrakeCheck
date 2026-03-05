@@ -1,6 +1,6 @@
-using TechSto.DataBase.Entity;
+using TechSto.Core.Entities;
 
-namespace TechSto.ViewModels
+namespace TechSto.WPF.ViewModels
 {
     public class AxleRowViewModel : ViewModelBase
     {

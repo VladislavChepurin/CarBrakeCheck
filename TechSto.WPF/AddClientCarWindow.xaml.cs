@@ -2,10 +2,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using TechSto.DataBase.Entity;
-using TechSto.ViewModels;
+using TechSto.Core.Entities;
+using TechSto.Infrastructure.Data;
+using TechSto.WPF.ViewModels;
 
-namespace TechSto
+namespace TechSto.WPF
 {
     public partial class AddClientCarWindow : Window
     {

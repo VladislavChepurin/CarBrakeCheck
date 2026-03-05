@@ -96,7 +96,7 @@ namespace TechSto.Infrastructure.Services
             var car = new TheCar
             {
                 GosNumber = gosNumber,
-                BodyNumber = bodyNumber,
+                VinCode = bodyNumber,
                 FrameNumber = frameNumber,
                 CarModelId = carModelId,
                 OwnerId = ownerId
@@ -118,7 +118,7 @@ namespace TechSto.Infrastructure.Services
                 throw new InvalidOperationException("Автомобиль не найден.");
 
             existing.GosNumber = updatedCar.GosNumber;
-            existing.BodyNumber = updatedCar.BodyNumber;
+            existing.VinCode = updatedCar.VinCode;
             existing.FrameNumber = updatedCar.FrameNumber;
             existing.CarModelId = updatedCar.CarModelId;
             existing.OwnerId = updatedCar.OwnerId;

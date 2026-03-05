@@ -2,7 +2,7 @@
 
 namespace TechSto.Core.Models
 {
-    class AppSettings
+    public class AppSettings
     {
         public string Language { get; set; } = "ru-RU";
         public string LastSelectedTab { get; set; } = "Settings";
