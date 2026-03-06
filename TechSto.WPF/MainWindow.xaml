@@ -14,7 +14,6 @@
 
     <Window.Resources>
         <helpers:BindingProxy x:Key="Proxy" Data="{Binding}" />
-
         <converters:EqualityToBooleanConverter x:Key="EqualityToBooleanConverter"/>
         <converters:GreaterThanZeroConverter x:Key="GreaterThanZero"/>
         <converters:ModeToColorConverter x:Key="ModeToColorConverter"/>
@@ -249,22 +248,22 @@
 
                             <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">                              
                                 <StackPanel>
-                                    <TextBlock Text="Выбранное АТС" Style="{StaticResource RightColumnHeaderTextStyle}"/>
+                                    <TextBlock Text="{Binding LocalizationProvider[SelectedAuto]}" Style="{StaticResource RightColumnHeaderTextStyle}"/>
                                     <TextBlock Text="{Binding SelectedCarDisplay}" Style="{StaticResource RightColumnTextStyle}"/>
                                     <TextBlock Text="{Binding CarCategory, StringFormat='Категория: {0}'}" Style="{StaticResource RightColumnTextStyle}"/>
                                     <TextBlock Text="{Binding AxlesCount, StringFormat='Кол-во осей: {0}'}" Style="{StaticResource RightColumnTextStyle}"/>
-                                    <CheckBox Content="Относительно разницы производителя" IsChecked="{Binding IsRelativeDifference}" Style="{StaticResource RightColumnCheckBoxStyle}"/>
+                                    <CheckBox Content="{Binding LocalizationProvider[RegardingManufacturerDifference]}" IsChecked="{Binding IsRelativeDifference}" Style="{StaticResource RightColumnCheckBoxStyle}"/>
                                 </StackPanel>
                             </Border>
 
                             <!-- Блок 2: Режим измерений -->
                             <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}">                             
                                 <StackPanel>
-                                    <TextBlock Text="Режим измерений" Style="{StaticResource RightColumnHeaderTextStyle}"/>
+                                    <TextBlock Text="{Binding LocalizationProvider[MeasurementMode]}" Style="{StaticResource RightColumnHeaderTextStyle}"/>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,5">
-                                        <Button Content="Ручной" Command="{Binding ManualModeCommand}" Width="80" Margin="2" 
+                                        <Button Content="{Binding LocalizationProvider[ManualBth]}" Command="{Binding ManualModeCommand}" Width="80" Margin="2" 
                             Background="{Binding SelectedMeasurementMode, Converter={StaticResource ModeToColorConverter}, ConverterParameter=0}"/>
-                                        <Button Content="Автомат" Command="{Binding AutoModeCommand}" Width="80" Margin="2" 
+                                        <Button Content="{Binding LocalizationProvider[AutoBth]}" Command="{Binding AutoModeCommand}" Width="80" Margin="2" 
                             Background="{Binding SelectedMeasurementMode, Converter={StaticResource ModeToColorConverter}, ConverterParameter=1}"/>
                                     </StackPanel>
                                 </StackPanel>
@@ -273,24 +272,24 @@
                             <!-- Блок 3: Вид измерений -->
                             <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}">                               
                                 <StackPanel>
-                                    <TextBlock Text="Вид измерений" Style="{StaticResource RightColumnHeaderTextStyle}"/>
+                                    <TextBlock Text="{Binding LocalizationProvider[TypeOfMeasurements]}" Style="{StaticResource RightColumnHeaderTextStyle}"/>
                                     <ComboBox ItemsSource="{Binding AxleItems}" SelectedItem="{Binding SelectedAxle}" 
                           Margin="0,5" IsEnabled="{Binding AxlesCount, Converter={StaticResource GreaterThanZero}}"/>
                                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="5,0,0,0">
-                                        <RadioButton GroupName="MeasurementType" Content="Въезд/Просушка"  
+                                        <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[EntryDryingRadioBth]}"  
                                  IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=0}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
-                                        <RadioButton GroupName="MeasurementType" Content="Полная загрузка" 
+                                        <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[FullLoadRadioBth]}" 
                                  IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=1}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
-                                        <RadioButton GroupName="MeasurementType" Content="Стояночная ТС"   
+                                        <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[ParkingVehicleRadioBth]}"   
                                  IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=2}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
-                                        <RadioButton GroupName="MeasurementType" Content="Выезд"           
+                                        <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[EntryRadioBth]}"           
                                  IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=3}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
                                     </StackPanel>
                                 </StackPanel>
                             </Border>
 
                             <!-- Блок 4: Кнопка Старт -->
-                            <Button Grid.Row="3" Content="Старт" Command="{Binding StartCommand}" 
+                            <Button Grid.Row="3" Content="{Binding LocalizationProvider[StartBth]}" Command="{Binding StartCommand}" 
                 Height="40" Background="{StaticResource PrimaryLightBrush}" Foreground="{StaticResource CommonTextBrush}" FontSize="16" Margin="0,0,0,10"/>
                         </Grid>
                     </Border>

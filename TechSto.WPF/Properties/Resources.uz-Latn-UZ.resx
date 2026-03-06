@@ -399,4 +399,55 @@
   <data name="EquipmentIsNotConnected" xml:space="preserve">
     <value>Uskuna ulanmagan</value>
   </data>
+  <data name="OnwerHeader" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="CarNumberHeader" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="VinNumberHeader" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="CarBrandHeader" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="CarModelHeader" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="DateLastTestHeader" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="SelectedAuto" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="MeasurementMode" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="RegardingManufacturerDifference" xml:space="preserve">
+    <value>Lorem ipsum dolor</value>
+  </data>
+  <data name="TypeOfMeasurements" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="StartBth" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="ManualBth" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="AutoBth" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="EntryRadioBth" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="FullLoadRadioBth" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="EntryDryingRadioBth" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="ParkingVehicleRadioBth" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
 </root>

@@ -97,6 +97,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Автомат.
+        /// </summary>
+        public static string AutoBth {
+            get {
+                return ResourceManager.GetString("AutoBth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Тип тормоза.
         /// </summary>
         public static string AxleBrakeType {
@@ -174,6 +183,33 @@ namespace TechSto.WPF.Properties {
         public static string BrandsWindowTitle {
             get {
                 return ResourceManager.GetString("BrandsWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Марка машины.
+        /// </summary>
+        public static string CarBrandHeader {
+            get {
+                return ResourceManager.GetString("CarBrandHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Марка машины.
+        /// </summary>
+        public static string CarModelHeader {
+            get {
+                return ResourceManager.GetString("CarModelHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Номер машины.
+        /// </summary>
+        public static string CarNumberHeader {
+            get {
+                return ResourceManager.GetString("CarNumberHeader", resourceCulture);
             }
         }
         
@@ -295,6 +331,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Дата последнего испытания.
+        /// </summary>
+        public static string DateLastTestHeader {
+            get {
+                return ResourceManager.GetString("DateLastTestHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Удалить.
         /// </summary>
         public static string DeleteBth {
@@ -318,6 +363,24 @@ namespace TechSto.WPF.Properties {
         public static string EnterName {
             get {
                 return ResourceManager.GetString("EnterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Въезд/Просушка.
+        /// </summary>
+        public static string EntryDryingRadioBth {
+            get {
+                return ResourceManager.GetString("EntryDryingRadioBth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Въезд.
+        /// </summary>
+        public static string EntryRadioBth {
+            get {
+                return ResourceManager.GetString("EntryRadioBth", resourceCulture);
             }
         }
         
@@ -412,6 +475,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Полная загрузка.
+        /// </summary>
+        public static string FullLoadRadioBth {
+            get {
+                return ResourceManager.GetString("FullLoadRadioBth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Госномер.
         /// </summary>
         public static string GosNumberLabel {
@@ -439,11 +511,29 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Ручной.
+        /// </summary>
+        public static string ManualBth {
+            get {
+                return ResourceManager.GetString("ManualBth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Макс. масса (кг).
         /// </summary>
         public static string MaxMassLabel {
             get {
                 return ResourceManager.GetString("MaxMassLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Режим измерений.
+        /// </summary>
+        public static string MeasurementMode {
+            get {
+                return ResourceManager.GetString("MeasurementMode", resourceCulture);
             }
         }
         
@@ -520,6 +610,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Владелец.
+        /// </summary>
+        public static string OnwerHeader {
+            get {
+                return ResourceManager.GetString("OnwerHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Имя.
         /// </summary>
         public static string OwnerNameLabel {
@@ -534,6 +633,15 @@ namespace TechSto.WPF.Properties {
         public static string ParkingBrakeLabel {
             get {
                 return ResourceManager.GetString("ParkingBrakeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Стояночная ТС.
+        /// </summary>
+        public static string ParkingVehicleRadioBth {
+            get {
+                return ResourceManager.GetString("ParkingVehicleRadioBth", resourceCulture);
             }
         }
         
@@ -691,6 +799,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Относительно разницы производителя.
+        /// </summary>
+        public static string RegardingManufacturerDifference {
+            get {
+                return ResourceManager.GetString("RegardingManufacturerDifference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Отчеты.
         /// </summary>
         public static string Reports {
@@ -754,6 +871,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Выбранное АТС.
+        /// </summary>
+        public static string SelectedAuto {
+            get {
+                return ResourceManager.GetString("SelectedAuto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Необходимо выбрать марку машины..
         /// </summary>
         public static string SelectItemToChoose {
@@ -790,11 +916,29 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Старт.
+        /// </summary>
+        public static string StartBth {
+            get {
+                return ResourceManager.GetString("StartBth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Номер СТС.
         /// </summary>
         public static string StsNumberLabel {
             get {
                 return ResourceManager.GetString("StsNumberLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вид измерений.
+        /// </summary>
+        public static string TypeOfMeasurements {
+            get {
+                return ResourceManager.GetString("TypeOfMeasurements", resourceCulture);
             }
         }
         
@@ -808,7 +952,16 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на VIN номер.
+        ///   Ищет локализованную строку, похожую на Vin номер.
+        /// </summary>
+        public static string VinNumberHeader {
+            get {
+                return ResourceManager.GetString("VinNumberHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Vin номер.
         /// </summary>
         public static string VinNumberLabel {
             get {

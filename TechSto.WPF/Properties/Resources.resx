@@ -205,7 +205,7 @@
     <value>Госномер</value>
   </data>
   <data name="VinNumberLabel" xml:space="preserve">
-    <value>VIN номер</value>
+    <value>Vin номер</value>
   </data>
   <data name="ModelLabel" xml:space="preserve">
     <value>Модель</value>
@@ -398,5 +398,56 @@
   </data>
   <data name="EquipmentIsNotConnected" xml:space="preserve">
     <value>Стенд не подключен</value>
+  </data>
+  <data name="OnwerHeader" xml:space="preserve">
+    <value>Владелец</value>
+  </data>
+  <data name="CarNumberHeader" xml:space="preserve">
+    <value>Номер машины</value>
+  </data>
+  <data name="VinNumberHeader" xml:space="preserve">
+    <value>Vin номер</value>
+  </data>
+  <data name="CarBrandHeader" xml:space="preserve">
+    <value>Марка машины</value>
+  </data>
+  <data name="CarModelHeader" xml:space="preserve">
+    <value>Марка машины</value>
+  </data>
+  <data name="DateLastTestHeader" xml:space="preserve">
+    <value>Дата последнего испытания</value>
+  </data>
+  <data name="SelectedAuto" xml:space="preserve">
+    <value>Выбранное АТС</value>
+  </data>
+  <data name="MeasurementMode" xml:space="preserve">
+    <value>Режим измерений</value>
+  </data>
+  <data name="RegardingManufacturerDifference" xml:space="preserve">
+    <value>Относительно разницы производителя</value>
+  </data>
+  <data name="TypeOfMeasurements" xml:space="preserve">
+    <value>Вид измерений</value>
+  </data>
+  <data name="StartBth" xml:space="preserve">
+    <value>Старт</value>
+  </data>
+  <data name="ManualBth" xml:space="preserve">
+    <value>Ручной</value>
+  </data>
+  <data name="AutoBth" xml:space="preserve">
+    <value>Автомат</value>
+  </data>
+  <data name="EntryRadioBth" xml:space="preserve">
+    <value>Въезд</value>
+  </data>
+  <data name="FullLoadRadioBth" xml:space="preserve">
+    <value>Полная загрузка</value>
+  </data>
+  <data name="EntryDryingRadioBth" xml:space="preserve">
+    <value>Въезд/Просушка</value>
+  </data>
+  <data name="ParkingVehicleRadioBth" xml:space="preserve">
+    <value>Стояночная ТС</value>
   </data>
 </root>
