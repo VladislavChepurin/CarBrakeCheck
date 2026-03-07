@@ -58,19 +58,21 @@ namespace TechSto.WPF.ViewModels
                 _selectedClientRecord = value;
                 OnPropertyChanged();
                 _updateCommand?.RaiseCanExecuteChanged();
+                OnSelectedClientRecordChanged(); // метод для обновления зависимых свойств
             }
         }
 
         // Свойства для правой панели
         public string SelectedCarDisplay =>
             SelectedClientRecord != null
-                ? $"{SelectedClientRecord.StateNumber} ({SelectedClientRecord.BrandName} {SelectedClientRecord.Model})"
+                ? $"{SelectedClientRecord.BrandName} {SelectedClientRecord.Model}"
                 : "";
 
+        public string OnwerName => SelectedClientRecord?.Owner ?? "";        
+        public string VinNumber => SelectedClientRecord?.VinCode ?? "";
+        public string GosNumber => SelectedClientRecord?.GosNumber ?? "";
         public string CarCategory => SelectedClientRecord?.CategoryName ?? "";
-
         public int AxlesCount => SelectedClientRecord?.AxlesCount ?? 0;
-
         private bool _isRelativeDifference;
         public bool IsRelativeDifference
         {
@@ -248,9 +250,17 @@ namespace TechSto.WPF.ViewModels
             SelectedAxle = AxleItems.FirstOrDefault();
 
             // Обновить свойства, от которых зависит интерфейс
+
             OnPropertyChanged(nameof(SelectedCarDisplay));
+            OnPropertyChanged(nameof(GosNumber));
+            OnPropertyChanged(nameof(VinNumber));
             OnPropertyChanged(nameof(CarCategory));
             OnPropertyChanged(nameof(AxlesCount));
+            OnPropertyChanged(nameof(OnwerName));
+            //OnPropertyChanged(nameof(VinNumber));
+            //OnPropertyChanged(nameof(VinNumber));
+
+
         }
 
         private void ExecuteStart(object? parameter)

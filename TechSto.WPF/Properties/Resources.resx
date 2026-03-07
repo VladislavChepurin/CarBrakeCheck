@@ -273,9 +273,6 @@
   <data name="ColStateNumber" xml:space="preserve">
     <value>Гос номер</value>
   </data>
-  <data name="ColVin" xml:space="preserve">
-    <value>VIN номер</value>
-  </data>
   <data name="ColBrand" xml:space="preserve">
     <value>Марка</value>
   </data>
@@ -346,7 +343,7 @@
     <value>Владелец</value>
   </data>
   <data name="PreviewOwnerName" xml:space="preserve">
-    <value>Имя:</value>
+    <value>Имя</value>
   </data>
   <data name="PreviewOwnerSts" xml:space="preserve">
     <value>СТС:</value>
@@ -412,7 +409,7 @@
     <value>Марка машины</value>
   </data>
   <data name="CarModelHeader" xml:space="preserve">
-    <value>Марка машины</value>
+    <value>Модель машины</value>
   </data>
   <data name="DateLastTestHeader" xml:space="preserve">
     <value>Дата последнего испытания</value>
@@ -449,5 +446,11 @@
   </data>
   <data name="ParkingVehicleRadioBth" xml:space="preserve">
     <value>Стояночная ТС</value>
+  </data>
+  <data name="BrandAndModel" xml:space="preserve">
+    <value>Марка и модель</value>
+  </data>
+  <data name="NumberOfAxes" xml:space="preserve">
+    <value>Кол-во осей</value>
   </data>
 </root>

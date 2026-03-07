@@ -273,9 +273,6 @@
   <data name="ColStateNumber" xml:space="preserve">
     <value>Lorem ipsum</value>
   </data>
-  <data name="ColVin" xml:space="preserve">
-    <value>Lorem</value>
-  </data>
   <data name="ColBrand" xml:space="preserve">
     <value>Lorem</value>
   </data>
@@ -346,7 +343,7 @@
     <value>Lorem ipsum</value>
   </data>
   <data name="PreviewOwnerName" xml:space="preserve">
-    <value>Lorem:</value>
+    <value>Lorem</value>
   </data>
   <data name="PreviewOwnerSts" xml:space="preserve">
     <value>Lorem:</value>
@@ -448,6 +445,12 @@
     <value>Lorem ipsum</value>
   </data>
   <data name="ParkingVehicleRadioBth" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="BrandAndModel" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="NumberOfAxes" xml:space="preserve">
     <value>Lorem ipsum</value>
   </data>
 </root>

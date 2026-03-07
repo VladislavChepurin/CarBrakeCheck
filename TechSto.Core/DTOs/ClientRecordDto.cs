@@ -4,7 +4,7 @@
     {
         public int CarId { get; set; }
         public string? Owner { get; set; }
-        public string? StateNumber { get; set; }
+        public string? GosNumber { get; set; }
         public string? VinCode { get; set; }
         public string? BrandName { get; set; }
         public string? Model { get; set; }

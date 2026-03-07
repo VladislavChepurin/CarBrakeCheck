@@ -160,6 +160,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Марка и модель.
+        /// </summary>
+        public static string BrandAndModel {
+            get {
+                return ResourceManager.GetString("BrandAndModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Марка.
         /// </summary>
         public static string BrandLabel {
@@ -196,7 +205,7 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Марка машины.
+        ///   Ищет локализованную строку, похожую на Модель машины.
         /// </summary>
         public static string CarModelHeader {
             get {
@@ -273,15 +282,6 @@ namespace TechSto.WPF.Properties {
         public static string ColStateNumber {
             get {
                 return ResourceManager.GetString("ColStateNumber", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на VIN номер.
-        /// </summary>
-        public static string ColVin {
-            get {
-                return ResourceManager.GetString("ColVin", resourceCulture);
             }
         }
         
@@ -610,6 +610,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Кол-во осей.
+        /// </summary>
+        public static string NumberOfAxes {
+            get {
+                return ResourceManager.GetString("NumberOfAxes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Владелец.
         /// </summary>
         public static string OnwerHeader {
@@ -727,7 +736,7 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Имя:.
+        ///   Ищет локализованную строку, похожую на Имя.
         /// </summary>
         public static string PreviewOwnerName {
             get {

@@ -273,9 +273,6 @@
   <data name="ColStateNumber" xml:space="preserve">
     <value>State number</value>
   </data>
-  <data name="ColVin" xml:space="preserve">
-    <value>VIN</value>
-  </data>
   <data name="ColBrand" xml:space="preserve">
     <value>Brand</value>
   </data>
@@ -346,13 +343,13 @@
     <value>Owner</value>
   </data>
   <data name="PreviewOwnerName" xml:space="preserve">
-    <value>Name:</value>
+    <value>Name</value>
   </data>
   <data name="PreviewOwnerSts" xml:space="preserve">
     <value>STS:</value>
   </data>
   <data name="PreviewSectionCar" xml:space="preserve">
-    <value>Vehicle</value>
+    <value>Car</value>
   </data>
   <data name="PreviewCarGos" xml:space="preserve">
     <value>Reg. number:</value>
@@ -406,7 +403,7 @@
     <value>Car number</value>
   </data>
   <data name="VinNumberHeader" xml:space="preserve">
-    <value>Vin numer</value>
+    <value>Vin number</value>
   </data>
   <data name="CarBrandHeader" xml:space="preserve">
     <value>Car brand</value>
@@ -449,5 +446,11 @@
   </data>
   <data name="ParkingVehicleRadioBth" xml:space="preserve">
     <value>Parking vehicle</value>
+  </data>
+  <data name="BrandAndModel" xml:space="preserve">
+    <value>Brand and model</value>
+  </data>
+  <data name="NumberOfAxes" xml:space="preserve">
+    <value>Number of axes</value>
   </data>
 </root>

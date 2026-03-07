@@ -29,7 +29,7 @@ namespace TechSto.Infrastructure.Services
             {
                 CarId = c.Id,
                 Owner = c.Owner != null ? c.Owner.Name : null,
-                StateNumber = c.GosNumber,
+                GosNumber = c.GosNumber,
                 VinCode = c.VinCode,
                 BrandName = c.CarModel != null && c.CarModel.CarBrand != null
                     ? c.CarModel.CarBrand.BrandName : null,
