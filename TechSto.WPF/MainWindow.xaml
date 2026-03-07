@@ -214,7 +214,7 @@
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="{Binding Data.LocalizationProvider[OnwerHeader], Source={StaticResource Proxy}}" Binding="{Binding Owner}" Width="*"/>
                                     <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarNumberHeader], Source={StaticResource Proxy}}" Binding="{Binding StateNumber}" Width="120"/>
-                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[VinNumberHeader], Source={StaticResource Proxy}}" Binding="{Binding Vin}" Width="150"/>
+                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[VinNumberHeader], Source={StaticResource Proxy}}" Binding="{Binding VinCode}" Width="150"/>
                                     <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarBrandHeader], Source={StaticResource Proxy}}"  Binding="{Binding BrandName}" Width="100"/>
                                     <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarModelHeader], Source={StaticResource Proxy}}"  Binding="{Binding Model}" Width="100"/>
                                     <DataGridTextColumn Header="{Binding Data.LocalizationProvider[DateLastTestHeader], Source={StaticResource Proxy}}" Binding="{Binding LastTestDate, StringFormat='dd.MM.yyyy'}" Width="140"/>
@@ -247,12 +247,23 @@
                             </Grid.RowDefinitions>
 
                             <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">                              
-                                <StackPanel>
+                                <StackPanel>                                    
                                     <TextBlock Text="{Binding LocalizationProvider[SelectedAuto]}" Style="{StaticResource RightColumnHeaderTextStyle}"/>
-                                    <TextBlock Text="{Binding SelectedCarDisplay}" Style="{StaticResource RightColumnTextStyle}"/>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    <!--<TextBlock Text="{Binding SelectedCarDisplay}" Style="{StaticResource RightColumnTextStyle}"/>
                                     <TextBlock Text="{Binding CarCategory, StringFormat='Категория: {0}'}" Style="{StaticResource RightColumnTextStyle}"/>
-                                    <TextBlock Text="{Binding AxlesCount, StringFormat='Кол-во осей: {0}'}" Style="{StaticResource RightColumnTextStyle}"/>
+                                    <TextBlock Text="{Binding AxlesCount, StringFormat='Кол-во осей: {0}'}" Style="{StaticResource RightColumnTextStyle}"/>-->
                                     <CheckBox Content="{Binding LocalizationProvider[RegardingManufacturerDifference]}" IsChecked="{Binding IsRelativeDifference}" Style="{StaticResource RightColumnCheckBoxStyle}"/>
+                                
+                                                             
                                 </StackPanel>
                             </Border>
 

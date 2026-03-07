@@ -8,9 +8,7 @@ using TechSto.WPF.ViewModels;
 namespace TechSto.WPF
 {
     public partial class AddClientCarWindow : Window
-    {
-        private readonly bool _isEditMode;
-
+    {    
         private readonly AddClientCarViewModel _viewModel;
 
         public AddClientCarWindow(AddClientCarViewModel viewModel, ILocalizationService localizationService)
@@ -18,6 +16,7 @@ namespace TechSto.WPF
             InitializeComponent();
             _viewModel = viewModel;          
             DataContext = _viewModel;
+            viewModel.DataSaved += (s, e) => DialogResult = true;
         }
        
         private void AxlesGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

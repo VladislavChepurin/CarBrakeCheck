@@ -5,6 +5,7 @@ using System.Windows.Input;
 using TechSto.Core.DTOs;
 using TechSto.Core.Interfaces;
 using TechSto.Core.Models;
+using TechSto.Infrastructure.Services;
 using TechSto.WPF.Services;
 namespace TechSto.WPF.ViewModels
 {
@@ -31,6 +32,22 @@ namespace TechSto.WPF.ViewModels
         private readonly IClientRecordService _clientRecordService;
         private readonly IServiceProvider _serviceProvider;
         private AppSettings _settings;
+        private RelayCommand? _updateCommand;
+
+        public ICommand UpdateCommand => _updateCommand ??= new RelayCommand(OpenEditClientWindow, _ => SelectedClientRecord != null);
+
+
+
+        //public ClientRecordDto SelectedClientRecord
+        //{
+        //    get => _selectedClientRecord;
+        //    set
+        //    {
+        //        SetProperty(ref _selectedClientRecord, value);
+        //        OnSelectedClientRecordChanged(); // метод для обновления зависимых свойств
+        //    }
+        //}
+
 
 
         public ClientRecordDto SelectedClientRecord
@@ -38,8 +55,9 @@ namespace TechSto.WPF.ViewModels
             get => _selectedClientRecord;
             set
             {
-                SetProperty(ref _selectedClientRecord, value);
-                OnSelectedClientRecordChanged(); // метод для обновления зависимых свойств
+                _selectedClientRecord = value;
+                OnPropertyChanged();
+                _updateCommand?.RaiseCanExecuteChanged();
             }
         }
 
@@ -115,13 +133,15 @@ namespace TechSto.WPF.ViewModels
 
         public LocalizationProvider LocalizationProvider { get; }
 
-        public SettingsViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService, IClientRecordService clientRecordService, IServiceProvider serviceProvider, LocalizationProvider localizationProvider)
+        public SettingsViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService, 
+            IClientRecordService clientRecordService, IServiceProvider serviceProvider, 
+            LocalizationProvider localizationProvider)
         {
            
             _appSettingsService = appSettingsService;
             _localizationService = localizationService;
             _clientRecordService = clientRecordService;
-            _serviceProvider = serviceProvider;
+            _serviceProvider = serviceProvider;           
             //_addClientCarWindow = addClientCarWindow; 
             LocalizationProvider = localizationProvider;
 
@@ -165,23 +185,41 @@ namespace TechSto.WPF.ViewModels
 
         private void OpenAddClientWindow(object e)
         {
-
             var window = _serviceProvider.GetRequiredService<AddClientCarWindow>();
             window.Owner = Application.Current.MainWindow;
-            if (window.ShowDialog() == true)
-                LoadData();
-                     
-            //_addClientCarWindow.ShowDialog();
 
+            if (window.ShowDialog() == true)
+            {
+                LoadData(); // перезагрузка данных после успешного сохранения
+            }
         }
 
         private void OpenEditClientWindow(object e)
         {
-            //var addWindow = new ClientWindow();
-            //if (addWindow.ShowDialog() == true)
-            //{
-            LoadData(); // Обновляем таблицу после закрытия окна
-            //}
+            if (SelectedClientRecord == null) return;
+
+            // Создаём отдельный scope для изоляции контекста
+            using var scope = _serviceProvider.CreateScope();
+            var sp = scope.ServiceProvider;
+
+            // Загружаем полный объект автомобиля через сервис
+            var carService = sp.GetRequiredService<ITheCarService>();
+            var car = carService.GetById(SelectedClientRecord.CarId);
+
+            if (car == null) return;
+
+            var viewModel = ActivatorUtilities.CreateInstance<AddClientCarViewModel>(sp, car.Owner, car);
+
+            // Создаём окно вручную (не через DI, чтобы передать нашу ViewModel)
+            var window = new AddClientCarWindow(viewModel, sp.GetRequiredService<ILocalizationService>())
+            {
+                Owner = Application.Current.MainWindow
+            };
+
+            if (window.ShowDialog() == true)
+            {
+                LoadData(); // перезагрузка данных после успешного сохранения
+            }
         }
 
         private void DeleleteClient(object e)

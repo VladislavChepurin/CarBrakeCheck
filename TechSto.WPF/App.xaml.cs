@@ -47,6 +47,7 @@ namespace TechSto.WPF
                     services.AddScoped<ICarModelService, CarModelService>();
                     services.AddScoped<ICarCategoryService, CarCategoryService>();
                     services.AddScoped<IOwnerService, OwnerService>();
+                    services.AddScoped<ITheCarService, TheCarService>();
 
                     //services.AddScoped<ICarDetailsService, CarDetailsService>(); // если есть
 

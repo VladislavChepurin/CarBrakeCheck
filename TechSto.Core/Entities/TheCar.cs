@@ -10,7 +10,6 @@ namespace TechSto.Core.Entities
         [Required]
         public string GosNumber { get; set; }           // госномер
         public string VinCode { get; set; }          // VIN-код
-        public string FrameNumber { get; set; }         // Номер рамы
 
         [Required]
         // Внешний ключ к модели автомобиля (CarModel)

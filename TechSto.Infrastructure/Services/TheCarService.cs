@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using TechSto.Core.Entities;
+using TechSto.Core.Interfaces;
 using TechSto.Infrastructure.Data;
 
 namespace TechSto.Infrastructure.Services
 {
-    public class TheCarService
+    public class TheCarService: ITheCarService
     {
         private readonly MainContext _context;
 
@@ -84,7 +85,7 @@ namespace TechSto.Infrastructure.Services
         /// <summary>
         /// Создать автомобиль с указанными параметрами
         /// </summary>
-        public TheCar CreateCar(string gosNumber, string bodyNumber, string frameNumber, int carModelId, int ownerId)
+        public TheCar CreateCar(string gosNumber, string VinCode, int carModelId, int ownerId)
         {
             var model = _context.CarModels.Find(carModelId);
             if (model == null)
@@ -96,8 +97,7 @@ namespace TechSto.Infrastructure.Services
             var car = new TheCar
             {
                 GosNumber = gosNumber,
-                VinCode = bodyNumber,
-                FrameNumber = frameNumber,
+                VinCode = VinCode,               
                 CarModelId = carModelId,
                 OwnerId = ownerId
             };
@@ -118,8 +118,7 @@ namespace TechSto.Infrastructure.Services
                 throw new InvalidOperationException("Автомобиль не найден.");
 
             existing.GosNumber = updatedCar.GosNumber;
-            existing.VinCode = updatedCar.VinCode;
-            existing.FrameNumber = updatedCar.FrameNumber;
+            existing.VinCode = updatedCar.VinCode;          
             existing.CarModelId = updatedCar.CarModelId;
             existing.OwnerId = updatedCar.OwnerId;
 

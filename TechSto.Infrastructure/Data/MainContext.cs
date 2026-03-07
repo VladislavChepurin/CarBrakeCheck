@@ -62,6 +62,11 @@ namespace TechSto.Infrastructure.Data
                 .HasForeignKey(a => a.CarModelId)
                 .OnDelete(DeleteBehavior.Cascade); // При удалении модели удаляются и её оси
 
+            //Настраиваем поля которые могут быть только уникальными
+            modelBuilder.Entity<CarBrand>()
+                .HasIndex(b => b.BrandName)
+                .IsUnique();
+
             // Опционально: добавить уникальный индекс на пару (CarModelId, Order),
             // чтобы в рамках одной модели номера осей не повторялись.
             modelBuilder.Entity<Axle>()

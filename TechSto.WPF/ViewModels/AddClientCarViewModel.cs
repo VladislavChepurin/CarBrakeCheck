@@ -30,7 +30,7 @@ namespace TechSto.WPF.ViewModels
         private readonly ICarCategoryService _categoryService;
         private readonly int? _editingCarId;
 
-        public event Action? DataSaved;
+        public event EventHandler? DataSaved;
 
         private bool _isNewOwner = true;
         private string _ownerName = "";
@@ -283,15 +283,13 @@ namespace TechSto.WPF.ViewModels
                   
         public AddClientCarViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService,
             LocalizationProvider localizationProvider, IOwnerService ownerService,  ICarBrandService brandService,
-            ICarModelService modelService, ICarCategoryService categoryService, MainContext context)
-        {
-            Owner? existingOwner = null;
-            TheCar? existingCar = null;
-
+            ICarModelService modelService, ICarCategoryService categoryService, MainContext context, Owner? existingOwner = null,
+            TheCar? existingCar = null)
+        {        
             _appSettingsService = appSettingsService;
             _localizationService = localizationService;
             LocalizationProvider = localizationProvider;
-            //_context = context;
+            _context = context;
             _ownerService = ownerService;
             _brandService = brandService;
             _modelService = modelService;
@@ -376,11 +374,18 @@ namespace TechSto.WPF.ViewModels
                 return;
             }
             var brand = new CarBrand { BrandName = NewBrandName };
-            _brandService.Add(brand);
-            Brands.Add(brand);
-            SelectedBrand = brand;
-            IsNewBrandMode = false;
-            NewBrandName = "";
+            try
+            {
+                _brandService.Add(brand);
+                Brands.Add(brand);
+                SelectedBrand = brand;
+                IsNewBrandMode = false;
+                NewBrandName = "";
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+            {
+               MessageBox.Show("Test"); //Заглушка заменить на автоматичекий выбор бренда из БД
+            }
         }
 
         private void ExecuteCreateModel(object? _)
@@ -551,8 +556,7 @@ namespace TechSto.WPF.ViewModels
                         var car = new TheCar
                         {
                             GosNumber = pending.GosNumber,
-                            VinCode = pending.Vin ?? "",
-                            FrameNumber = "",
+                            VinCode = pending.Vin ?? "",                            
                             CarModelId = pending.CarModelId
                         };
 
@@ -568,12 +572,12 @@ namespace TechSto.WPF.ViewModels
                 _context.SaveChanges();
                 tx.Commit();
 
-                DataSaved?.Invoke();
+                DataSaved?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format(Properties.Resources.ErrorSaveData, ex.Message), Properties.Resources.ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
+        }          
     }
 }
