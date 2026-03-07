@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using TechSto.Core.Entities;
+using TechSto.Core.Interfaces;
 using TechSto.Infrastructure.Data;
 
 namespace TechSto.Infrastructure.Services
 {
-    public class OwnerService
+    public class OwnerService: IOwnerService
     {
         private readonly MainContext _context;
 
@@ -27,15 +28,15 @@ namespace TechSto.Infrastructure.Services
             return query;
         }
 
-        public Owner GetById(int id)
-        {
-            return GetById(id, _context);
-        }
+        //public Owner GetById(int id)
+        //{
+        //    return GetById(id, _context);
+        //}
 
         /// <summary>
         /// Получить владельца по Id с загрузкой автомобилей и проверок
         /// </summary>
-        public Owner GetById(int id, MainContext _context)
+        public Owner GetById(int id)
         {
             return _context.Owners
                 .Include(o => o.TheCars)

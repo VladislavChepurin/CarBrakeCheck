@@ -43,6 +43,11 @@ namespace TechSto.WPF
 
                     // Сервисы приложения
                     services.AddScoped<IClientRecordService, ClientRecordService>();
+                    services.AddScoped<ICarBrandService, CarBrandService>();
+                    services.AddScoped<ICarModelService, CarModelService>();
+                    services.AddScoped<ICarCategoryService, CarCategoryService>();
+                    services.AddScoped<IOwnerService, OwnerService>();
+
                     //services.AddScoped<ICarDetailsService, CarDetailsService>(); // если есть
 
                     // Сервисы инфраструктуры

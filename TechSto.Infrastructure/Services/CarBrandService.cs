@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using TechSto.Core.Entities;
+using TechSto.Core.Interfaces;
 using TechSto.Infrastructure.Data;
 
 namespace TechSto.Infrastructure.Services
 {
-    public class CarBrandService
+    public class CarBrandService: ICarBrandService
     {
         private readonly MainContext _context;
 

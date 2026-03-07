@@ -5,7 +5,6 @@ using TechSto.Core.Entities;
 using TechSto.Core.Interfaces;
 using TechSto.Core.Models;
 using TechSto.Infrastructure.Data;
-using TechSto.Infrastructure.Services;
 using TechSto.WPF.Services;
 
 namespace TechSto.WPF.ViewModels
@@ -21,15 +20,14 @@ namespace TechSto.WPF.ViewModels
     public class AddClientCarViewModel : ViewModelBase
     {
         private readonly IAppSettingsService _appSettingsService;
-        private readonly ILocalizationService _localizationService;
-        //private readonly LocalizationProvider _localizationProvider;
+        private readonly ILocalizationService _localizationService;       
         private readonly MainContext _context;
         private AppSettings _settings;
 
-        private readonly OwnerService _ownerService;
-        private readonly CarBrandService _brandService;
-        private readonly CarModelService _modelService;
-        private readonly CarCategoryService _categoryService;
+        private readonly IOwnerService _ownerService;
+        private readonly ICarBrandService _brandService;
+        private readonly ICarModelService _modelService;
+        private readonly ICarCategoryService _categoryService;
         private readonly int? _editingCarId;
 
         public event Action? DataSaved;
@@ -73,7 +71,6 @@ namespace TechSto.WPF.ViewModels
             get => _settings;
             private set => SetProperty(ref _settings, value);
         }
-
 
         public bool IsNewOwner
         {
@@ -283,8 +280,10 @@ namespace TechSto.WPF.ViewModels
         public ICommand DecreaseAxleCountCommand { get; }
 
         public LocalizationProvider LocalizationProvider { get; }
-
-        public AddClientCarViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService, MainContext context,LocalizationProvider localizationProvider)
+                  
+        public AddClientCarViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService,
+            LocalizationProvider localizationProvider, IOwnerService ownerService,  ICarBrandService brandService,
+            ICarModelService modelService, ICarCategoryService categoryService, MainContext context)
         {
             Owner? existingOwner = null;
             TheCar? existingCar = null;
@@ -292,12 +291,11 @@ namespace TechSto.WPF.ViewModels
             _appSettingsService = appSettingsService;
             _localizationService = localizationService;
             LocalizationProvider = localizationProvider;
-
-            _context = context;
-            _ownerService = new OwnerService(context);
-            _brandService = new CarBrandService(context);
-            _modelService = new CarModelService(context);
-            _categoryService = new CarCategoryService(context);
+            //_context = context;
+            _ownerService = ownerService;
+            _brandService = brandService;
+            _modelService = modelService;
+            _categoryService = categoryService;
             _editingCarId = existingCar?.Id;
 
             SaveCommand = new RelayCommand(ExecuteSave);
