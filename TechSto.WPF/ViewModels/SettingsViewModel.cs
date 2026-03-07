@@ -1,20 +1,26 @@
-﻿using System.Collections.ObjectModel;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using TechSto.Core.DTOs;
 using TechSto.Core.Interfaces;
 using TechSto.Core.Models;
-
 using TechSto.WPF.Services;
 namespace TechSto.WPF.ViewModels
 {
     public class SettingsViewModel: ViewModelBase
     {            
         private bool _isDeviceConnected;
+
+        //private readonly IHost _host;
+
         private ClientRecordDto _selectedClientRecord;
         private Visibility _brandsVisibility = Visibility.Collapsed;
         private ObservableCollection<ClientRecordDto> _clientRecords = [];
-        public ICommand OpenAddClientCommand { get; }
+        public ICommand AddClientCommand { get; }
+        public ICommand EditClientCommand { get; }
+        public ICommand DeleteClientCommand { get; }
+
         public ICommand StartCommand { get; }
         public ICommand ManualModeCommand { get; }
         public ICommand AutoModeCommand { get; }
@@ -22,8 +28,11 @@ namespace TechSto.WPF.ViewModels
 
         private readonly IAppSettingsService _appSettingsService;
         private readonly ILocalizationService _localizationService;
-        private readonly IClientRecordService _clientRecordService;       
+        private readonly IClientRecordService _clientRecordService;
+        private readonly IServiceProvider _serviceProvider;
         private AppSettings _settings;
+
+
         public ClientRecordDto SelectedClientRecord
         {
             get => _selectedClientRecord;
@@ -106,18 +115,23 @@ namespace TechSto.WPF.ViewModels
 
         public LocalizationProvider LocalizationProvider { get; }
 
-        public SettingsViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService, IClientRecordService clientRecordService)
+        public SettingsViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService, IClientRecordService clientRecordService, IServiceProvider serviceProvider, LocalizationProvider localizationProvider)
         {
            
             _appSettingsService = appSettingsService;
             _localizationService = localizationService;
-            _clientRecordService = clientRecordService;          
+            _clientRecordService = clientRecordService;
+            _serviceProvider = serviceProvider;
+            //_addClientCarWindow = addClientCarWindow; 
+            LocalizationProvider = localizationProvider;
 
-            _localizationService = localizationService;
-            LocalizationProvider = new LocalizationProvider(_localizationService);
+            //LocalizationProvider = new LocalizationProvider(_localizationService);
 
+            //Кнопки CRUD
+            AddClientCommand = new RelayCommand(OpenAddClientWindow);
+            EditClientCommand = new RelayCommand(OpenEditClientWindow);
+            DeleteClientCommand = new RelayCommand(DeleleteClient);
 
-            OpenAddClientCommand = new RelayCommand(OpenAddClientWindow);
             StartCommand = new RelayCommand(ExecuteStart, CanExecuteStart);
             //ManualModeCommand = new RelayCommand(() => SelectedMeasurementMode = 0);
             //AutoModeCommand = new RelayCommand(() => SelectedMeasurementMode = 1);
@@ -128,9 +142,10 @@ namespace TechSto.WPF.ViewModels
             //    IsDeviceConnected = DeviceConnectionService.Instance.IsConnected;
             //}
 
+
+
             // Загружаем настройки
             SettingsModel = _appSettingsService.Load();
-
             // Устанавливаем язык из настроек
             _localizationService.SetLanguage(SettingsModel.Language);
                         
@@ -150,12 +165,35 @@ namespace TechSto.WPF.ViewModels
 
         private void OpenAddClientWindow(object e)
         {
+
+            var window = _serviceProvider.GetRequiredService<AddClientCarWindow>();
+            window.Owner = Application.Current.MainWindow;
+            if (window.ShowDialog() == true)
+                LoadData();
+                     
+            //_addClientCarWindow.ShowDialog();
+
+        }
+
+        private void OpenEditClientWindow(object e)
+        {
             //var addWindow = new ClientWindow();
             //if (addWindow.ShowDialog() == true)
             //{
-                LoadData(); // Обновляем таблицу после закрытия окна
+            LoadData(); // Обновляем таблицу после закрытия окна
             //}
         }
+
+        private void DeleleteClient(object e)
+        {
+        
+            //var addWindow = new ClientWindow();
+            //if (addWindow.ShowDialog() == true)
+            //{
+            LoadData(); // Обновляем таблицу после закрытия окна
+            //}
+        }
+
 
         private void OnSelectedClientRecordChanged()
         {

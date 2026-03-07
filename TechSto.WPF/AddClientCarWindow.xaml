@@ -3,46 +3,35 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:properties="clr-namespace:TechSto.WPF.Properties"                
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="{Binding LocalizationProvider[AddClientWindowTitle]}"     
+        Title="{Binding LocalizationProvider[AddClientWindowTitle], Mode=OneWay}"     
         WindowStyle="ToolWindow"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
         Background="#F0F8FF">
-                
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
-        <!--<ObjectDataProvider x:Key="RotationDirections" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="entity:RotationDirection"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <ObjectDataProvider x:Key="BrakeTypes" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="entity:BrakeType"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>-->
     </Window.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="860">
         <StackPanel Margin="20" Width="540">
 
-            <!-- Влалделец -->
+            <!-- Владелец -->
             <Border Background="White" CornerRadius="5" Margin="0,0,0,10" Padding="15">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                 </Border.Effect>
                 <StackPanel>
-                    <TextBlock Text="{Binding LocalizationProvider[SectionOwner]}"
+                    <TextBlock Text="{Binding LocalizationProvider[SectionOwner], Mode=OneWay}"
                                FontSize="14" FontWeight="Bold" Foreground="#0066CC" Margin="0,0,0,10"/>
 
                     <!-- радиокнопки -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <RadioButton Content="{Binding LocalizationProvider[NewOwner]}"
+                        <RadioButton Content="{Binding LocalizationProvider[NewOwner], Mode=OneWay}"
                                      IsChecked="{Binding IsNewOwner, Mode=TwoWay}"
                                      Margin="0,0,20,0" VerticalContentAlignment="Center"/>
-                        <RadioButton Content="{Binding LocalizationProvider[ExistingOwner]}"
+                        <RadioButton Content="{Binding LocalizationProvider[ExistingOwner], Mode=OneWay}"
                                      IsChecked="{Binding IsExistingOwner, Mode=TwoWay}"
                                      VerticalContentAlignment="Center"/>
                     </StackPanel>
@@ -54,7 +43,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[OwnerNameLabel]}"
+                            <TextBlock Text="{Binding LocalizationProvider[OwnerNameLabel], Mode=OneWay}"
                                        VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding OwnerName, UpdateSourceTrigger=PropertyChanged}"
@@ -65,7 +54,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[StsNumberLabel]}"
+                            <TextBlock Text="{Binding LocalizationProvider[StsNumberLabel], Mode=OneWay}"
                                        VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding STSNumber, UpdateSourceTrigger=PropertyChanged}"
@@ -73,7 +62,7 @@
                         </Grid>
                     </StackPanel>
 
-                    <!-- выбор сущ -->
+                    <!-- выбор существующего владельца -->
                     <ComboBox IsEnabled="{Binding IsExistingOwner}"
                               ItemsSource="{Binding Owners}"
                               SelectedItem="{Binding SelectedExistingOwner}"
@@ -91,7 +80,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[OwnerNameLabel]}" Foreground="#666" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[OwnerNameLabel], Mode=OneWay}" Foreground="#666" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="1"
                                        Text="{Binding SelectedExistingOwner.Name}"
                                        FontWeight="SemiBold" VerticalAlignment="Center"/>
@@ -101,7 +90,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[StsNumberLabel]}" Foreground="#666" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[StsNumberLabel], Mode=OneWay}" Foreground="#666" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="1"
                                        Text="{Binding SelectedExistingOwner.STSNumber}"
                                        FontWeight="SemiBold" VerticalAlignment="Center"/>
@@ -116,7 +105,7 @@
                     <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                 </Border.Effect>
                 <StackPanel>
-                    <TextBlock Text="{Binding LocalizationProvider[SectionCar]}"
+                    <TextBlock Text="{Binding LocalizationProvider[SectionCar], Mode=OneWay}"
                                FontSize="14" FontWeight="Bold" Foreground="#0066CC" Margin="0,0,0,10"/>
 
                     <Grid Margin="0,0,0,8">
@@ -124,7 +113,7 @@
                             <ColumnDefinition Width="140"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding LocalizationProvider[GosNumberLabel]}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding LocalizationProvider[GosNumberLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                         <TextBox Grid.Column="1"
                                  Text="{Binding GosNumber, UpdateSourceTrigger=PropertyChanged}"
                                  Height="26" Padding="4,3"/>
@@ -135,7 +124,7 @@
                             <ColumnDefinition Width="140"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding LocalizationProvider[VinNumberLabel]}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding LocalizationProvider[VinNumberLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                         <TextBox Grid.Column="1"
                                  Text="{Binding Vin, UpdateSourceTrigger=PropertyChanged}"
                                  Height="26" Padding="4,3"/>
@@ -147,7 +136,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding LocalizationProvider[ModelLabel]}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding LocalizationProvider[ModelLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                         <ComboBox Grid.Column="1"
                                   ItemsSource="{Binding CarModels}"
                                   SelectedItem="{Binding SelectedCarModel}"
@@ -164,7 +153,7 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                         <Button Grid.Column="2"
-                                Content="{Binding LocalizationProvider[NewModelBtn]}"
+                                Content="{Binding LocalizationProvider[NewModelBtn], Mode=OneWay}"
                                 Command="{Binding ToggleNewModelCommand}"
                                 Height="28" Padding="10,0"/>
                     </Grid>
@@ -179,21 +168,21 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
                                 <TextBlock Foreground="#555" FontSize="11">
-                                    <Run Text="{Binding LocalizationProvider[MaxMassLabel]}"/><Run Text=": "/>
+                                    <Run Text="{Binding LocalizationProvider[MaxMassLabel], Mode=OneWay}"/><Run Text=": "/>
                                     <Run Text="{Binding SelectedCarModel.MaxMass}"/>
                                 </TextBlock>
                                 <TextBlock Foreground="#555" FontSize="11">
-                                    <Run Text="{Binding LocalizationProvider[CurbMassLabel]}"/><Run Text=": "/>
+                                    <Run Text="{Binding LocalizationProvider[CurbMassLabel], Mode=OneWay}"/><Run Text=": "/>
                                     <Run Text="{Binding SelectedCarModel.CurbMass}"/>
                                 </TextBlock>
                             </StackPanel>
                             <StackPanel Grid.Column="1">
                                 <TextBlock Foreground="#555" FontSize="11">
-                                    <Run Text="{Binding LocalizationProvider[BrakeDiffLabel]}"/><Run Text=": "/>
+                                    <Run Text="{Binding LocalizationProvider[BrakeDiffLabel], Mode=OneWay}"/><Run Text=": "/>
                                     <Run Text="{Binding SelectedCarModel.BrakeForceDifference}"/>
                                 </TextBlock>
                                 <TextBlock Foreground="#555" FontSize="11">
-                                    <Run Text="{Binding LocalizationProvider[CategoryLabel]}"/><Run Text=": "/>
+                                    <Run Text="{Binding LocalizationProvider[CategoryLabel], Mode=OneWay}"/><Run Text=": "/>
                                     <Run Text="{Binding SelectedCarModel.CarСategory.CategoryName}"/>
                                 </TextBlock>
                             </StackPanel>
@@ -202,7 +191,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- нов модель -->
+            <!-- новая модель -->
             <Expander IsExpanded="{Binding IsNewModelExpanded}"
                       Background="White"
                       Margin="0,0,0,10">
@@ -213,7 +202,7 @@
                     </Style>
                 </Expander.Style>
                 <Expander.Header>
-                    <TextBlock Text="{Binding LocalizationProvider[SectionNewModel]}"
+                    <TextBlock Text="{Binding LocalizationProvider[SectionNewModel], Mode=OneWay}"
                                FontSize="13" FontWeight="Bold" Foreground="#0066CC" Margin="4,0"/>
                 </Expander.Header>
                 <Border Padding="15,10" Background="White">
@@ -226,7 +215,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[BrandLabel]}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[BrandLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                             <ComboBox Grid.Column="1"
                                       ItemsSource="{Binding Brands}"
                                       SelectedItem="{Binding SelectedBrand}"
@@ -234,7 +223,7 @@
                                       Height="28"
                                       Margin="0,0,8,0"/>
                             <Button Grid.Column="2"
-                                    Content="{Binding LocalizationProvider[NewBrandBtn]}"
+                                    Content="{Binding LocalizationProvider[NewBrandBtn], Mode=OneWay}"
                                     Command="{Binding ToggleNewBrandCommand}"
                                     Height="28" Padding="10,0"/>
                         </Grid>
@@ -247,12 +236,12 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[BrandNameLabel]}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[BrandNameLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding NewBrandName, UpdateSourceTrigger=PropertyChanged}"
                                      Height="26" Padding="4,3" Margin="0,0,8,0"/>
                             <Button Grid.Column="2"
-                                    Content="{Binding LocalizationProvider[CreateBrandBtn]}"
+                                    Content="{Binding LocalizationProvider[CreateBrandBtn], Mode=OneWay}"
                                     Command="{Binding CreateBrandCommand}"
                                     Height="28" Padding="10,0"/>
                         </Grid>
@@ -263,7 +252,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[ModelLabel]}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[ModelLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding NewModelName, UpdateSourceTrigger=PropertyChanged}"
                                      Height="26" Padding="4,3"/>
@@ -275,7 +264,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[CategoryLabel]}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[CategoryLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                             <ComboBox Grid.Column="1"
                                       ItemsSource="{Binding Categories}"
                                       SelectedItem="{Binding SelectedCategory}"
@@ -289,7 +278,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[MaxMassLabel]}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[MaxMassLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding MaxMass, UpdateSourceTrigger=PropertyChanged}"
                                      Height="26" Padding="4,3"/>
@@ -301,7 +290,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[CurbMassLabel]}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[CurbMassLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding CurbMass, UpdateSourceTrigger=PropertyChanged}"
                                      Height="26" Padding="4,3"/>
@@ -313,7 +302,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[BrakeDiffLabel]}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[BrakeDiffLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding BrakeForceDiff, UpdateSourceTrigger=PropertyChanged}"
                                      Height="26" Padding="4,3"/>
@@ -325,7 +314,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[ParkingBrakeLabel]}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[ParkingBrakeLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                             <ComboBox Grid.Column="1"
                                       ItemsSource="{Binding ParkingBrakeChoices}"
                                       SelectedItem="{Binding SelectedParkingBrake}"
@@ -355,7 +344,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[ReserveBrakeLabel]}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[ReserveBrakeLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                             <ComboBox Grid.Column="1"
                                       ItemsSource="{Binding ReserveBrakeChoices}"
                                       SelectedItem="{Binding SelectedReserveBrake}"
@@ -387,7 +376,7 @@
                                 <ColumnDefinition Width="40"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[AxleCountLabel]}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[AxleCountLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                             <Button Grid.Column="1"
                                     Content="−"
                                     Command="{Binding DecreaseAxleCountCommand}"
@@ -418,9 +407,7 @@
                                   MinHeight="50"
                                   MaxHeight="200"
                                   Margin="0,0,0,12"
-                                 >
-
-                            <!--PreviewMouseLeftButtonDown="AxlesGrid_PreviewMouseLeftButtonDown"-->
+                                  PreviewMouseLeftButtonDown="AxlesGrid_PreviewMouseLeftButtonDown">
 
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="№"
@@ -428,7 +415,7 @@
                                                     IsReadOnly="True"
                                                     Width="38"/>
 
-                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleDirection]}" Width="115">
+                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleDirection], Mode=OneWay}" Width="115">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding RotationDirection}"
@@ -444,7 +431,7 @@
                                     </DataGridTemplateColumn.CellEditingTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleParkingBrake]}" Width="80">
+                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleParkingBrake], Mode=OneWay}" Width="80">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <CheckBox IsChecked="{Binding HasParkingBrake, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -453,7 +440,7 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleBrakeType]}" Width="100">
+                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleBrakeType], Mode=OneWay}" Width="100">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding BrakeType}"
@@ -469,7 +456,7 @@
                                     </DataGridTemplateColumn.CellEditingTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleRegulator]}" Width="80">
+                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleRegulator], Mode=OneWay}" Width="80">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <CheckBox IsChecked="{Binding HasRegulator, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -480,7 +467,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <Button Content="{Binding LocalizationProvider[CreateModelBtn]}"
+                        <Button Content="{Binding LocalizationProvider[CreateModelBtn], Mode=OneWay}"
                                 Command="{Binding CreateModelCommand}"
                                 HorizontalAlignment="Left"
                                 Height="30" Padding="18,0"/>
@@ -515,11 +502,11 @@
                     <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                 </Border.Effect>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Content="{Binding LocalizationProvider[AddAnotherCarBtn]}"
+                    <Button Content="{Binding LocalizationProvider[AddAnotherCarBtn], Mode=OneWay}"
                             Command="{Binding AddAnotherCarCommand}"
                             Visibility="{Binding IsNotEditMode, Converter={StaticResource BoolToVis}}"
                             Height="32" Padding="15,0" Margin="5"/>
-                    <Button Content="{Binding LocalizationProvider[SaveAllBtn]}"
+                    <Button Content="{Binding LocalizationProvider[SaveAllBtn], Mode=OneWay}"
                             Command="{Binding SaveCommand}"
                             Height="32" Padding="15,0" Margin="5"/>
                 </StackPanel>

@@ -48,7 +48,7 @@ namespace TechSto.WPF
             if (_viewModel.SettingsModel == null) return;
 
             // Устанавливаем язык из настроек через сервис локализации
-            _localizationService.SetLanguage(_viewModel.SettingsModel.Language);
+            //_localizationService.SetLanguage(_viewModel.SettingsModel.Language);
             SetSelectedLanguage();
         }    
 

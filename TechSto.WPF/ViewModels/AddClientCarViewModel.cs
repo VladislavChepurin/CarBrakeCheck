@@ -2,8 +2,11 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using TechSto.Core.Entities;
+using TechSto.Core.Interfaces;
+using TechSto.Core.Models;
 using TechSto.Infrastructure.Data;
 using TechSto.Infrastructure.Services;
+using TechSto.WPF.Services;
 
 namespace TechSto.WPF.ViewModels
 {
@@ -17,7 +20,12 @@ namespace TechSto.WPF.ViewModels
 
     public class AddClientCarViewModel : ViewModelBase
     {
+        private readonly IAppSettingsService _appSettingsService;
+        private readonly ILocalizationService _localizationService;
+        //private readonly LocalizationProvider _localizationProvider;
         private readonly MainContext _context;
+        private AppSettings _settings;
+
         private readonly OwnerService _ownerService;
         private readonly CarBrandService _brandService;
         private readonly CarModelService _modelService;
@@ -58,6 +66,13 @@ namespace TechSto.WPF.ViewModels
     = new ObservableCollection<RotationDirection>(Enum.GetValues(typeof(RotationDirection)).Cast<RotationDirection>());
         public ObservableCollection<BrakeType> BrakeTypes { get; }
             = new ObservableCollection<BrakeType>(Enum.GetValues(typeof(BrakeType)).Cast<BrakeType>());
+
+
+        public AppSettings SettingsModel
+        {
+            get => _settings;
+            private set => SetProperty(ref _settings, value);
+        }
 
 
         public bool IsNewOwner
@@ -267,8 +282,17 @@ namespace TechSto.WPF.ViewModels
         public ICommand IncreaseAxleCountCommand { get; }
         public ICommand DecreaseAxleCountCommand { get; }
 
-        public AddClientCarViewModel(MainContext context, Owner? existingOwner = null, TheCar? existingCar = null)
+        public LocalizationProvider LocalizationProvider { get; }
+
+        public AddClientCarViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService, MainContext context,LocalizationProvider localizationProvider)
         {
+            Owner? existingOwner = null;
+            TheCar? existingCar = null;
+
+            _appSettingsService = appSettingsService;
+            _localizationService = localizationService;
+            LocalizationProvider = localizationProvider;
+
             _context = context;
             _ownerService = new OwnerService(context);
             _brandService = new CarBrandService(context);
@@ -284,6 +308,13 @@ namespace TechSto.WPF.ViewModels
             ToggleNewBrandCommand = new RelayCommand(_ => IsNewBrandMode = !IsNewBrandMode);
             IncreaseAxleCountCommand = new RelayCommand(_ => AxleCount++);
             DecreaseAxleCountCommand = new RelayCommand(_ => AxleCount--);
+
+
+            // Загружаем настройки
+            SettingsModel = _appSettingsService.Load();
+
+            // Устанавливаем язык из настроек
+            _localizationService.SetLanguage(SettingsModel.Language);
 
             LoadData();
 

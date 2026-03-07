@@ -1,31 +1,34 @@
 ﻿using System.ComponentModel;
-using System.Resources;
-using TechSto.Core.Interfaces; // или где лежит ILocalizationService
-using TechSto.WPF.Properties; // пространство имён ресурсов
+using TechSto.Core.Interfaces;
+using TechSto.WPF.Properties; // для доступа к ресурсам
 
 namespace TechSto.WPF.Services
 {
     public class LocalizationProvider : INotifyPropertyChanged
     {
         private readonly ILocalizationService _localizationService;
-        private readonly ResourceManager _resourceManager;
 
         public LocalizationProvider(ILocalizationService localizationService)
         {
             _localizationService = localizationService;
-            _resourceManager = Resources.ResourceManager;
-
-            // Подписка на событие смены языка
-            _localizationService.LanguageChanged += (s, e) =>
-                OnPropertyChanged(string.Empty); // обновить все привязки
+            _localizationService.LanguageChanged += OnLanguageChanged;
         }
 
-        // Индексатор для доступа по ключу ресурса
-        public string this[string key] =>
-            _resourceManager.GetString(key, _localizationService.CurrentCulture);
+        private void OnLanguageChanged(object? sender, EventArgs e)
+        {
+            // Уведомляем об изменении всех привязок к индексатору
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
+        }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        // Индексатор для доступа к локализованным строкам по ключу
+        public string this[string key]
+        {
+            get
+            {
+                return Resources.ResourceManager.GetString(key, _localizationService.CurrentCulture) ?? $"[{key}]";
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }
