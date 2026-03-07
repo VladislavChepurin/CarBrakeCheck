@@ -16,7 +16,7 @@ namespace TechSto.ViewModels
 
     public class AddClientCarViewModel : ViewModelBase
     {
-        private readonly MainContext _context;
+        private readonly AddClientCarService _addClientCarService;
         private readonly OwnerService _ownerService;
         private readonly CarBrandService _brandService;
         private readonly CarModelService _modelService;
@@ -251,6 +251,12 @@ namespace TechSto.ViewModels
         public IEnumerable<ReserveBrakeSystem?> ReserveBrakeChoices { get; } =
             Enum.GetValues<ReserveBrakeSystem>().Cast<ReserveBrakeSystem?>().Prepend(null).ToArray();
 
+        public IEnumerable<RotationDirection> RotationDirectionChoices { get; } =
+            Enum.GetValues<RotationDirection>();
+
+        public IEnumerable<BrakeType> BrakeTypeChoices { get; } =
+            Enum.GetValues<BrakeType>();
+
         public ICommand SaveCommand { get; }
         public ICommand AddAnotherCarCommand { get; }
         public ICommand CreateBrandCommand { get; }
@@ -262,7 +268,7 @@ namespace TechSto.ViewModels
 
         public AddClientCarViewModel(MainContext context, Owner? existingOwner = null, TheCar? existingCar = null)
         {
-            _context = context;
+            _addClientCarService = new AddClientCarService(context);
             _ownerService = new OwnerService(context);
             _brandService = new CarBrandService(context);
             _modelService = new CarModelService(context);
@@ -476,61 +482,37 @@ namespace TechSto.ViewModels
 
             try
             {
-                using var tx = _context.Database.BeginTransaction();
                 if (IsEditMode)
                 {
-                    var car = _context.TheCars.Find(_editingCarId!.Value);
-                    if (car == null)
+                    _addClientCarService.UpdateClientCar(new UpdateClientCarDto
                     {
-                        MessageBox.Show(Properties.Resources.ErrorCarNotFound, Properties.Resources.ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-
-                    car.GosNumber = GosNumber;
-                    car.BodyNumber = Vin ?? "";
-                    car.CarModelId = SelectedCarModel!.Id;
-
-                    if (SelectedExistingOwner != null)
-                    {
-                        SelectedExistingOwner.Name = OwnerName;
-                        SelectedExistingOwner.STSNumber = STSNumber ?? "";
-                        car.OwnerId = SelectedExistingOwner.Id;
-                    }
+                        CarId = _editingCarId!.Value,
+                        GosNumber = GosNumber,
+                        BodyNumber = Vin ?? "",
+                        CarModelId = SelectedCarModel!.Id,
+                        OwnerId = SelectedExistingOwner?.Id,
+                        OwnerName = OwnerName,
+                        STSNumber = STSNumber ?? ""
+                    });
                 }
                 else
                 {
-                    Owner? owner = null;
-                    if (IsNewOwner)
+                    _addClientCarService.SaveNewClientWithCars(new SaveNewClientDto
                     {
-                        owner = new Owner { Name = OwnerName, STSNumber = STSNumber ?? "" };
-                        _context.Owners.Add(owner);
-                    }
-                    else
-                    {
-                        owner = SelectedExistingOwner;
-                    }
-
-                    foreach (var pending in PendingCars)
-                    {
-                        var car = new TheCar
+                        IsNewOwner = IsNewOwner,
+                        OwnerName = OwnerName,
+                        STSNumber = STSNumber ?? "",
+                        ExistingOwnerId = SelectedExistingOwner?.Id,
+                        ExistingOwnerName = OwnerName,
+                        ExistingOwnerSTS = STSNumber ?? "",
+                        Cars = PendingCars.Select(p => new ClientCarItemDto
                         {
-                            GosNumber = pending.GosNumber,
-                            BodyNumber = pending.Vin ?? "",
-                            FrameNumber = "",
-                            CarModelId = pending.CarModelId
-                        };
-
-                        if (IsNewOwner)
-                            car.Owner = owner!;
-                        else
-                            car.OwnerId = owner!.Id;
-
-                        _context.TheCars.Add(car);
-                    }
+                            GosNumber = p.GosNumber,
+                            BodyNumber = p.Vin ?? "",
+                            CarModelId = p.CarModelId
+                        }).ToList()
+                    });
                 }
-
-                _context.SaveChanges();
-                tx.Commit();
 
                 DataSaved?.Invoke();
             }
