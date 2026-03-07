@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using TechSto.DataBase.Entity;
 
@@ -27,7 +27,7 @@ namespace TechSto.BusinessLayer
                     // Если Owner нет, вернём null
                     Owner = c.Owner != null ? c.Owner.Name : null,
                     StateNumber = c.GosNumber,
-                    Vin = c.VinСode,
+                    Vin = c.BodyNumber,
                     // Проверяем всю цепочку: CarModel и CarBrand
                     BrandName = c.CarModel != null && c.CarModel.CarBrand != null
                         ? c.CarModel.CarBrand.BrandName
