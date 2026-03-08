@@ -5,7 +5,6 @@ using System.Windows.Input;
 using TechSto.Core.DTOs;
 using TechSto.Core.Interfaces;
 using TechSto.Core.Models;
-using TechSto.Infrastructure.Services;
 using TechSto.WPF.Services;
 namespace TechSto.WPF.ViewModels
 {
@@ -21,35 +20,16 @@ namespace TechSto.WPF.ViewModels
         public ICommand AddClientCommand { get; }
         public ICommand EditClientCommand { get; }
         public ICommand DeleteClientCommand { get; }
-
         public ICommand StartCommand { get; }
         public ICommand ManualModeCommand { get; }
         public ICommand AutoModeCommand { get; }
-
 
         private readonly IAppSettingsService _appSettingsService;
         private readonly ILocalizationService _localizationService;
         private readonly IClientRecordService _clientRecordService;
         private readonly IServiceProvider _serviceProvider;
         private AppSettings _settings;
-        private RelayCommand? _updateCommand;
-
-        public ICommand UpdateCommand => _updateCommand ??= new RelayCommand(OpenEditClientWindow, _ => SelectedClientRecord != null);
-
-
-
-        //public ClientRecordDto SelectedClientRecord
-        //{
-        //    get => _selectedClientRecord;
-        //    set
-        //    {
-        //        SetProperty(ref _selectedClientRecord, value);
-        //        OnSelectedClientRecordChanged(); // метод для обновления зависимых свойств
-        //    }
-        //}
-
-
-
+                                  
         public ClientRecordDto SelectedClientRecord
         {
             get => _selectedClientRecord;
@@ -57,7 +37,6 @@ namespace TechSto.WPF.ViewModels
             {
                 _selectedClientRecord = value;
                 OnPropertyChanged();
-                _updateCommand?.RaiseCanExecuteChanged();
                 OnSelectedClientRecordChanged(); // метод для обновления зависимых свойств
             }
         }
@@ -68,11 +47,17 @@ namespace TechSto.WPF.ViewModels
                 ? $"{SelectedClientRecord.BrandName} {SelectedClientRecord.Model}"
                 : "";
 
-        public string OnwerName => SelectedClientRecord?.Owner ?? "";        
+        // Уточнить необходимость данных свойств, DataGrid заполняется из ClientRecordDto
+        public string OnwerName => SelectedClientRecord?.OwnerName ?? "";
+        public string OnwerSurname => SelectedClientRecord?.OwnerSurname ?? "";
+        //public string Onwer => SelectedClientRecord?.OwnerName ?? "";
         public string VinNumber => SelectedClientRecord?.VinCode ?? "";
         public string GosNumber => SelectedClientRecord?.GosNumber ?? "";
         public string CarCategory => SelectedClientRecord?.CategoryName ?? "";
         public int AxlesCount => SelectedClientRecord?.AxlesCount ?? 0;
+        public int CurbMass => SelectedClientRecord?.CurbMass ?? 0;
+        public int MaxMass => SelectedClientRecord?.MaxMass ?? 0;
+
         private bool _isRelativeDifference;
         public bool IsRelativeDifference
         {
@@ -94,11 +79,16 @@ namespace TechSto.WPF.ViewModels
             set => SetProperty(ref _selectedAxle, value);
         }
 
-        private int _selectedMeasurementMode; // 0 - ручной, 1 - автомат (или enum)
-        public int SelectedMeasurementMode
+     // Ползунок Авто-Ручной
+        private bool _selectedMeasurementMode;
+        public bool SelectedMeasurementMode
         {
             get => _selectedMeasurementMode;
-            set => SetProperty(ref _selectedMeasurementMode, value);
+            set
+            {
+                _selectedMeasurementMode = value;
+                OnPropertyChanged();
+            }
         }
 
         private int _selectedMeasurementType; // для радиокнопок: 0 - въезд/просушка, 1 - полная загрузка и т.д.
@@ -152,20 +142,10 @@ namespace TechSto.WPF.ViewModels
             //Кнопки CRUD
             AddClientCommand = new RelayCommand(OpenAddClientWindow);
             EditClientCommand = new RelayCommand(OpenEditClientWindow);
-            DeleteClientCommand = new RelayCommand(DeleleteClient);
+            DeleteClientCommand = new RelayCommand(DeleteClient);
 
             StartCommand = new RelayCommand(ExecuteStart, CanExecuteStart);
-            //ManualModeCommand = new RelayCommand(() => SelectedMeasurementMode = 0);
-            //AutoModeCommand = new RelayCommand(() => SelectedMeasurementMode = 1);
-
-            //if (DeviceConnectionService.Instance != null)
-            //{
-            //    DeviceConnectionService.Instance.ConnectionStateChanged += OnConnectionStateChanged;
-            //    IsDeviceConnected = DeviceConnectionService.Instance.IsConnected;
-            //}
-
-
-
+            
             // Загружаем настройки
             SettingsModel = _appSettingsService.Load();
             // Устанавливаем язык из настроек
@@ -224,16 +204,48 @@ namespace TechSto.WPF.ViewModels
             }
         }
 
-        private void DeleleteClient(object e)
-        {
-        
-            //var addWindow = new ClientWindow();
-            //if (addWindow.ShowDialog() == true)
-            //{
-            LoadData(); // Обновляем таблицу после закрытия окна
-            //}
-        }
+        private void DeleteClient(object e)
+        {        
+            if (SelectedClientRecord == null)
+            {
+                MessageBox.Show(
+                    LocalizationProvider["WarnSelectRowToDelete"],
+                    LocalizationProvider["MessageWarning"],
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
 
+            var confirm = MessageBox.Show(
+                string.Format(LocalizationProvider["ConfirmDeleteCar"], SelectedClientRecord.OwnerName),
+                LocalizationProvider["MessageWarning"],
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes)
+                return;
+
+            try
+            {
+                // Предполагаем, что в сервисе есть метод удаления по идентификатору автомобиля
+                _clientRecordService.DeleteClientRecord(SelectedClientRecord.CarId);
+
+                // Перезагружаем данные
+                LoadData();
+
+                // Сбрасываем выделение, так как удалённой записи больше нет
+                SelectedClientRecord = null;                               
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    string.Format(LocalizationProvider["ErrorCarDelete"], ex.Message),
+                    LocalizationProvider["MessageError"],
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+    
 
         private void OnSelectedClientRecordChanged()
         {
@@ -252,14 +264,16 @@ namespace TechSto.WPF.ViewModels
             // Обновить свойства, от которых зависит интерфейс
 
             OnPropertyChanged(nameof(SelectedCarDisplay));
+
             OnPropertyChanged(nameof(GosNumber));
             OnPropertyChanged(nameof(VinNumber));
             OnPropertyChanged(nameof(CarCategory));
             OnPropertyChanged(nameof(AxlesCount));
             OnPropertyChanged(nameof(OnwerName));
-            //OnPropertyChanged(nameof(VinNumber));
-            //OnPropertyChanged(nameof(VinNumber));
-
+            OnPropertyChanged(nameof(OnwerSurname));
+            //OnPropertyChanged(nameof(Onwer));
+            OnPropertyChanged(nameof(CurbMass));
+            OnPropertyChanged(nameof(MaxMass));
 
         }
 

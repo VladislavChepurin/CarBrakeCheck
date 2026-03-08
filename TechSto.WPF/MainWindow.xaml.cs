@@ -14,7 +14,7 @@ namespace TechSto.WPF
         private readonly SettingsViewModel _viewModel;
         private readonly IAppSettingsService _appSettingsService;
         private readonly ILocalizationService _localizationService;
-              
+
         public MainWindow(SettingsViewModel viewModel, IAppSettingsService appSettingsService, ILocalizationService localizationService)
         {
             InitializeComponent();
@@ -268,6 +268,7 @@ namespace TechSto.WPF
             {
                 System.Diagnostics.Debug.WriteLine($"Error hiding content: {ex.Message}");
             }
-        }       
+        }
+             
     }
 }

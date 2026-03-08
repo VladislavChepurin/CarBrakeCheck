@@ -198,9 +198,6 @@
   <data name="OwnerNameLabel" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="StsNumberLabel" xml:space="preserve">
-    <value>STS Number</value>
-  </data>
   <data name="GosNumberLabel" xml:space="preserve">
     <value>Reg. number</value>
   </data>
@@ -345,9 +342,6 @@
   <data name="PreviewOwnerName" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="PreviewOwnerSts" xml:space="preserve">
-    <value>STS:</value>
-  </data>
   <data name="PreviewSectionCar" xml:space="preserve">
     <value>Car</value>
   </data>
@@ -451,6 +445,51 @@
     <value>Brand and model</value>
   </data>
   <data name="NumberOfAxes" xml:space="preserve">
-    <value>Number of axes</value>
+    <value>Sum of axes</value>
+  </data>
+  <data name="ErrorCarDelete" xml:space="preserve">
+    <value>Error deleting the machine</value>
+  </data>
+  <data name="MessageError" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="ParkingBrakeType_Foot" xml:space="preserve">
+    <value>Foot</value>
+  </data>
+  <data name="ParkingBrakeType_Hand" xml:space="preserve">
+    <value>Hand</value>
+  </data>
+  <data name="ParkingBrakeType_Electronic" xml:space="preserve">
+    <value>Electronic</value>
+  </data>
+  <data name="RotationDirection_Forward" xml:space="preserve">
+    <value>Forvard</value>
+  </data>
+  <data name="RotationDirection_Reverse" xml:space="preserve">
+    <value>Reverse</value>
+  </data>
+  <data name="BrakeType_Drum" xml:space="preserve">
+    <value>Drum</value>
+  </data>
+  <data name="BrakeType_Disc" xml:space="preserve">
+    <value>Disc</value>
+  </data>
+  <data name="ReserveBrakeSystem_Hand" xml:space="preserve">
+    <value>Hand</value>
+  </data>
+  <data name="ReserveBrakeSystem_Foot" xml:space="preserve">
+    <value>Foot</value>
+  </data>
+  <data name="OwnerSurnameLabel" xml:space="preserve">
+    <value>Surname</value>
+  </data>
+  <data name="ReserveBrakeSystem_N1" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="PreviewOwnerSurname" xml:space="preserve">
+    <value>Surname</value>
   </data>
 </root>

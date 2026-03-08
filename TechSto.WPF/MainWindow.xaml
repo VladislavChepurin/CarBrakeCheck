@@ -3,9 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TechSto.WPF"
+        xmlns:local="clr-namespace:TechSto.WPF.Controls"
         xmlns:converters="clr-namespace:TechSto.WPF.Converters"
-        xmlns:properties="clr-namespace:TechSto.WPF.Properties"
         xmlns:helpers="clr-namespace:TechSto.WPF.Helpers"
         mc:Ignorable="d"
         Title="{Binding LocalizationProvider[NameProgram], Mode=OneWay}"    
@@ -254,6 +253,12 @@
                                         <Run Text="{Binding OnwerName, Mode=OneWay}"/>
                                     </TextBlock>
 
+                                    <TextBlock Style="{StaticResource RightColumnTextStyle}">
+                                        <Run Text="{Binding LocalizationProvider[PreviewOwnerSurname], Mode=OneWay}"/>
+                                        <Run Text=": "/>
+                                        <Run Text="{Binding OnwerSurname, Mode=OneWay}"/>
+                                    </TextBlock>
+
                                     <TextBlock Text="{Binding LocalizationProvider[PreviewSectionCar], Mode=OneWay}" Style="{StaticResource RightColumnSubHeaderTextStyle}"/>
 
                                     <TextBlock Style="{StaticResource RightColumnTextStyle}">
@@ -282,6 +287,19 @@
                                          <Run Text="{Binding CarCategory, Mode=OneWay}"/>
                                     </TextBlock>
 
+
+                                    <TextBlock Style="{StaticResource RightColumnTextStyle}">
+                                         <Run Text="{Binding LocalizationProvider[CurbMassLabel], Mode=OneWay}"/>
+                                         <Run Text=": "/>
+                                         <Run Text="{Binding CurbMass, Mode=OneWay}"/>
+                                    </TextBlock>
+
+                                    <TextBlock Style="{StaticResource RightColumnTextStyle}">
+                                         <Run Text="{Binding LocalizationProvider[MaxMassLabel], Mode=OneWay}"/>
+                                         <Run Text=": "/>
+                                         <Run Text="{Binding MaxMass, Mode=OneWay}"/>
+                                    </TextBlock>
+
                                     <TextBlock Style="{StaticResource RightColumnTextStyle}">
                                          <Run Text="{Binding LocalizationProvider[NumberOfAxes], Mode=OneWay}"/>
                                          <Run Text=": "/>
@@ -293,33 +311,27 @@
                             </Border>
 
                             <!-- Блок 2: Режим измерений -->
-                            <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}">                             
+                            <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}">
                                 <StackPanel>
-                                    <TextBlock Text="{Binding LocalizationProvider[MeasurementMode], Mode=OneWay}" Style="{StaticResource RightColumnHeaderTextStyle}"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,5">
-                                        <Button Content="{Binding LocalizationProvider[ManualBth], Mode=OneWay}" Command="{Binding ManualModeCommand}" Width="80" Margin="2" 
-                                                Background="{Binding SelectedMeasurementMode, Converter={StaticResource ModeToColorConverter}, ConverterParameter=0}"/>
-                                        <Button Content="{Binding LocalizationProvider[AutoBth], Mode=OneWay}" Command="{Binding AutoModeCommand}" Width="80" Margin="2" 
-                                                Background="{Binding SelectedMeasurementMode, Converter={StaticResource ModeToColorConverter}, ConverterParameter=1}"/>
-                                    </StackPanel>
+                                    <local:ToggleSwitch HorizontalAlignment="Left" Margin="0" IsChecked="{Binding SelectedMeasurementMode}"/>
                                 </StackPanel>
                             </Border>
 
                             <!-- Блок 3: Вид измерений -->
-                            <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}">                               
-                                <StackPanel>
+                            <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}">
+                                <StackPanel IsEnabled="{Binding SelectedMeasurementMode}">
                                     <TextBlock Text="{Binding LocalizationProvider[TypeOfMeasurements], Mode=OneWay}" Style="{StaticResource RightColumnHeaderTextStyle}"/>
                                     <ComboBox ItemsSource="{Binding AxleItems}" SelectedItem="{Binding SelectedAxle}" 
-                                              Margin="0,5" IsEnabled="{Binding AxlesCount, Converter={StaticResource GreaterThanZero}}"/>
+                  Margin="0,5" IsEnabled="{Binding AxlesCount, Converter={StaticResource GreaterThanZero}}"/>
                                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="5,0,0,0">
                                         <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[EntryDryingRadioBth], Mode=OneWay}"  
-                                                     IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=0}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+                         IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=0}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
                                         <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[FullLoadRadioBth], Mode=OneWay}" 
-                                                     IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=1}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+                         IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=1}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
                                         <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[ParkingVehicleRadioBth], Mode=OneWay}"   
-                                                     IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=2}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+                         IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=2}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
                                         <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[EntryRadioBth], Mode=OneWay}"           
-                                                     IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=3}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+                         IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=3}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
                                     </StackPanel>
                                 </StackPanel>
                             </Border>

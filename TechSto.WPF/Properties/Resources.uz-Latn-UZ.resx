@@ -198,9 +198,6 @@
   <data name="OwnerNameLabel" xml:space="preserve">
     <value>Lorem</value>
   </data>
-  <data name="StsNumberLabel" xml:space="preserve">
-    <value>Lorem ipsum</value>
-  </data>
   <data name="GosNumberLabel" xml:space="preserve">
     <value>Lorem ipsum</value>
   </data>
@@ -345,9 +342,6 @@
   <data name="PreviewOwnerName" xml:space="preserve">
     <value>Lorem</value>
   </data>
-  <data name="PreviewOwnerSts" xml:space="preserve">
-    <value>Lorem:</value>
-  </data>
   <data name="PreviewSectionCar" xml:space="preserve">
     <value>Lorem ipsum</value>
   </data>
@@ -452,5 +446,50 @@
   </data>
   <data name="NumberOfAxes" xml:space="preserve">
     <value>Lorem ipsum</value>
+  </data>
+  <data name="ErrorCarDelete" xml:space="preserve">
+    <value>Lorem ipsum.</value>
+  </data>
+  <data name="MessageError" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="ParkingBrakeType_Foot" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="ParkingBrakeType_Hand" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="ParkingBrakeType_Electronic" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="RotationDirection_Forward" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="RotationDirection_Reverse" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="BrakeType_Drum" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="BrakeType_Disc" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="ReserveBrakeSystem_Hand" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="ReserveBrakeSystem_Foot" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="OwnerSurnameLabel" xml:space="preserve">
+    <value>Familiyasi</value>
+  </data>
+  <data name="ReserveBrakeSystem_N1" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
+  <data name="PreviewOwnerSurname" xml:space="preserve">
+    <value>Familiyasi</value>
   </data>
 </root>

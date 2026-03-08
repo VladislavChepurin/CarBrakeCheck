@@ -20,7 +20,7 @@ namespace TechSto.Infrastructure.Services
         /// </summary>
         public List<ClientRecordDto> LoadClientRecords()
         {
-            var records = _context.TheCars
+            var records = _context.TheCars!
             .Include(c => c.Owner)
             .Include(c => c.CarModel).ThenInclude(m => m!.CarBrand)
             .Include(c => c.CarModel).ThenInclude(m => m!.CarСategory) // для категории
@@ -28,7 +28,8 @@ namespace TechSto.Infrastructure.Services
             .Select(c => new ClientRecordDto
             {
                 CarId = c.Id,
-                Owner = c.Owner != null ? c.Owner.Name : null,
+                OwnerName = c.Owner != null ? c.Owner.Name : null,
+                OwnerSurname = c.Owner != null ? c.Owner.Surname : null,
                 GosNumber = c.GosNumber,
                 VinCode = c.VinCode,
                 BrandName = c.CarModel != null && c.CarModel.CarBrand != null
@@ -36,7 +37,9 @@ namespace TechSto.Infrastructure.Services
                 Model = c.CarModel != null ? c.CarModel.ModelName : null,
                 CategoryName = c.CarModel != null && c.CarModel.CarСategory != null
                     ? c.CarModel.CarСategory.CategoryName : null,
-                AxlesCount = c.CarModel != null ? c.CarModel.Axles.Count : 0,
+                AxlesCount = c.CarModel != null ? c.CarModel.Axles.Count : 0,                
+                CurbMass = c.CarModel!.CurbMass ?? 0,
+                MaxMass = c.CarModel.MaxMass ?? 0,
                 LastTestDateString = c.DataChecks
                     .OrderByDescending(d => d.Data)
                     .Select(d => d.Data)
@@ -56,6 +59,49 @@ namespace TechSto.Infrastructure.Services
             }
 
             return records;
+        }
+
+        public void DeleteClientRecord(int carId)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                // Загружаем автомобиль с владельцем и проверками
+                var car = _context.TheCars
+                    .Include(c => c.Owner)
+                    .Include(c => c.DataChecks)
+                    .FirstOrDefault(c => c.Id == carId);
+
+                if (car == null)
+                    throw new InvalidOperationException($"Автомобиль с ID {carId} не найден.");
+
+                // Удаляем все проверки, связанные с автомобилем
+                if (car.DataChecks != null && car.DataChecks.Any())
+                {
+                    _context.Checks?.RemoveRange(car.DataChecks);
+                }
+
+                // Удаляем сам автомобиль
+                _context.TheCars.Remove(car);
+
+                // Если у владельца нет других автомобилей, удаляем и его
+                if (car.Owner != null)
+                {
+                    var hasOtherCars = _context.TheCars.Any(c => c.OwnerId == car.Owner.Id && c.Id != carId);
+                    if (!hasOtherCars)
+                    {
+                        _context.Owners.Remove(car.Owner);
+                    }
+                }
+
+                _context.SaveChanges();
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
     }
 }

@@ -1,8 +1,10 @@
 <Window x:Class="TechSto.WPF.AddClientCarWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:properties="clr-namespace:TechSto.WPF.Properties"                
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"           
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:helpers="clr-namespace:TechSto.WPF.Helpers"
+        xmlns:сonverter="clr-namespace:TechSto.WPF.Converters"
+        
         Title="{Binding LocalizationProvider[AddClientWindowTitle], Mode=OneWay}"     
         WindowStyle="ToolWindow"
         ResizeMode="NoResize"
@@ -11,6 +13,8 @@
         Background="#F0F8FF">
 
     <Window.Resources>
+        <сonverter:EnumToLocalizedStringConverter x:Key="EnumToLocalizedStringConverter"/>
+        <helpers:BindingProxy x:Key="Proxy" Data="{Binding}" />
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Window.Resources>
 
@@ -54,7 +58,7 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[StsNumberLabel], Mode=OneWay}"
+                            <TextBlock Text="{Binding LocalizationProvider[OwnerSurnameLabel], Mode=OneWay}"
                                        VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      Text="{Binding STSNumber, UpdateSourceTrigger=PropertyChanged}"
@@ -90,9 +94,9 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding LocalizationProvider[StsNumberLabel], Mode=OneWay}" Foreground="#666" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LocalizationProvider[OwnerSurnameLabel], Mode=OneWay}" Foreground="#666" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="1"
-                                       Text="{Binding SelectedExistingOwner.STSNumber}"
+                                       Text="{Binding SelectedExistingOwner.Surname}"
                                        FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </Grid>
                     </StackPanel>
@@ -315,27 +319,15 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="{Binding LocalizationProvider[ParkingBrakeLabel], Mode=OneWay}" VerticalAlignment="Center"/>
+
                             <ComboBox Grid.Column="1"
-                                      ItemsSource="{Binding ParkingBrakeChoices}"
-                                      SelectedItem="{Binding SelectedParkingBrake}"
-                                      Height="28">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock>
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Text" Value="{Binding}"/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding}" Value="{x:Null}">
-                                                            <Setter Property="Text" Value="—"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
+                                  ItemsSource="{Binding ParkingBrakeChoices}"
+                                  SelectedValue="{Binding SelectedParkingBrake}"
+                                  SelectedValuePath="Value"
+                                  DisplayMemberPath="Display"
+                                  Height="28">
                             </ComboBox>
+                            
                         </Grid>
 
                         <!-- Резервный тормоз -->
@@ -346,26 +338,11 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="{Binding LocalizationProvider[ReserveBrakeLabel], Mode=OneWay}" VerticalAlignment="Center"/>
                             <ComboBox Grid.Column="1"
-                                      ItemsSource="{Binding ReserveBrakeChoices}"
-                                      SelectedItem="{Binding SelectedReserveBrake}"
-                                      Height="28">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock>
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Text" Value="{Binding}"/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding}" Value="{x:Null}">
-                                                            <Setter Property="Text" Value="—"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
+                                 ItemsSource="{Binding ReserveBrakeChoices}"
+                                 SelectedValue="{Binding SelectedReserveBrake}"
+                                 SelectedValuePath="Value"
+                                 DisplayMemberPath="Display"
+                                 Height="28"/>
                         </Grid>
 
                         <!-- Количество осей -->
@@ -410,57 +387,78 @@
                                   PreviewMouseLeftButtonDown="AxlesGrid_PreviewMouseLeftButtonDown">
 
                             <DataGrid.Columns>
+                                <!-- Колонка "№" (порядковый номер оси) -->
                                 <DataGridTextColumn Header="№"
-                                                    Binding="{Binding Order}"
-                                                    IsReadOnly="True"
-                                                    Width="38"/>
+                        Binding="{Binding Order}"
+                        IsReadOnly="True"
+                        Width="38"/>
 
-                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleDirection], Mode=OneWay}" Width="115">
+                                <!-- Колонка "Направление вращения" -->
+                                <DataGridTemplateColumn Header="{Binding Data.LocalizationProvider[AxleDirection], Mode=OneWay, Source={StaticResource Proxy}}" Width="115">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding RotationDirection}"
-                                                       VerticalAlignment="Center" Margin="4,0"/>
+                                            <TextBlock VerticalAlignment="Center" Margin="4,0">
+                                                <TextBlock.Text>
+                                                    <MultiBinding Converter="{StaticResource EnumToLocalizedStringConverter}">
+                                                        <Binding Path="RotationDirection" />
+                                                        <Binding Path="DataContext.LocalizationProvider" RelativeSource="{RelativeSource AncestorType=Window}" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </DataTemplate>                                 
+                                    </DataGridTemplateColumn.CellTemplate>
+                                    <DataGridTemplateColumn.CellEditingTemplate>
+                                        <DataTemplate>
+                                            <ComboBox ItemsSource="{Binding DataContext.RotationDirectionChoices, RelativeSource={RelativeSource AncestorType=Window}}"
+                          DisplayMemberPath="Display"
+                          SelectedValuePath="Value"
+                          SelectedValue="{Binding RotationDirection, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                          Height="24"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellEditingTemplate>
+                                </DataGridTemplateColumn>
+
+                                <!-- Колонка "Стояночный тормоз на оси" (флаг) -->
+                                <DataGridTemplateColumn Header="{Binding Data.LocalizationProvider[AxleParkingBrake], Mode=OneWay, Source={StaticResource Proxy}}" Width="80">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding HasParkingBrake, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <!-- Колонка "Тип тормоза" -->
+                                <DataGridTemplateColumn Header="{Binding Data.LocalizationProvider[AxleBrakeType], Mode=OneWay, Source={StaticResource Proxy}}" Width="100">
+                                    <DataGridTemplateColumn.CellTemplate>          
+                                        <DataTemplate>
+                                            <TextBlock VerticalAlignment="Center" Margin="4,0">
+                                                <TextBlock.Text>
+                                                    <MultiBinding Converter="{StaticResource EnumToLocalizedStringConverter}">
+                                                        <Binding Path="BrakeType" />
+                                                        <Binding Path="DataContext.LocalizationProvider" RelativeSource="{RelativeSource AncestorType=Window}" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                     <DataGridTemplateColumn.CellEditingTemplate>
                                         <DataTemplate>
-                                            <ComboBox SelectedItem="{Binding RotationDirection, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                ItemsSource="{Binding DataContext.RotationDirections, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            <ComboBox ItemsSource="{Binding DataContext.BrakeTypeChoices, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                DisplayMemberPath="Display"
+                                                SelectedValuePath="Value"
+                                                SelectedValue="{Binding BrakeType, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                 Height="24"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellEditingTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleParkingBrake], Mode=OneWay}" Width="80">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <CheckBox IsChecked="{Binding HasParkingBrake, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleBrakeType], Mode=OneWay}" Width="100">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding BrakeType}"
-                                                       VerticalAlignment="Center" Margin="4,0"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                    <DataGridTemplateColumn.CellEditingTemplate>
-                                        <DataTemplate>
-                                            <ComboBox SelectedItem="{Binding BrakeType, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                      ItemsSource="{Binding DataContext.BrakeTypes, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                      Height="24"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellEditingTemplate>
-                                </DataGridTemplateColumn>
-
-                                <DataGridTemplateColumn Header="{Binding LocalizationProvider[AxleRegulator], Mode=OneWay}" Width="80">
+                                <!-- Колонка "Регулятор тормозных сил" (флаг) -->
+                                <DataGridTemplateColumn Header="{Binding Data.LocalizationProvider[AxleRegulator], Mode=OneWay, Source={StaticResource Proxy}}" Width="80">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <CheckBox IsChecked="{Binding HasRegulator, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>

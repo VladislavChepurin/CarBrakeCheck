@@ -160,6 +160,24 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Дисковые.
+        /// </summary>
+        public static string BrakeType_Disc {
+            get {
+                return ResourceManager.GetString("BrakeType_Disc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Барабанные.
+        /// </summary>
+        public static string BrakeType_Drum {
+            get {
+                return ResourceManager.GetString("BrakeType_Drum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Марка и модель.
         /// </summary>
         public static string BrandAndModel {
@@ -403,6 +421,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка при удалении машины.
+        /// </summary>
+        public static string ErrorCarDelete {
+            get {
+                return ResourceManager.GetString("ErrorCarDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Автомобиль не найден..
         /// </summary>
         public static string ErrorCarNotFound {
@@ -547,6 +574,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка.
+        /// </summary>
+        public static string MessageError {
+            get {
+                return ResourceManager.GetString("MessageError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Предупреждение.
         /// </summary>
         public static string MessageWarning {
@@ -610,6 +646,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Не выбрано.
+        /// </summary>
+        public static string None {
+            get {
+                return ResourceManager.GetString("None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Кол-во осей.
         /// </summary>
         public static string NumberOfAxes {
@@ -637,11 +682,47 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Фамилия.
+        /// </summary>
+        public static string OwnerSurnameLabel {
+            get {
+                return ResourceManager.GetString("OwnerSurnameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Стояночный тормоз.
         /// </summary>
         public static string ParkingBrakeLabel {
             get {
                 return ResourceManager.GetString("ParkingBrakeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Электронный.
+        /// </summary>
+        public static string ParkingBrakeType_Electronic {
+            get {
+                return ResourceManager.GetString("ParkingBrakeType_Electronic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ножной.
+        /// </summary>
+        public static string ParkingBrakeType_Foot {
+            get {
+                return ResourceManager.GetString("ParkingBrakeType_Foot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ручной.
+        /// </summary>
+        public static string ParkingBrakeType_Hand {
+            get {
+                return ResourceManager.GetString("ParkingBrakeType_Hand", resourceCulture);
             }
         }
         
@@ -745,11 +826,11 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на СТС:.
+        ///   Ищет локализованную строку, похожую на Фамилия.
         /// </summary>
-        public static string PreviewOwnerSts {
+        public static string PreviewOwnerSurname {
             get {
-                return ResourceManager.GetString("PreviewOwnerSts", resourceCulture);
+                return ResourceManager.GetString("PreviewOwnerSurname", resourceCulture);
             }
         }
         
@@ -831,6 +912,51 @@ namespace TechSto.WPF.Properties {
         public static string ReserveBrakeLabel {
             get {
                 return ResourceManager.GetString("ReserveBrakeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ножной.
+        /// </summary>
+        public static string ReserveBrakeSystem_Foot {
+            get {
+                return ResourceManager.GetString("ReserveBrakeSystem_Foot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ручнной.
+        /// </summary>
+        public static string ReserveBrakeSystem_Hand {
+            get {
+                return ResourceManager.GetString("ReserveBrakeSystem_Hand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отсутствует.
+        /// </summary>
+        public static string ReserveBrakeSystem_N1 {
+            get {
+                return ResourceManager.GetString("ReserveBrakeSystem_N1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Прямое.
+        /// </summary>
+        public static string RotationDirection_Forward {
+            get {
+                return ResourceManager.GetString("RotationDirection_Forward", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обратное.
+        /// </summary>
+        public static string RotationDirection_Reverse {
+            get {
+                return ResourceManager.GetString("RotationDirection_Reverse", resourceCulture);
             }
         }
         
@@ -930,15 +1056,6 @@ namespace TechSto.WPF.Properties {
         public static string StartBth {
             get {
                 return ResourceManager.GetString("StartBth", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Номер СТС.
-        /// </summary>
-        public static string StsNumberLabel {
-            get {
-                return ResourceManager.GetString("StsNumberLabel", resourceCulture);
             }
         }
         

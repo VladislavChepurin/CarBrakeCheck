@@ -1,14 +1,23 @@
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using TechSto.Core.DTOs;
 using TechSto.Core.Entities;
 using TechSto.Core.Interfaces;
 using TechSto.Core.Models;
-using TechSto.Infrastructure.Data;
 using TechSto.WPF.Services;
 
 namespace TechSto.WPF.ViewModels
 {
+    // Вспомогательный класс для отображения локализованных значений enum
+    public class EnumDisplay<T>
+    {
+        public T? Value { get; set; }
+        public string Display { get; set; } = string.Empty;
+    }
     public class PendingCarItem
     {
         public string GosNumber { get; set; } = "";
@@ -20,29 +29,32 @@ namespace TechSto.WPF.ViewModels
     public class AddClientCarViewModel : ViewModelBase
     {
         private readonly IAppSettingsService _appSettingsService;
-        private readonly ILocalizationService _localizationService;       
-        private readonly MainContext _context;
+        private readonly ILocalizationService _localizationService;
         private AppSettings _settings;
 
         private readonly IOwnerService _ownerService;
         private readonly ICarBrandService _brandService;
         private readonly ICarModelService _modelService;
         private readonly ICarCategoryService _categoryService;
+        private readonly IAddClientCarService _addClientCarService;
         private readonly int? _editingCarId;
 
         public event EventHandler? DataSaved;
 
+        // Состояние владельца
         private bool _isNewOwner = true;
         private string _ownerName = "";
-        private string _stsNumber = "";
+        private string _ownerSurname = "";
         private Owner? _selectedExistingOwner;
         private ObservableCollection<Owner> _owners = new();
 
+        // Данные автомобиля
         private string _gosNumber = "";
         private string _vin = "";
         private CarModel? _selectedCarModel;
         private ObservableCollection<CarModel> _carModels = new();
 
+        // Новая модель (расширенная форма)
         private bool _isNewModelExpanded;
         private string _newModelName = "";
         private CarBrand? _selectedBrand;
@@ -56,15 +68,33 @@ namespace TechSto.WPF.ViewModels
         private ReserveBrakeSystem? _selectedReserveBrake;
         private int _axleCount = 2;
         private ObservableCollection<AxleRowViewModel> _axles = new();
+
+        // Справочники
         private ObservableCollection<CarBrand> _brands = new();
         private ObservableCollection<CarСategory> _categories = new();
+
+        // Коллекции для временных автомобилей (при добавлении нескольких)
         private ObservableCollection<PendingCarItem> _pendingCars = new();
 
-        public ObservableCollection<RotationDirection> RotationDirections { get; }
-    = new ObservableCollection<RotationDirection>(Enum.GetValues(typeof(RotationDirection)).Cast<RotationDirection>());
-        public ObservableCollection<BrakeType> BrakeTypes { get; }
-            = new ObservableCollection<BrakeType>(Enum.GetValues(typeof(BrakeType)).Cast<BrakeType>());
+        // Локализованные коллекции для enum
+        private ObservableCollection<EnumDisplay<ParkingBrakeType?>> _parkingBrakeChoices;
+        private ObservableCollection<EnumDisplay<ReserveBrakeSystem?>> _reserveBrakeChoices;
+        private ObservableCollection<EnumDisplay<RotationDirection?>> _rotationDirectionChoices;
+        private ObservableCollection<EnumDisplay<BrakeType?>> _brakeTypeChoices;
 
+        // Команды
+        public ICommand SaveCommand { get; }
+        public ICommand AddAnotherCarCommand { get; }
+        public ICommand CreateBrandCommand { get; }
+        public ICommand CreateModelCommand { get; }
+        public ICommand ToggleNewModelCommand { get; }
+        public ICommand ToggleNewBrandCommand { get; }
+        public ICommand IncreaseAxleCountCommand { get; }
+        public ICommand DecreaseAxleCountCommand { get; }
+
+        public LocalizationProvider LocalizationProvider { get; }
+
+        // ========== Свойства ==========
 
         public AppSettings SettingsModel
         {
@@ -72,6 +102,7 @@ namespace TechSto.WPF.ViewModels
             private set => SetProperty(ref _settings, value);
         }
 
+        // Владелец
         public bool IsNewOwner
         {
             get => _isNewOwner;
@@ -104,10 +135,10 @@ namespace TechSto.WPF.ViewModels
             set { _ownerName = value; OnPropertyChanged(); }
         }
 
-        public string STSNumber
+        public string OwnerSurname
         {
-            get => _stsNumber;
-            set { _stsNumber = value; OnPropertyChanged(); }
+            get => _ownerSurname;
+            set { _ownerSurname = value; OnPropertyChanged(); }
         }
 
         public Owner? SelectedExistingOwner
@@ -120,7 +151,7 @@ namespace TechSto.WPF.ViewModels
                 if (IsEditMode && _selectedExistingOwner != null)
                 {
                     OwnerName = _selectedExistingOwner.Name ?? "";
-                    STSNumber = _selectedExistingOwner.STSNumber ?? "";
+                    OwnerSurname = _selectedExistingOwner.Surname ?? "";
                 }
             }
         }
@@ -131,6 +162,7 @@ namespace TechSto.WPF.ViewModels
             set { _owners = value; OnPropertyChanged(); }
         }
 
+        // Автомобиль
         public string GosNumber
         {
             get => _gosNumber;
@@ -157,6 +189,7 @@ namespace TechSto.WPF.ViewModels
             set { _carModels = value; OnPropertyChanged(); }
         }
 
+        // Новая модель
         public bool IsNewModelExpanded
         {
             get => _isNewModelExpanded;
@@ -241,6 +274,7 @@ namespace TechSto.WPF.ViewModels
             set { _axles = value; OnPropertyChanged(); }
         }
 
+        // Справочники
         public ObservableCollection<CarBrand> Brands
         {
             get => _brands;
@@ -253,49 +287,68 @@ namespace TechSto.WPF.ViewModels
             set { _categories = value; OnPropertyChanged(); }
         }
 
+        // Временные автомобили
         public ObservableCollection<PendingCarItem> PendingCars
         {
             get => _pendingCars;
             set { _pendingCars = value; OnPropertyChanged(); }
         }
 
+        // Режимы
         public bool IsEditMode => _editingCarId.HasValue;
         public bool IsNotEditMode => !IsEditMode;
         public bool CanEditOwnerFields => IsNewOwner || IsEditMode;
 
-        // enum-списки для комбобоксов в форме новой модели
-        public IEnumerable<ParkingBrakeType?> ParkingBrakeChoices { get; } =
-            new ParkingBrakeType?[] { null, ParkingBrakeType.Foot, ParkingBrakeType.Hand };
+        // Локализованные коллекции enum
+        public ObservableCollection<EnumDisplay<ParkingBrakeType?>> ParkingBrakeChoices
+        {
+            get => _parkingBrakeChoices;
+            set => SetProperty(ref _parkingBrakeChoices, value);
+        }
 
-        public IEnumerable<ReserveBrakeSystem?> ReserveBrakeChoices { get; } =
-            Enum.GetValues<ReserveBrakeSystem>().Cast<ReserveBrakeSystem?>().Prepend(null).ToArray();
+        public ObservableCollection<EnumDisplay<ReserveBrakeSystem?>> ReserveBrakeChoices
+        {
+            get => _reserveBrakeChoices;
+            set => SetProperty(ref _reserveBrakeChoices, value);
+        }
 
-        public ICommand SaveCommand { get; }
-        public ICommand AddAnotherCarCommand { get; }
-        public ICommand CreateBrandCommand { get; }
-        public ICommand CreateModelCommand { get; }
-        public ICommand ToggleNewModelCommand { get; }
-        public ICommand ToggleNewBrandCommand { get; }
-        public ICommand IncreaseAxleCountCommand { get; }
-        public ICommand DecreaseAxleCountCommand { get; }
+        public ObservableCollection<EnumDisplay<RotationDirection?>> RotationDirectionChoices
+        {
+            get => _rotationDirectionChoices;
+            set => SetProperty(ref _rotationDirectionChoices, value);
+        }
 
-        public LocalizationProvider LocalizationProvider { get; }
-                  
-        public AddClientCarViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService,
-            LocalizationProvider localizationProvider, IOwnerService ownerService,  ICarBrandService brandService,
-            ICarModelService modelService, ICarCategoryService categoryService, MainContext context, Owner? existingOwner = null,
+        public ObservableCollection<EnumDisplay<BrakeType?>> BrakeTypeChoices
+        {
+            get => _brakeTypeChoices;
+            set => SetProperty(ref _brakeTypeChoices, value);
+        }
+
+        // ========== Конструктор ==========
+
+        public AddClientCarViewModel(
+            IAppSettingsService appSettingsService,
+            ILocalizationService localizationService,
+            LocalizationProvider localizationProvider,
+            IOwnerService ownerService,
+            ICarBrandService brandService,
+            ICarModelService modelService,
+            ICarCategoryService categoryService,
+            IAddClientCarService addClientCarService,
+            Owner? existingOwner = null,
             TheCar? existingCar = null)
-        {        
+        {
             _appSettingsService = appSettingsService;
             _localizationService = localizationService;
             LocalizationProvider = localizationProvider;
-            _context = context;
             _ownerService = ownerService;
             _brandService = brandService;
             _modelService = modelService;
             _categoryService = categoryService;
+            _addClientCarService = addClientCarService;
             _editingCarId = existingCar?.Id;
 
+            // Инициализация команд
             SaveCommand = new RelayCommand(ExecuteSave);
             AddAnotherCarCommand = new RelayCommand(ExecuteAddAnotherCar);
             CreateBrandCommand = new RelayCommand(ExecuteCreateBrand);
@@ -305,21 +358,23 @@ namespace TechSto.WPF.ViewModels
             IncreaseAxleCountCommand = new RelayCommand(_ => AxleCount++);
             DecreaseAxleCountCommand = new RelayCommand(_ => AxleCount--);
 
-
-            // Загружаем настройки
+            // Загружаем настройки и язык
             SettingsModel = _appSettingsService.Load();
-
-            // Устанавливаем язык из настроек
             _localizationService.SetLanguage(SettingsModel.Language);
 
+            // Инициализация локализованных коллекций enum
+            InitializeLocalizedEnums();
+            SelectedReserveBrake = ReserveBrakeSystem.None;
+            // Загрузка справочников из БД
             LoadData();
 
+            // Если редактирование существующего автомобиля
             if (existingCar != null)
             {
                 IsNewOwner = false;
                 SelectedExistingOwner = Owners.FirstOrDefault(o => o.Id == existingCar.OwnerId);
                 OwnerName = SelectedExistingOwner?.Name ?? "";
-                STSNumber = SelectedExistingOwner?.STSNumber ?? "";
+                OwnerSurname = SelectedExistingOwner?.Surname ?? "";
                 GosNumber = existingCar.GosNumber;
                 Vin = existingCar.VinCode;
                 SelectedCarModel = CarModels.FirstOrDefault(m => m.Id == existingCar.CarModelId);
@@ -333,6 +388,61 @@ namespace TechSto.WPF.ViewModels
             RebuildAxles();
         }
 
+        // ========== Инициализация локализованных enum коллекций ==========
+
+        private void InitializeLocalizedEnums()
+        {
+            // ParkingBrakeType
+            ParkingBrakeChoices = new ObservableCollection<EnumDisplay<ParkingBrakeType?>>();
+            foreach (ParkingBrakeType value in Enum.GetValues(typeof(ParkingBrakeType)))
+            {
+                string key = $"ParkingBrakeType_{value}";
+                ParkingBrakeChoices.Add(new EnumDisplay<ParkingBrakeType?>
+                {
+                    Value = value,
+                    Display = LocalizationProvider[key] ?? value.ToString()
+                });
+            }
+
+            // ReserveBrakeSystem
+            ReserveBrakeChoices = new ObservableCollection<EnumDisplay<ReserveBrakeSystem?>>();
+            foreach (ReserveBrakeSystem value in Enum.GetValues(typeof(ReserveBrakeSystem)))
+            {
+                string key = $"ReserveBrakeSystem_{value}";
+                ReserveBrakeChoices.Add(new EnumDisplay<ReserveBrakeSystem?>
+                {
+                    Value = value,
+                    Display = LocalizationProvider[key] ?? value.ToString()
+                });
+            }
+
+            // RotationDirection
+            RotationDirectionChoices = new ObservableCollection<EnumDisplay<RotationDirection?>>();           
+            foreach (RotationDirection value in Enum.GetValues(typeof(RotationDirection)))
+            {
+                string key = $"RotationDirection_{value}";
+                RotationDirectionChoices.Add(new EnumDisplay<RotationDirection?>
+                {
+                    Value = value,
+                    Display = LocalizationProvider[key] ?? value.ToString()
+                });
+            }
+
+            // BrakeType
+            BrakeTypeChoices = new ObservableCollection<EnumDisplay<BrakeType?>>();
+            foreach (BrakeType value in Enum.GetValues(typeof(BrakeType)))
+            {
+                string key = $"BrakeType_{value}";
+                BrakeTypeChoices.Add(new EnumDisplay<BrakeType?>
+                {
+                    Value = value,
+                    Display = LocalizationProvider[key] ?? value.ToString()
+                });
+            }
+        }
+
+        // ========== Загрузка данных ==========
+
         private void LoadData()
         {
             try
@@ -344,8 +454,8 @@ namespace TechSto.WPF.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format(Properties.Resources.ErrorLoadData, ex.Message), Properties.Resources.ErrorTitle,
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.ErrorLoadData, ex.Message),
+                    Properties.Resources.ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -366,11 +476,14 @@ namespace TechSto.WPF.ViewModels
             Axles = newAxles;
         }
 
+        // ========== Команды ==========
+
         private void ExecuteCreateBrand(object? _)
         {
             if (string.IsNullOrWhiteSpace(NewBrandName))
             {
-                MessageBox.Show(Properties.Resources.WarnEnterBrandName, Properties.Resources.MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(LocalizationProvider["WarnEnterBrandName"],
+                    LocalizationProvider["MessageWarning"], MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             var brand = new CarBrand { BrandName = NewBrandName };
@@ -384,7 +497,7 @@ namespace TechSto.WPF.ViewModels
             }
             catch (Microsoft.EntityFrameworkCore.DbUpdateException)
             {
-               MessageBox.Show("Test"); //Заглушка заменить на автоматичекий выбор бренда из БД
+                MessageBox.Show("Test"); // Заглушка, заменить на реальную обработку
             }
         }
 
@@ -392,12 +505,14 @@ namespace TechSto.WPF.ViewModels
         {
             if (string.IsNullOrWhiteSpace(NewModelName))
             {
-                MessageBox.Show(Properties.Resources.WarnEnterModelName, Properties.Resources.MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(LocalizationProvider["WarnEnterModelName"],
+                    LocalizationProvider["MessageWarning"], MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             if (SelectedBrand == null)
             {
-                MessageBox.Show(Properties.Resources.WarnSelectBrand, Properties.Resources.MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(LocalizationProvider["WarnSelectBrand"],
+                    LocalizationProvider["MessageWarning"], MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -426,7 +541,8 @@ namespace TechSto.WPF.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format(Properties.Resources.ErrorCreateModel, ex.Message), Properties.Resources.ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(LocalizationProvider["ErrorCreateModel"], ex.Message),
+                    LocalizationProvider["ErrorTitle"], MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -447,12 +563,14 @@ namespace TechSto.WPF.ViewModels
         {
             if (string.IsNullOrWhiteSpace(GosNumber))
             {
-                MessageBox.Show(Properties.Resources.WarnEnterGosNumber, Properties.Resources.MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(LocalizationProvider["WarnEnterGosNumber"],
+                    LocalizationProvider["MessageWarning"], MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             if (SelectedCarModel == null)
             {
-                MessageBox.Show(Properties.Resources.WarnSelectCarModel, Properties.Resources.MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(LocalizationProvider["WarnSelectCarModel"],
+                    LocalizationProvider["MessageWarning"], MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -471,32 +589,39 @@ namespace TechSto.WPF.ViewModels
 
         private void ExecuteSave(object? _)
         {
+            // Валидация владельца
             if (IsNewOwner && string.IsNullOrWhiteSpace(OwnerName))
             {
-                MessageBox.Show(Properties.Resources.WarnEnterOwnerName, Properties.Resources.MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(LocalizationProvider["WarnEnterOwnerName"],
+                    LocalizationProvider["MessageWarning"], MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             if (!IsNewOwner && SelectedExistingOwner == null)
             {
-                MessageBox.Show(Properties.Resources.WarnSelectOwner, Properties.Resources.MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(LocalizationProvider["WarnSelectOwner"],
+                    LocalizationProvider["MessageWarning"], MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
+            // Для режима редактирования проверяем поля автомобиля
             if (IsEditMode)
             {
                 if (string.IsNullOrWhiteSpace(GosNumber))
                 {
-                    MessageBox.Show(Properties.Resources.WarnEnterGosNumber, Properties.Resources.MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(LocalizationProvider["WarnEnterGosNumber"],
+                        LocalizationProvider["MessageWarning"], MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
                 if (SelectedCarModel == null)
                 {
-                    MessageBox.Show(Properties.Resources.WarnSelectCarModel, Properties.Resources.MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(LocalizationProvider["WarnSelectCarModel"],
+                        LocalizationProvider["MessageWarning"], MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
             }
-            else
+            else // Для добавления нового клиента с несколькими авто
             {
+                // Добавляем текущий автомобиль, если он заполнен
                 if (!string.IsNullOrWhiteSpace(GosNumber) && SelectedCarModel != null)
                 {
                     PendingCars.Add(new PendingCarItem
@@ -510,74 +635,52 @@ namespace TechSto.WPF.ViewModels
 
                 if (PendingCars.Count == 0)
                 {
-                    MessageBox.Show(Properties.Resources.WarnAddAtLeastOneCar, Properties.Resources.MessageWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(LocalizationProvider["WarnAddAtLeastOneCar"],
+                        LocalizationProvider["MessageWarning"], MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
             }
 
             try
             {
-                using var tx = _context.Database.BeginTransaction();
                 if (IsEditMode)
                 {
-                    var car = _context.TheCars.Find(_editingCarId!.Value);
-                    if (car == null)
+                    _addClientCarService.UpdateClientCar(new UpdateClientCarDto
                     {
-                        MessageBox.Show(Properties.Resources.ErrorCarNotFound, Properties.Resources.ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-
-                    car.GosNumber = GosNumber;
-                    car.VinCode = Vin ?? "";
-                    car.CarModelId = SelectedCarModel!.Id;
-
-                    if (SelectedExistingOwner != null)
-                    {
-                        SelectedExistingOwner.Name = OwnerName;
-                        SelectedExistingOwner.STSNumber = STSNumber ?? "";
-                        car.OwnerId = SelectedExistingOwner.Id;
-                    }
+                        CarId = _editingCarId!.Value,
+                        GosNumber = GosNumber,
+                        VinCode = Vin ?? "",
+                        CarModelId = SelectedCarModel!.Id,
+                        OwnerId = SelectedExistingOwner?.Id,
+                        OwnerName = OwnerName,
+                        OwnerSurname = OwnerSurname ?? ""
+                    });
                 }
                 else
                 {
-                    Owner? owner = null;
-                    if (IsNewOwner)
+                    _addClientCarService.SaveNewClientWithCars(new SaveNewClientDto
                     {
-                        owner = new Owner { Name = OwnerName, STSNumber = STSNumber ?? "" };
-                        _context.Owners.Add(owner);
-                    }
-                    else
-                    {
-                        owner = SelectedExistingOwner;
-                    }
-
-                    foreach (var pending in PendingCars)
-                    {
-                        var car = new TheCar
+                        IsNewOwner = IsNewOwner,
+                        OwnerName = OwnerName,
+                        OwnerSurname = OwnerSurname ?? "",
+                        ExistingOwnerId = SelectedExistingOwner?.Id,
+                        ExistingOwnerName = OwnerName,
+                        ExistingOwnerSurname = OwnerSurname ?? "",
+                        Cars = PendingCars.Select(p => new ClientCarItemDto
                         {
-                            GosNumber = pending.GosNumber,
-                            VinCode = pending.Vin ?? "",                            
-                            CarModelId = pending.CarModelId
-                        };
-
-                        if (IsNewOwner)
-                            car.Owner = owner!;
-                        else
-                            car.OwnerId = owner!.Id;
-
-                        _context.TheCars.Add(car);
-                    }
+                            GosNumber = p.GosNumber,
+                            VinCode = p.Vin ?? "",
+                            CarModelId = p.CarModelId
+                        }).ToList()
+                    });
                 }
-
-                _context.SaveChanges();
-                tx.Commit();
-
                 DataSaved?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format(Properties.Resources.ErrorSaveData, ex.Message), Properties.Resources.ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(LocalizationProvider["ErrorSaveData"], ex.Message),
+                    LocalizationProvider["ErrorTitle"], MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }          
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace TechSto.Core.Entities
         [Required]
         public string Name { get; set; }
 
-        public string STSNumber { get; set; } //Пока под вопросом необходимость данного поля 
+        public string Surname { get; set; }
 
         // Навигационное свойство: список автомобилей владельца
         public virtual ICollection<TheCar> TheCars { get; set; } = new ObservableCollection<TheCar>();   

@@ -198,9 +198,6 @@
   <data name="OwnerNameLabel" xml:space="preserve">
     <value>Имя</value>
   </data>
-  <data name="StsNumberLabel" xml:space="preserve">
-    <value>Номер СТС</value>
-  </data>
   <data name="GosNumberLabel" xml:space="preserve">
     <value>Госномер</value>
   </data>
@@ -345,9 +342,6 @@
   <data name="PreviewOwnerName" xml:space="preserve">
     <value>Имя</value>
   </data>
-  <data name="PreviewOwnerSts" xml:space="preserve">
-    <value>СТС:</value>
-  </data>
   <data name="PreviewSectionCar" xml:space="preserve">
     <value>Автомобиль</value>
   </data>
@@ -452,5 +446,50 @@
   </data>
   <data name="NumberOfAxes" xml:space="preserve">
     <value>Кол-во осей</value>
+  </data>
+  <data name="ErrorCarDelete" xml:space="preserve">
+    <value>Ошибка при удалении машины</value>
+  </data>
+  <data name="MessageError" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Не выбрано</value>
+  </data>
+  <data name="ParkingBrakeType_Foot" xml:space="preserve">
+    <value>Ножной</value>
+  </data>
+  <data name="ParkingBrakeType_Hand" xml:space="preserve">
+    <value>Ручной</value>
+  </data>
+  <data name="ParkingBrakeType_Electronic" xml:space="preserve">
+    <value>Электронный</value>
+  </data>
+  <data name="RotationDirection_Forward" xml:space="preserve">
+    <value>Прямое</value>
+  </data>
+  <data name="RotationDirection_Reverse" xml:space="preserve">
+    <value>Обратное</value>
+  </data>
+  <data name="BrakeType_Drum" xml:space="preserve">
+    <value>Барабанные</value>
+  </data>
+  <data name="BrakeType_Disc" xml:space="preserve">
+    <value>Дисковые</value>
+  </data>
+  <data name="ReserveBrakeSystem_Hand" xml:space="preserve">
+    <value>Ручнной</value>
+  </data>
+  <data name="ReserveBrakeSystem_Foot" xml:space="preserve">
+    <value>Ножной</value>
+  </data>
+  <data name="OwnerSurnameLabel" xml:space="preserve">
+    <value>Фамилия</value>
+  </data>
+  <data name="ReserveBrakeSystem_N1" xml:space="preserve">
+    <value>Отсутствует</value>
+  </data>
+  <data name="PreviewOwnerSurname" xml:space="preserve">
+    <value>Фамилия</value>
   </data>
 </root>
