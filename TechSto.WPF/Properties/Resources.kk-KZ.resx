@@ -349,7 +349,7 @@
     <value>Lorem ipsum:</value>
   </data>
   <data name="PreviewCarVin" xml:space="preserve">
-    <value>Lorem:</value>
+    <value>VIN:</value>
   </data>
   <data name="PreviewCarBrand" xml:space="preserve">
     <value>Lorem:</value>
@@ -486,10 +486,43 @@
   <data name="OwnerSurnameLabel" xml:space="preserve">
     <value>Тегі</value>
   </data>
-  <data name="ReserveBrakeSystem_N1" xml:space="preserve">
+  <data name="ReserveBrakeSystem_None" xml:space="preserve">
     <value>Lorem</value>
   </data>
   <data name="PreviewOwnerSurname" xml:space="preserve">
     <value>Тегі</value>
+  </data>
+  <data name="AllCheckBth" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="WarnSelectRowToOpenCheck" xml:space="preserve">
+    <value>Lorem ipsum dolor</value>
+  </data>
+  <data name="MessageInformation" xml:space="preserve">
+    <value>Ақпарат</value>
+  </data>
+  <data name="NoChecksFound" xml:space="preserve">
+    <value>Автоматты тексеру {0} табылған жоқ</value>
+  </data>
+  <data name="ChecksWindowTitle" xml:space="preserve">
+    <value>Барлық тексерулер</value>
+  </data>
+  <data name="DateColumnHeader" xml:space="preserve">
+    <value>Күні</value>
+  </data>
+  <data name="ResultColumnHeader" xml:space="preserve">
+    <value>Нәтиже</value>
+  </data>
+  <data name="CarInfo" xml:space="preserve">
+    <value>Көлік</value>
+  </data>
+  <data name="CloseButton" xml:space="preserve">
+    <value>Жабу</value>
+  </data>
+  <data name="CheckPassed" xml:space="preserve">
+    <value>Lorem ipsum</value>
+  </data>
+  <data name="CheckFailed" xml:space="preserve">
+    <value>Lorem ipsum</value>
   </data>
 </root>

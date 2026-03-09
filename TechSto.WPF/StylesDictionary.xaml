@@ -45,7 +45,22 @@
         <Setter Property="Margin" Value="10,0,0,0"/>
     </Style>
 
-    <!-- Стиль для карточек правой панели Settings -->
+
+    <!-- Стиль для выпадающей карточки -->
+    <Style x:Key="CardExpanderStyle" TargetType="Expander">
+        <Setter Property="Background" Value="White"/>        
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="Margin" Value="0,0,0,5"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+        
+    <!-- Стиль для карточек -->
     <Style x:Key="CardBorderStyle" TargetType="Border">
         <Setter Property="Background" Value="White"/>
         <Setter Property="CornerRadius" Value="5"/>
@@ -56,6 +71,8 @@
                 <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
             </Setter.Value>
         </Setter>
+        <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
     </Style>
 
     <!-- Стиль для карточек правой панели Settings подзаголовки -->
@@ -244,4 +261,20 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="DataGridCellStyle" TargetType="DataGridCell">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+
+    <Style x:Key="ResultPassedStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Foreground" Value="Green"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <Style x:Key="ResultFailedStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Foreground" Value="Red"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+    
 </ResourceDictionary>

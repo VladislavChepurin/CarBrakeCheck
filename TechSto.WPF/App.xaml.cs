@@ -48,7 +48,8 @@ namespace TechSto.WPF
                     services.AddScoped<ICarCategoryService, CarCategoryService>();
                     services.AddScoped<IOwnerService, OwnerService>();
                     services.AddScoped<ITheCarService, TheCarService>();
-                    services.AddScoped<IAddClientCarService, AddClientCarService>();                 
+                    services.AddScoped<IAddClientCarService, AddClientCarService>();
+                    services.AddScoped<ICheckService, CheckService>();
 
                     //services.AddScoped<ICarDetailsService, CarDetailsService>(); // если есть
 
@@ -66,12 +67,14 @@ namespace TechSto.WPF
                     services.AddTransient<HelpViewModel>();
                     services.AddTransient<AboutViewModel>();
                     services.AddTransient<SettingsViewModel>();
-                    services.AddTransient<ClientViewModel>(); // если есть
+                    services.AddTransient<ClientViewModel>();
                     services.AddTransient<AddClientCarViewModel>();
+                    services.AddTransient<ChecksWindowViewModel>();
 
                     // Окна
                     services.AddTransient<MainWindow>();
-                    services.AddTransient<AddClientCarWindow>();                    
+                    services.AddTransient<AddClientCarWindow>();
+                    services.AddTransient<ChecksWindow>();
                 })
                 .Build();
         }

@@ -97,6 +97,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Все проверки.
+        /// </summary>
+        public static string AllCheckBth {
+            get {
+                return ResourceManager.GetString("AllCheckBth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Автомат.
         /// </summary>
         public static string AutoBth {
@@ -223,6 +232,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Автомобиль.
+        /// </summary>
+        public static string CarInfo {
+            get {
+                return ResourceManager.GetString("CarInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Модель машины.
         /// </summary>
         public static string CarModelHeader {
@@ -250,11 +268,47 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверка не пройдена.
+        /// </summary>
+        public static string CheckFailed {
+            get {
+                return ResourceManager.GetString("CheckFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверка пройдена.
+        /// </summary>
+        public static string CheckPassed {
+            get {
+                return ResourceManager.GetString("CheckPassed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Все проверки.
+        /// </summary>
+        public static string ChecksWindowTitle {
+            get {
+                return ResourceManager.GetString("ChecksWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Выбрать.
         /// </summary>
         public static string ChooseBtn {
             get {
                 return ResourceManager.GetString("ChooseBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Закрыть.
+        /// </summary>
+        public static string CloseButton {
+            get {
+                return ResourceManager.GetString("CloseButton", resourceCulture);
             }
         }
         
@@ -349,7 +403,16 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Дата последнего испытания.
+        ///   Ищет локализованную строку, похожую на Дата.
+        /// </summary>
+        public static string DateColumnHeader {
+            get {
+                return ResourceManager.GetString("DateColumnHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Дата посл. испыт..
         /// </summary>
         public static string DateLastTestHeader {
             get {
@@ -583,6 +646,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Информация.
+        /// </summary>
+        public static string MessageInformation {
+            get {
+                return ResourceManager.GetString("MessageInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Предупреждение.
         /// </summary>
         public static string MessageWarning {
@@ -642,6 +714,15 @@ namespace TechSto.WPF.Properties {
         public static string NewOwner {
             get {
                 return ResourceManager.GetString("NewOwner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверок авто {0} не обнаружено.
+        /// </summary>
+        public static string NoChecksFound {
+            get {
+                return ResourceManager.GetString("NoChecksFound", resourceCulture);
             }
         }
         
@@ -936,9 +1017,18 @@ namespace TechSto.WPF.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Отсутствует.
         /// </summary>
-        public static string ReserveBrakeSystem_N1 {
+        public static string ReserveBrakeSystem_None {
             get {
-                return ResourceManager.GetString("ReserveBrakeSystem_N1", resourceCulture);
+                return ResourceManager.GetString("ReserveBrakeSystem_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Результат.
+        /// </summary>
+        public static string ResultColumnHeader {
+            get {
+                return ResourceManager.GetString("ResultColumnHeader", resourceCulture);
             }
         }
         
@@ -1182,6 +1272,15 @@ namespace TechSto.WPF.Properties {
         public static string WarnSelectRowToEdit {
             get {
                 return ResourceManager.GetString("WarnSelectRowToEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выберете строку для вывода истории всех проверок..
+        /// </summary>
+        public static string WarnSelectRowToOpenCheck {
+            get {
+                return ResourceManager.GetString("WarnSelectRowToOpenCheck", resourceCulture);
             }
         }
     }

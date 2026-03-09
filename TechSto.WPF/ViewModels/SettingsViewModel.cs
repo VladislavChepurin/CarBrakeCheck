@@ -10,26 +10,16 @@ namespace TechSto.WPF.ViewModels
 {
     public class SettingsViewModel: ViewModelBase
     {            
-        private bool _isDeviceConnected;
-
-        //private readonly IHost _host;
-
+        private bool _isDeviceConnected;     
         private ClientRecordDto _selectedClientRecord;
         private Visibility _brandsVisibility = Visibility.Collapsed;
-        private ObservableCollection<ClientRecordDto> _clientRecords = [];
-        public ICommand AddClientCommand { get; }
-        public ICommand EditClientCommand { get; }
-        public ICommand DeleteClientCommand { get; }
-        public ICommand StartCommand { get; }
-        public ICommand ManualModeCommand { get; }
-        public ICommand AutoModeCommand { get; }
-
+        private ObservableCollection<ClientRecordDto> _clientRecords = [];  
         private readonly IAppSettingsService _appSettingsService;
         private readonly ILocalizationService _localizationService;
         private readonly IClientRecordService _clientRecordService;
         private readonly IServiceProvider _serviceProvider;
         private AppSettings _settings;
-                                  
+
         public ClientRecordDto SelectedClientRecord
         {
             get => _selectedClientRecord;
@@ -37,7 +27,15 @@ namespace TechSto.WPF.ViewModels
             {
                 _selectedClientRecord = value;
                 OnPropertyChanged();
-                OnSelectedClientRecordChanged(); // метод для обновления зависимых свойств
+                OnSelectedClientRecordChanged();
+
+                // Обновляем состояние команды Start
+                _startCommand?.RaiseCanExecuteChanged();
+
+                // Если есть другие команды, зависящие от выбора
+                (_editClientCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                (_deleteClientCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                (_allCheckClientCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -47,10 +45,30 @@ namespace TechSto.WPF.ViewModels
                 ? $"{SelectedClientRecord.BrandName} {SelectedClientRecord.Model}"
                 : "";
 
-        // Уточнить необходимость данных свойств, DataGrid заполняется из ClientRecordDto
+        private RelayCommand? _addClientCommand;
+        public ICommand AddClientCommand => _addClientCommand ??= new RelayCommand(OpenAddClientWindow);
+
+        private RelayCommand? _editClientCommand;
+        public ICommand EditClientCommand => _editClientCommand ??= new RelayCommand(OpenEditClientWindow, CanExecuteCommand);
+
+        private RelayCommand? _deleteClientCommand;
+        public ICommand DeleteClientCommand => _deleteClientCommand ??= new RelayCommand(DeleteClient, CanExecuteCommand);
+
+        private RelayCommand? _allCheckClientCommand;
+        public ICommand AllCheckClientCommand => _allCheckClientCommand ??= new RelayCommand(OpenAllCheckClient, CanExecuteCommand);
+
+        private RelayCommand? _startCommand;
+        public ICommand StartCommand => _startCommand ??= new RelayCommand(ExecuteStart, CanExecuteCommand);
+
+        // Команды для режимов (не зависят от выбора)
+        private RelayCommand? _manualModeCommand;
+        public ICommand ManualModeCommand => _manualModeCommand ??= new RelayCommand(_ => SelectedMeasurementMode = false);
+
+        private RelayCommand? _autoModeCommand;
+        public ICommand AutoModeCommand => _autoModeCommand ??= new RelayCommand(_ => SelectedMeasurementMode = true);
+
         public string OnwerName => SelectedClientRecord?.OwnerName ?? "";
         public string OnwerSurname => SelectedClientRecord?.OwnerSurname ?? "";
-        //public string Onwer => SelectedClientRecord?.OwnerName ?? "";
         public string VinNumber => SelectedClientRecord?.VinCode ?? "";
         public string GosNumber => SelectedClientRecord?.GosNumber ?? "";
         public string CarCategory => SelectedClientRecord?.CategoryName ?? "";
@@ -128,24 +146,12 @@ namespace TechSto.WPF.ViewModels
         public SettingsViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService, 
             IClientRecordService clientRecordService, IServiceProvider serviceProvider, 
             LocalizationProvider localizationProvider)
-        {
-           
+        {           
             _appSettingsService = appSettingsService;
             _localizationService = localizationService;
             _clientRecordService = clientRecordService;
             _serviceProvider = serviceProvider;           
-            //_addClientCarWindow = addClientCarWindow; 
             LocalizationProvider = localizationProvider;
-
-            //LocalizationProvider = new LocalizationProvider(_localizationService);
-
-            //Кнопки CRUD
-            AddClientCommand = new RelayCommand(OpenAddClientWindow);
-            EditClientCommand = new RelayCommand(OpenEditClientWindow);
-            DeleteClientCommand = new RelayCommand(DeleteClient);
-
-            StartCommand = new RelayCommand(ExecuteStart, CanExecuteStart);
-            
             // Загружаем настройки
             SettingsModel = _appSettingsService.Load();
             // Устанавливаем язык из настроек
@@ -200,8 +206,8 @@ namespace TechSto.WPF.ViewModels
 
             if (window.ShowDialog() == true)
             {
-                LoadData(); // перезагрузка данных после успешного сохранения
-            }
+                LoadData(); // перезагрузка данных после успешного сохранения               
+            }          
         }
 
         private void DeleteClient(object e)
@@ -245,8 +251,61 @@ namespace TechSto.WPF.ViewModels
                     MessageBoxImage.Error);
             }
         }
-    
 
+        private void OpenAllCheckClient(object e)
+        {
+            if (SelectedClientRecord == null)
+            {
+                MessageBox.Show(
+                    LocalizationProvider["WarnSelectRowToOpenCheck"],
+                    LocalizationProvider["MessageWarning"],
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                SetFocusReturn();
+                return;
+            }
+
+            // Проверяем наличие проверок через сервис
+            using var scope = _serviceProvider.CreateScope();
+            var sp = scope.ServiceProvider;
+            var checkService = sp.GetRequiredService<ICheckService>();
+
+            var checks = checkService.GetChecksDtoByCarId(SelectedClientRecord.CarId);
+
+            if (checks == null || !checks.Any())
+            {
+                MessageBox.Show(
+                    string.Format(LocalizationProvider["NoChecksFound"], SelectedClientRecord.GosNumber),
+                    LocalizationProvider["MessageInformation"],
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+                SetFocusReturn();
+                return;
+            }
+
+            // Формируем информацию об автомобиле
+            string carInfo = $"{SelectedClientRecord.BrandName} {SelectedClientRecord.Model}".Trim();
+
+            // Получаем фабрику или используем ActivatorUtilities для создания ViewModel с параметрами
+            var viewModel = ActivatorUtilities.CreateInstance<ChecksWindowViewModel>(
+                sp,
+                checkService,
+                LocalizationProvider,
+                SelectedClientRecord.CarId,
+                SelectedClientRecord.OwnerName ?? "",
+                SelectedClientRecord.OwnerSurname ?? "",
+                SelectedClientRecord.GosNumber ?? "",
+                carInfo
+            );
+
+            // Получаем окно из DI и устанавливаем ViewModel
+            var window = sp.GetRequiredService<ChecksWindow>();
+            window.DataContext = viewModel;
+            window.Owner = Application.Current.MainWindow;   
+            window.Closed += (s, args) => SetFocusReturn();
+            window.ShowDialog();
+        }
+                
         private void OnSelectedClientRecordChanged()
         {
             // Обновляем список осей
@@ -260,32 +319,35 @@ namespace TechSto.WPF.ViewModels
             }
             // Сбросить выбранную ось, если их количество изменилось
             SelectedAxle = AxleItems.FirstOrDefault();
-
             // Обновить свойства, от которых зависит интерфейс
-
             OnPropertyChanged(nameof(SelectedCarDisplay));
-
             OnPropertyChanged(nameof(GosNumber));
             OnPropertyChanged(nameof(VinNumber));
             OnPropertyChanged(nameof(CarCategory));
             OnPropertyChanged(nameof(AxlesCount));
             OnPropertyChanged(nameof(OnwerName));
             OnPropertyChanged(nameof(OnwerSurname));
-            //OnPropertyChanged(nameof(Onwer));
             OnPropertyChanged(nameof(CurbMass));
             OnPropertyChanged(nameof(MaxMass));
+        }
+        private bool CanExecuteCommand(object? parameter)
+        {
+            return SelectedClientRecord != null;
+        }
 
+        private void SetFocusReturn()
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var mainWindow = Application.Current.MainWindow as MainWindow;
+                mainWindow?.MainTableWithClientData?.Focus();
+            }));
         }
 
         private void ExecuteStart(object? parameter)
         {
-            // Ваша логика
+            
         }
-
-        private bool CanExecuteStart(object? parameter)
-        {
-            // Возвращаете true/false, параметр можно игнорировать, если не нужен
-            return SelectedClientRecord != null;
-        }
+   
     }
 }

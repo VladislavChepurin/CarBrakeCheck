@@ -486,10 +486,43 @@
   <data name="OwnerSurnameLabel" xml:space="preserve">
     <value>Surname</value>
   </data>
-  <data name="ReserveBrakeSystem_N1" xml:space="preserve">
+  <data name="ReserveBrakeSystem_None" xml:space="preserve">
     <value>None</value>
   </data>
   <data name="PreviewOwnerSurname" xml:space="preserve">
     <value>Surname</value>
+  </data>
+  <data name="AllCheckBth" xml:space="preserve">
+    <value>All check</value>
+  </data>
+  <data name="WarnSelectRowToOpenCheck" xml:space="preserve">
+    <value>Select the line to display the history of all checks.</value>
+  </data>
+  <data name="MessageInformation" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="NoChecksFound" xml:space="preserve">
+    <value>No auto checks found {0}</value>
+  </data>
+  <data name="ChecksWindowTitle" xml:space="preserve">
+    <value>All checks</value>
+  </data>
+  <data name="DateColumnHeader" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="ResultColumnHeader" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="CarInfo" xml:space="preserve">
+    <value>Car</value>
+  </data>
+  <data name="CloseButton" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="CheckPassed" xml:space="preserve">
+    <value>Check рassed</value>
+  </data>
+  <data name="CheckFailed" xml:space="preserve">
+    <value>Check failed</value>
   </data>
 </root>

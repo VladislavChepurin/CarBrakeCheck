@@ -406,7 +406,7 @@
     <value>Модель машины</value>
   </data>
   <data name="DateLastTestHeader" xml:space="preserve">
-    <value>Дата последнего испытания</value>
+    <value>Дата посл. испыт.</value>
   </data>
   <data name="SelectedAuto" xml:space="preserve">
     <value>Выбранное АТС</value>
@@ -486,10 +486,43 @@
   <data name="OwnerSurnameLabel" xml:space="preserve">
     <value>Фамилия</value>
   </data>
-  <data name="ReserveBrakeSystem_N1" xml:space="preserve">
+  <data name="ReserveBrakeSystem_None" xml:space="preserve">
     <value>Отсутствует</value>
   </data>
   <data name="PreviewOwnerSurname" xml:space="preserve">
     <value>Фамилия</value>
+  </data>
+  <data name="AllCheckBth" xml:space="preserve">
+    <value>Все проверки</value>
+  </data>
+  <data name="WarnSelectRowToOpenCheck" xml:space="preserve">
+    <value>Выберете строку для вывода истории всех проверок.</value>
+  </data>
+  <data name="MessageInformation" xml:space="preserve">
+    <value>Информация</value>
+  </data>
+  <data name="NoChecksFound" xml:space="preserve">
+    <value>Проверок авто {0} не обнаружено</value>
+  </data>
+  <data name="ChecksWindowTitle" xml:space="preserve">
+    <value>Все проверки</value>
+  </data>
+  <data name="DateColumnHeader" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="ResultColumnHeader" xml:space="preserve">
+    <value>Результат</value>
+  </data>
+  <data name="CarInfo" xml:space="preserve">
+    <value>Автомобиль</value>
+  </data>
+  <data name="CloseButton" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="CheckPassed" xml:space="preserve">
+    <value>Проверка пройдена</value>
+  </data>
+  <data name="CheckFailed" xml:space="preserve">
+    <value>Проверка не пройдена</value>
   </data>
 </root>

@@ -162,11 +162,7 @@ namespace TechSto.WPF
             {
                 if (_tabMapping.TryGetValue(tabName, out var tabInfo))
                 {
-                    SelectTab(tabInfo.tab, tabInfo.content);
-
-                    //// Сохраняем последнюю вкладку в настройках
-                    //_viewModel.SettingsModel.LastSelectedTab = tabName;
-                    //_appSettingsService.Save(_viewModel.SettingsModel);
+                    SelectTab(tabInfo.tab, tabInfo.content);                                       
                 }
             }
             catch (Exception ex)

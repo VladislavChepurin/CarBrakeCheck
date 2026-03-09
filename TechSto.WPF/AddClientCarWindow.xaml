@@ -22,10 +22,7 @@
         <StackPanel Margin="20" Width="540">
 
             <!-- Владелец -->
-            <Border Background="White" CornerRadius="5" Margin="0,0,0,10" Padding="15">
-                <Border.Effect>
-                    <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
-                </Border.Effect>
+            <Border Style="{StaticResource CardBorderStyle}">               
                 <StackPanel>
                     <TextBlock Text="{Binding LocalizationProvider[SectionOwner], Mode=OneWay}"
                                FontSize="14" FontWeight="Bold" Foreground="#0066CC" Margin="0,0,0,10"/>
@@ -61,7 +58,7 @@
                             <TextBlock Text="{Binding LocalizationProvider[OwnerSurnameLabel], Mode=OneWay}"
                                        VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
-                                     Text="{Binding STSNumber, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{Binding OwnerSurname, UpdateSourceTrigger=PropertyChanged}"
                                      Height="26" Padding="4,3"/>
                         </Grid>
                     </StackPanel>
@@ -104,10 +101,7 @@
             </Border>
 
             <!-- Авто -->
-            <Border Background="White" CornerRadius="5" Margin="0,0,0,10" Padding="15">
-                <Border.Effect>
-                    <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
-                </Border.Effect>
+            <Border Style="{StaticResource CardBorderStyle}">               
                 <StackPanel>
                     <TextBlock Text="{Binding LocalizationProvider[SectionCar], Mode=OneWay}"
                                FontSize="14" FontWeight="Bold" Foreground="#0066CC" Margin="0,0,0,10"/>
@@ -196,15 +190,7 @@
             </Border>
 
             <!-- новая модель -->
-            <Expander IsExpanded="{Binding IsNewModelExpanded}"
-                      Background="White"
-                      Margin="0,0,0,10">
-                <Expander.Style>
-                    <Style TargetType="Expander">
-                        <Setter Property="BorderBrush" Value="#B3D9FF"/>
-                        <Setter Property="BorderThickness" Value="1"/>
-                    </Style>
-                </Expander.Style>
+            <Expander IsExpanded="{Binding IsNewModelExpanded}" Style="{StaticResource CardExpanderStyle}">                
                 <Expander.Header>
                     <TextBlock Text="{Binding LocalizationProvider[SectionNewModel], Mode=OneWay}"
                                FontSize="13" FontWeight="Bold" Foreground="#0066CC" Margin="4,0"/>
@@ -419,7 +405,7 @@
                                 </DataGridTemplateColumn>
 
                                 <!-- Колонка "Стояночный тормоз на оси" (флаг) -->
-                                <DataGridTemplateColumn Header="{Binding Data.LocalizationProvider[AxleParkingBrake], Mode=OneWay, Source={StaticResource Proxy}}" Width="80">
+                                <DataGridTemplateColumn Header="{Binding Data.LocalizationProvider[AxleParkingBrake], Mode=OneWay, Source={StaticResource Proxy}}" Width="90">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <CheckBox IsChecked="{Binding HasParkingBrake, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -454,7 +440,7 @@
                                 </DataGridTemplateColumn>
 
                                 <!-- Колонка "Регулятор тормозных сил" (флаг) -->
-                                <DataGridTemplateColumn Header="{Binding Data.LocalizationProvider[AxleRegulator], Mode=OneWay, Source={StaticResource Proxy}}" Width="80">
+                                <DataGridTemplateColumn Header="{Binding Data.LocalizationProvider[AxleRegulator], Mode=OneWay, Source={StaticResource Proxy}}" Width="90">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <CheckBox IsChecked="{Binding HasRegulator, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -495,10 +481,7 @@
             </ItemsControl>
 
             <!-- кнопки панели действий -->
-            <Border Background="White" CornerRadius="5" Margin="0,5,0,5" Padding="15,10">
-                <Border.Effect>
-                    <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
-                </Border.Effect>
+            <Border Style="{StaticResource CardBorderStyle}">               
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Content="{Binding LocalizationProvider[AddAnotherCarBtn], Mode=OneWay}"
                             Command="{Binding AddAnotherCarCommand}"
