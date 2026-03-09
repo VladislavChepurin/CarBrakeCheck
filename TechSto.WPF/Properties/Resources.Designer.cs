@@ -747,9 +747,9 @@ namespace TechSto.WPF.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Владелец.
         /// </summary>
-        public static string OnwerHeader {
+        public static string OwnerHeader {
             get {
-                return ResourceManager.GetString("OnwerHeader", resourceCulture);
+                return ResourceManager.GetString("OwnerHeader", resourceCulture);
             }
         }
         

@@ -390,7 +390,7 @@
   <data name="EquipmentIsNotConnected" xml:space="preserve">
     <value>Uskuna ulanmagan</value>
   </data>
-  <data name="OnwerHeader" xml:space="preserve">
+  <data name="OwnerHeader" xml:space="preserve">
     <value>Lorem</value>
   </data>
   <data name="CarNumberHeader" xml:space="preserve">

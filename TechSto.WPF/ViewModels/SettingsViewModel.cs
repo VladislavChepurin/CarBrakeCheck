@@ -8,17 +8,21 @@ using TechSto.Core.Models;
 using TechSto.WPF.Services;
 namespace TechSto.WPF.ViewModels
 {
-    public class SettingsViewModel: ViewModelBase
+    public class SettingsViewModel: ViewModelBase, IDisposable
     {            
         private bool _isDeviceConnected;     
         private ClientRecordDto _selectedClientRecord;
         private Visibility _brandsVisibility = Visibility.Collapsed;
-        private ObservableCollection<ClientRecordDto> _clientRecords = [];  
+        private ObservableCollection<ClientRecordDto> _clientRecords = [];
+        private ObservableCollection<ClientRecordDto> _allClientRecords = [];
+        private List<ClientRecordDto> _filteredList = [];
         private readonly IAppSettingsService _appSettingsService;
         private readonly ILocalizationService _localizationService;
         private readonly IClientRecordService _clientRecordService;
         private readonly IServiceProvider _serviceProvider;
         private AppSettings _settings;
+        private string _searchText = string.Empty;
+        private System.Timers.Timer _searchTimer;
 
         public ClientRecordDto SelectedClientRecord
         {
@@ -67,14 +71,28 @@ namespace TechSto.WPF.ViewModels
         private RelayCommand? _autoModeCommand;
         public ICommand AutoModeCommand => _autoModeCommand ??= new RelayCommand(_ => SelectedMeasurementMode = true);
 
-        public string OnwerName => SelectedClientRecord?.OwnerName ?? "";
-        public string OnwerSurname => SelectedClientRecord?.OwnerSurname ?? "";
+        public string OwnerName => SelectedClientRecord?.OwnerName ?? "";
+        public string OwnerSurname => SelectedClientRecord?.OwnerSurname ?? "";
         public string VinNumber => SelectedClientRecord?.VinCode ?? "";
         public string GosNumber => SelectedClientRecord?.GosNumber ?? "";
         public string CarCategory => SelectedClientRecord?.CategoryName ?? "";
         public int AxlesCount => SelectedClientRecord?.AxlesCount ?? 0;
         public int CurbMass => SelectedClientRecord?.CurbMass ?? 0;
         public int MaxMass => SelectedClientRecord?.MaxMass ?? 0;
+
+
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                if (SetProperty(ref _searchText, value))
+                {
+                    _searchTimer.Stop();
+                    _searchTimer.Start();
+                }
+            }
+        }
 
         private bool _isRelativeDifference;
         public bool IsRelativeDifference
@@ -156,14 +174,51 @@ namespace TechSto.WPF.ViewModels
             SettingsModel = _appSettingsService.Load();
             // Устанавливаем язык из настроек
             _localizationService.SetLanguage(SettingsModel.Language);
-                        
+
+            _searchTimer = new System.Timers.Timer(300);
+            _searchTimer.AutoReset = false;
+            _searchTimer.Elapsed += (s, e) =>
+            {
+                Application.Current.Dispatcher.Invoke(() => ApplyFilter());
+            };
             LoadData();
         }
 
         private void LoadData()
         {
             var records = _clientRecordService.LoadClientRecords();
+            _allClientRecords = new ObservableCollection<ClientRecordDto>(records);
             ClientRecords = new ObservableCollection<ClientRecordDto>(records);
+        }
+
+        private void ApplyFilter()
+        {
+            List<ClientRecordDto> filtered;
+
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                filtered = _allClientRecords.ToList();
+            }
+            else
+            {
+                filtered = _allClientRecords.Where(record =>
+                    (record.OwnerName?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                    (record.OwnerSurname?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                    (record.GosNumber?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                    (record.VinCode?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                    (record.BrandName?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                    (record.Model?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                    (record.CategoryName?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                    (record.LastTestDate?.ToString("dd.MM.yyyy")?.Contains(SearchText) ?? false)
+                ).ToList();
+            }
+
+            // Обновляем коллекцию только если изменилось количество или порядок
+            if (!_filteredList.SequenceEqual(filtered))
+            {
+                _filteredList = filtered;
+                ClientRecords = new ObservableCollection<ClientRecordDto>(_filteredList);
+            }
         }
 
         private void OnConnectionStateChanged(bool isConnected)
@@ -325,8 +380,8 @@ namespace TechSto.WPF.ViewModels
             OnPropertyChanged(nameof(VinNumber));
             OnPropertyChanged(nameof(CarCategory));
             OnPropertyChanged(nameof(AxlesCount));
-            OnPropertyChanged(nameof(OnwerName));
-            OnPropertyChanged(nameof(OnwerSurname));
+            OnPropertyChanged(nameof(OwnerName));
+            OnPropertyChanged(nameof(OwnerSurname));
             OnPropertyChanged(nameof(CurbMass));
             OnPropertyChanged(nameof(MaxMass));
         }
@@ -348,6 +403,11 @@ namespace TechSto.WPF.ViewModels
         {
             
         }
-   
+
+        public void Dispose()
+        {
+            _searchTimer?.Dispose();
+        }
+
     }
 }

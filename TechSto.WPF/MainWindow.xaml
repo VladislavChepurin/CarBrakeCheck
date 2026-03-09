@@ -189,7 +189,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock x:Name="SearchLabel" Grid.Column="0" Text="{Binding LocalizationProvider[SearchLabel], Mode=OneWay}" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                <TextBox Grid.Column="1" x:Name="InputTextBox" Height="25" Padding="3"/>
+                                <TextBox Grid.Column="1" x:Name="InputTextBox" Height="25" Padding="3" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                             </Grid>
 
                             <!-- DataGrid -->
@@ -204,7 +204,7 @@
                                       RowHeaderWidth="0"
                                       Margin="0,0,0,10">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[OnwerHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding Owner}" Width="150"/>
+                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[OwnerHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding Owner}" Width="150"/>
                                     <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarNumberHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding GosNumber}" Width="120"/>
                                     <DataGridTextColumn Header="{Binding Data.LocalizationProvider[VinNumberHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding VinCode}" Width="130"/>
                                     <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarBrandHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding BrandName}" Width="140"/>
@@ -248,13 +248,13 @@
                                     <TextBlock Style="{StaticResource RightColumnTextStyle}">
                                         <Run Text="{Binding LocalizationProvider[PreviewOwnerName], Mode=OneWay}"/>
                                         <Run Text=": "/>
-                                        <Run Text="{Binding OnwerName, Mode=OneWay}"/>
+                                        <Run Text="{Binding OwnerName, Mode=OneWay}"/>
                                     </TextBlock>
 
                                     <TextBlock Style="{StaticResource RightColumnTextStyle}">
                                         <Run Text="{Binding LocalizationProvider[PreviewOwnerSurname], Mode=OneWay}"/>
                                         <Run Text=": "/>
-                                        <Run Text="{Binding OnwerSurname, Mode=OneWay}"/>
+                                        <Run Text="{Binding OwnerSurname, Mode=OneWay}"/>
                                     </TextBlock>
 
                                     <TextBlock Text="{Binding LocalizationProvider[PreviewSectionCar], Mode=OneWay}" Style="{StaticResource RightColumnSubHeaderTextStyle}"/>

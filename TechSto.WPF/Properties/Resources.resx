@@ -390,7 +390,7 @@
   <data name="EquipmentIsNotConnected" xml:space="preserve">
     <value>Стенд не подключен</value>
   </data>
-  <data name="OnwerHeader" xml:space="preserve">
+  <data name="OwnerHeader" xml:space="preserve">
     <value>Владелец</value>
   </data>
   <data name="CarNumberHeader" xml:space="preserve">

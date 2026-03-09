@@ -390,7 +390,7 @@
   <data name="EquipmentIsNotConnected" xml:space="preserve">
     <value>Stend is not connected</value>
   </data>
-  <data name="OnwerHeader" xml:space="preserve">
+  <data name="OwnerHeader" xml:space="preserve">
     <value>Onwer</value>
   </data>
   <data name="CarNumberHeader" xml:space="preserve">
