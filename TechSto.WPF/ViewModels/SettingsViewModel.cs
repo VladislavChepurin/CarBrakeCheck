@@ -9,8 +9,7 @@ using TechSto.WPF.Services;
 namespace TechSto.WPF.ViewModels
 {
     public class SettingsViewModel: ViewModelBase, IDisposable
-    {            
-        private bool _isDeviceConnected;     
+    {      
         private ClientRecordDto _selectedClientRecord;
         private Visibility _brandsVisibility = Visibility.Collapsed;
         private ObservableCollection<ClientRecordDto> _clientRecords = [];
@@ -133,13 +132,7 @@ namespace TechSto.WPF.ViewModels
         {
             get => _selectedMeasurementType;
             set => SetProperty(ref _selectedMeasurementType, value);
-        }
-
-        public bool IsDeviceConnected
-        {
-            get => _isDeviceConnected;
-            set { _isDeviceConnected = value; OnPropertyChanged(); }
-        }
+        }      
 
         public Visibility BrandsVisibility
         {
@@ -181,7 +174,7 @@ namespace TechSto.WPF.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(() => ApplyFilter());
             };
-            LoadData();
+            LoadData();         
         }
 
         private void LoadData()
@@ -220,12 +213,7 @@ namespace TechSto.WPF.ViewModels
                 ClientRecords = new ObservableCollection<ClientRecordDto>(_filteredList);
             }
         }
-
-        private void OnConnectionStateChanged(bool isConnected)
-        {
-            IsDeviceConnected = isConnected;
-        }
-
+            
         private void OpenAddClientWindow(object e)
         {
             var window = _serviceProvider.GetRequiredService<AddClientCarWindow>();

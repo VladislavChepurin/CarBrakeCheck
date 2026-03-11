@@ -6,5 +6,9 @@ namespace TechSto.WPF.ViewModels
 {
     public class AboutViewModel
     {
+        public AboutViewModel()
+        {
+            
+        }
     }
 }

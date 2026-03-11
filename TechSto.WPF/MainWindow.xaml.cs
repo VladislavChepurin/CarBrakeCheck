@@ -11,11 +11,11 @@ namespace TechSto.WPF
     {
         private Border? _selectedTab;       
         private Dictionary<string, (Border tab, FrameworkElement content)>? _tabMapping;
-        private readonly SettingsViewModel _viewModel;
+        private readonly MainViewModel _viewModel;
         private readonly IAppSettingsService _appSettingsService;
         private readonly ILocalizationService _localizationService;
 
-        public MainWindow(SettingsViewModel viewModel, IAppSettingsService appSettingsService, ILocalizationService localizationService)
+        public MainWindow(MainViewModel viewModel, IAppSettingsService appSettingsService, ILocalizationService localizationService)
         {
             InitializeComponent();
             _viewModel = viewModel;
@@ -27,8 +27,7 @@ namespace TechSto.WPF
             InitializeTabMapping();   
             InitializeLanguage();
 
-            Loaded += OnLoaded;
-            Closed += OnClosed;             
+            Loaded += OnLoaded;                   
         }           
 
         private void InitializeTabMapping()
@@ -45,7 +44,7 @@ namespace TechSto.WPF
         
         private void InitializeLanguage()
         {
-            if (_viewModel.SettingsModel == null) return;
+            if (_viewModel.SettingsVM.SettingsModel == null) return;
 
             // Устанавливаем язык из настроек через сервис локализации
             //_localizationService.SetLanguage(_viewModel.SettingsModel.Language);
@@ -55,59 +54,19 @@ namespace TechSto.WPF
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             SelectFirstTab();
-
-            //if (_viewModel.SettingsModel != null)
-            //{
-            //    Восстанавливаем размеры окна из настроек
-            //   var settings = _viewModel.SettingsModel;
-            //    Width = settings.WindowWidth;
-            //    Height = settings.WindowHeight;
-            //    Left = settings.WindowLeft;
-            //    Top = settings.WindowTop;
-            //    WindowState = settings.IsMaximized ? WindowState.Maximized : WindowState.Normal;
-            //}
-        }
-
-        private void OnClosed(object sender, EventArgs e)
-        {
-            try
-            {
-                if (_viewModel.SettingsModel != null)
-                {
-                    // Сохраняем размеры окна
-                    var settings = _viewModel.SettingsModel;
-                    if (WindowState == WindowState.Normal)
-                    {
-                        //settings.WindowWidth = Width;
-                        //settings.WindowHeight = Height;
-                        //settings.WindowLeft = Left;
-                        //settings.WindowTop = Top;
-                    }
-                    //settings.IsMaximized = WindowState == WindowState.Maximized;
-                    _appSettingsService.Save(settings);
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error saving settings: {ex.Message}");
-            }
-            finally
-            {                
-                //_viewModel.Dispose(); // если MainWindowViewModel реализует IDisposable
-            }
-        }
+        }       
 
         // ========== МЕТОДЫ ДЛЯ РАБОТЫ С ЯЗЫКОМ ==========
 
         private void SetSelectedLanguage()
         {
-            if (_viewModel.SettingsModel == null || LanguageComboBox == null) return;
+            if (_viewModel.SettingsVM.SettingsModel == null || LanguageComboBox == null) return;
 
             try
             {
                 foreach (ComboBoxItem item in LanguageComboBox.Items)
                 {
-                    if (item.Tag?.ToString() == _viewModel.SettingsModel.Language)
+                    if (item.Tag?.ToString() == _viewModel.SettingsVM.SettingsModel.Language)
                     {
                         LanguageComboBox.SelectedItem = item;
                         break;
@@ -122,7 +81,7 @@ namespace TechSto.WPF
 
         private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_viewModel.SettingsModel == null) return;
+            if (_viewModel.SettingsVM.SettingsModel == null) return;
 
             try
             {
@@ -131,8 +90,8 @@ namespace TechSto.WPF
                     string cultureCode = selectedItem.Tag?.ToString() ?? "ru-RU";
 
                     // Сохраняем язык в настройках
-                    _viewModel.SettingsModel.Language = cultureCode;
-                    _appSettingsService.Save(_viewModel.SettingsModel);
+                    _viewModel.SettingsVM.SettingsModel.Language = cultureCode;
+                    _appSettingsService.Save(_viewModel.SettingsVM.SettingsModel);
 
                     // Меняем язык через сервис локализации
                     _localizationService.SetLanguage(cultureCode);
@@ -156,7 +115,7 @@ namespace TechSto.WPF
 
         private void SwitchTab(Border clickedTab, string tabName)
         {
-            if (_viewModel.SettingsModel == null || _tabMapping == null) return;
+            if (_viewModel.SettingsVM.SettingsModel == null || _tabMapping == null) return;
 
             try
             {

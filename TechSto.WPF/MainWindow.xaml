@@ -158,7 +158,7 @@
             </Grid.RowDefinitions>
 
             <!-- Контент для Установки -->
-            <Grid x:Name="SettingsContent" Visibility="Visible" Margin="10">
+            <Grid x:Name="SettingsContent" DataContext="{Binding SettingsVM}" Visibility="Visible" Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="65"/>
@@ -365,7 +365,7 @@
             </Grid>
 
             <!-- Контент для Измерения (заглушка) -->
-            <Grid x:Name="MeasurementsContent" Visibility="Collapsed" Margin="10">
+            <Grid x:Name="MeasurementsContent" DataContext="{Binding MeasurementsVM}" Visibility="Collapsed" Margin="10">
                 <Border Style="{StaticResource CardBorderStyle}">                                 
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock Text="Проведение и анализ измерений" FontSize="18" Foreground="#666666"/>
@@ -374,7 +374,7 @@
             </Grid>
 
             <!-- Контент для Отчеты (заглушка) -->
-            <Grid x:Name="ReportsContent" Visibility="Collapsed" Margin="10">
+            <Grid x:Name="ReportsContent" DataContext="{Binding ReportsVM}" Visibility="Collapsed" Margin="10">
                 <Border Style="{StaticResource CardBorderStyle}">                    
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock Text="Формирование и просмотр отчетов" FontSize="18" Foreground="#666666"/>
@@ -383,7 +383,7 @@
             </Grid>
 
             <!-- Контент для Справка (заглушка) -->
-            <Grid x:Name="HelpContent" Visibility="Collapsed" Margin="10">
+            <Grid x:Name="HelpContent" DataContext="{Binding HelpVM}" Visibility="Collapsed" Margin="10">
                 <Border Style="{StaticResource CardBorderStyle}">                   
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock Text="Документация и помощь по использованию" FontSize="18" Foreground="#666666"/>
@@ -392,7 +392,7 @@
             </Grid>
 
             <!-- Контент для О программе (заглушка) -->
-            <Grid x:Name="AboutContent" Visibility="Collapsed" Margin="10">
+            <Grid x:Name="AboutContent" DataContext="{Binding AboutVM}" Visibility="Collapsed" Margin="10">
                 <Border Style="{StaticResource CardBorderStyle}">                   
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock Text="Версия 1.0.0\n© 2024 Все права защищены" FontSize="18" Foreground="#666666" TextAlignment="Center"/>

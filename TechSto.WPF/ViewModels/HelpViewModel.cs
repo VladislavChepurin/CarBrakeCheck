@@ -6,5 +6,9 @@ namespace TechSto.WPF.ViewModels
 {
     public class HelpViewModel
     {
+        public HelpViewModel()
+        {
+            
+        }
     }
 }

@@ -62,12 +62,13 @@ namespace TechSto.WPF
                     //services.AddSingleton<ISelectionService, SelectionService>();
 
                     //// ViewModel                    
-                    services.AddTransient<MeasurementsViewModel>();
-                    services.AddTransient<ReportsViewModel>();
-                    services.AddTransient<HelpViewModel>();
-                    services.AddTransient<AboutViewModel>();
-                    services.AddTransient<SettingsViewModel>();
-                    services.AddTransient<ClientViewModel>();
+                    services.AddSingleton<MainViewModel>();
+
+                    services.AddSingleton<SettingsViewModel>();
+                    services.AddSingleton<MeasurementsViewModel>();
+                    services.AddSingleton<ReportsViewModel>();
+                    services.AddSingleton<HelpViewModel>();
+                    services.AddSingleton<AboutViewModel>();
                     services.AddTransient<AddClientCarViewModel>();
                     services.AddTransient<ChecksWindowViewModel>();
 
