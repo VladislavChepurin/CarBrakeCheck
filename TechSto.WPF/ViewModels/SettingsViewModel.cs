@@ -23,6 +23,26 @@ namespace TechSto.WPF.ViewModels
         private string _searchText = string.Empty;
         private System.Timers.Timer _searchTimer;
 
+
+        private string _selectedLanguage;
+        public string SelectedLanguage
+        {
+            get => _selectedLanguage;
+            set
+            {
+                if (SetProperty(ref _selectedLanguage, value))
+                {
+                    if (SettingsModel != null)
+                    {
+                        SettingsModel.Language = value;
+
+                        _appSettingsService.Save(SettingsModel);
+                        _localizationService.SetLanguage(value);
+                    }
+                }
+            }
+        }
+
         public ClientRecordDto SelectedClientRecord
         {
             get => _selectedClientRecord;
@@ -154,18 +174,20 @@ namespace TechSto.WPF.ViewModels
 
         public LocalizationProvider LocalizationProvider { get; }
 
-        public SettingsViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService, 
-            IClientRecordService clientRecordService, IServiceProvider serviceProvider, 
-            LocalizationProvider localizationProvider)
-        {           
+        public SettingsViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService,
+                IClientRecordService clientRecordService, IServiceProvider serviceProvider, LocalizationProvider localizationProvider)
+        {
             _appSettingsService = appSettingsService;
             _localizationService = localizationService;
             _clientRecordService = clientRecordService;
-            _serviceProvider = serviceProvider;           
+            _serviceProvider = serviceProvider;
             LocalizationProvider = localizationProvider;
+
             // Загружаем настройки
             SettingsModel = _appSettingsService.Load();
-            // Устанавливаем язык из настроек
+
+            // Устанавливаем язык
+            _selectedLanguage = SettingsModel.Language;
             _localizationService.SetLanguage(SettingsModel.Language);
 
             _searchTimer = new System.Timers.Timer(300);
@@ -174,7 +196,8 @@ namespace TechSto.WPF.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(() => ApplyFilter());
             };
-            LoadData();         
+
+            LoadData();
         }
 
         private void LoadData()

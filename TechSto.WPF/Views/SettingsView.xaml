@@ -220,14 +220,13 @@
         <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Padding="0">
 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,10,0,0">
-                <ComboBox x:Name="LanguageComboBox" 
-                  Style="{StaticResource ComboBoxStyle}">
-                    <!--SelectionChanged="LanguageComboBox_SelectionChanged">-->
+
+                <ComboBox SelectedValuePath="Tag" SelectedValue="{Binding SelectedLanguage, Mode=TwoWay}" Style="{StaticResource ComboBoxStyle}">
                     <ComboBoxItem Tag="ru-RU">🇷🇺 Русский</ComboBoxItem>
                     <ComboBoxItem Tag="en-US">🇬🇧 English</ComboBoxItem>
                     <ComboBoxItem Tag="kk-KZ">🇰🇿 Қазақша</ComboBoxItem>
                     <ComboBoxItem Tag="uz-Latn-UZ">🇺🇿 O'zbekcha</ComboBoxItem>
-                </ComboBox>
+                </ComboBox>             
             </StackPanel>
         </Border>
     </Grid>
