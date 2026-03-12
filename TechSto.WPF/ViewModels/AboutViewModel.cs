@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TechSto.WPF.ViewModels
 {
-    public class AboutViewModel
+    public class AboutViewModel : ViewModelBase
     {
         public AboutViewModel()
         {

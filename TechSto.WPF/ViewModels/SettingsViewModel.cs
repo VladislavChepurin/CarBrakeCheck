@@ -8,7 +8,7 @@ using TechSto.Core.Models;
 using TechSto.WPF.Services;
 namespace TechSto.WPF.ViewModels
 {
-    public class SettingsViewModel: ViewModelBase, IDisposable
+    public class SettingsViewModel : ViewModelBase, IDisposable
     {      
         private ClientRecordDto _selectedClientRecord;
         private Visibility _brandsVisibility = Visibility.Collapsed;
@@ -383,7 +383,7 @@ namespace TechSto.WPF.ViewModels
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 var mainWindow = Application.Current.MainWindow as MainWindow;
-                mainWindow?.MainTableWithClientData?.Focus();
+                //mainWindow?.MainTableWithClientData?.Focus();
             }));
         }
 

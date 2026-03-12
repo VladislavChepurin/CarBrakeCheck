@@ -3,402 +3,238 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TechSto.WPF.Controls"
-        xmlns:converters="clr-namespace:TechSto.WPF.Converters"
-        xmlns:helpers="clr-namespace:TechSto.WPF.Helpers"
+        xmlns:vm="clr-namespace:TechSto.WPF.ViewModels"
         mc:Ignorable="d"
-        Title="{Binding LocalizationProvider[NameProgram], Mode=OneWay}"    
-        Width="1366" Height="768"
+        Title="{Binding LocalizationProvider[NameProgram]}"
+        Width="1366"
+        Height="768"
         ResizeMode="NoResize">
 
-    <Window.Resources>
-        <helpers:BindingProxy x:Key="Proxy" Data="{Binding}" />
-        <converters:EqualityToBooleanConverter x:Key="EqualityToBooleanConverter"/>
-        <converters:GreaterThanZeroConverter x:Key="GreaterThanZero"/>
-        <converters:ModeToColorConverter x:Key="ModeToColorConverter"/>
-    </Window.Resources>
-
     <Grid Background="#F0F8FF">
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="46.5"/>
-            <ColumnDefinition Width="163.5"/>
+            <ColumnDefinition Width="210"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Панель вкладок слева -->
-        <Grid Grid.Column="0" Grid.ColumnSpan="2">
+
+        <!-- ========================= -->
+        <!-- ЛЕВАЯ ПАНЕЛЬ НАВИГАЦИИ -->
+        <!-- ========================= -->
+
+        <Grid Grid.Column="0">
+
             <Grid.RowDefinitions>
+
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+
             </Grid.RowDefinitions>
 
-            <!-- Вкладка "Установки" -->
-            <Border x:Name="SettingsTab" 
-                    Grid.Row="0" 
-                    Style="{StaticResource SelectedTabStyleSet}"                                      
-                    MouseDown="Tab_MouseDown"
-                    Tag="Settings">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
-                    <TextBlock Text="📋" Style="{StaticResource TabIconStyle}"/>
-                    <TextBlock x:Name="SettingsTabText" Text="{Binding LocalizationProvider[Settings], Mode=OneWay}" Style="{StaticResource TabTextStyle}"/>
+
+            <!-- Settings -->
+
+            <Button Grid.Row="0"
+                    Command="{Binding ShowSettingsCommand}"
+                    Margin="10"
+                    Height="60">
+
+                <StackPanel Orientation="Horizontal">
+
+                    <TextBlock Text="📋"
+                               FontSize="18"
+                               Margin="5"/>
+
+                    <TextBlock Text="{Binding LocalizationProvider[Settings]}"
+                               VerticalAlignment="Center"
+                               Margin="5"/>
+
                 </StackPanel>
-            </Border>
 
-            <!-- Разделительная линия после первой вкладки -->
-            <Border Grid.Row="0" 
-                    Style="{StaticResource DividerStyle}"
-                    Margin="10,82,10,0"/>
+            </Button>
 
-            <!-- Вкладка "Измерения" -->
-            <Border x:Name="MeasurementsTab" 
-                    Grid.Row="1" 
-                    Style="{StaticResource SelectedTabStyle}"                     
-                    MouseDown="Tab_MouseDown"
-                    Tag="Measurements">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
-                    <TextBlock Text="📊" Style="{StaticResource TabIconStyle}"/>
-                    <TextBlock x:Name="MeasurementsTabText" Text="{Binding LocalizationProvider[Measurements], Mode=OneWay}" Style="{StaticResource TabTextStyle}"/>
+
+            <!-- Measurements -->
+
+            <Button Grid.Row="1"
+                    Command="{Binding ShowMeasurementsCommand}"
+                    Margin="10"
+                    Height="60">
+
+                <StackPanel Orientation="Horizontal">
+
+                    <TextBlock Text="📊"
+                               FontSize="18"
+                               Margin="5"/>
+
+                    <TextBlock Text="{Binding LocalizationProvider[Measurements]}"
+                               VerticalAlignment="Center"
+                               Margin="5"/>
+
                 </StackPanel>
-            </Border>
 
-            <!-- Разделительная линия после второй вкладки -->
-            <Border Grid.Row="1" 
-                    Style="{StaticResource DividerStyle}"
-                    Margin="10,62,10,0"/>
+            </Button>
 
-            <!-- Вкладка "Отчеты" -->
-            <Border x:Name="ReportsTab" 
-                    Grid.Row="2" 
-                    Style="{StaticResource SelectedTabStyle}"  
-                    MouseDown="Tab_MouseDown"
-                    Tag="Reports">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
-                    <TextBlock Text="📈" Style="{StaticResource TabIconStyle}"/>
-                    <TextBlock x:Name="ReportsTabText" Text="{Binding LocalizationProvider[Reports], Mode=OneWay}" Style="{StaticResource TabTextStyle}"/>
+
+            <!-- Reports -->
+
+            <Button Grid.Row="2"
+                    Command="{Binding ShowReportsCommand}"
+                    Margin="10"
+                    Height="60">
+
+                <StackPanel Orientation="Horizontal">
+
+                    <TextBlock Text="📈"
+                               FontSize="18"
+                               Margin="5"/>
+
+                    <TextBlock Text="{Binding LocalizationProvider[Reports]}"
+                               VerticalAlignment="Center"
+                               Margin="5"/>
+
                 </StackPanel>
-            </Border>
 
-            <!-- Разделительная линия после третьей вкладки -->
-            <Border Grid.Row="2" 
-                    Style="{StaticResource DividerStyle}"
-                    Margin="10,62,10,0"/>
+            </Button>
 
-            <!-- Вкладка "Справка" -->
-            <Border x:Name="HelpTab" 
-                    Grid.Row="3" 
-                   Style="{StaticResource SelectedTabStyle}"  
-                    MouseDown="Tab_MouseDown"
-                    Tag="Help">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
-                    <TextBlock Text="❓" Style="{StaticResource TabIconStyle}"/>
-                    <TextBlock x:Name="HelpTabText" Text="{Binding LocalizationProvider[Help], Mode=OneWay}" Style="{StaticResource TabTextStyle}"/>
+
+            <!-- Help -->
+
+            <Button Grid.Row="3"
+                    Command="{Binding ShowHelpCommand}"
+                    Margin="10"
+                    Height="60">
+
+                <StackPanel Orientation="Horizontal">
+
+                    <TextBlock Text="❓"
+                               FontSize="18"
+                               Margin="5"/>
+
+                    <TextBlock Text="{Binding LocalizationProvider[Help]}"
+                               VerticalAlignment="Center"
+                               Margin="5"/>
+
                 </StackPanel>
-            </Border>
 
-            <!-- Разделительная линия после четвертой вкладки -->
-            <Border Grid.Row="3" 
-                    Style="{StaticResource DividerStyle}"
-                    Margin="10,62,10,0"/>
+            </Button>
 
-            <!-- Вкладка "О программе" -->
-            <Border x:Name="AboutTab" 
-                    Grid.Row="4"  
-                    Style="{StaticResource SelectedTabStyle}"  
-                    MouseDown="Tab_MouseDown"
-                    Tag="About">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
-                    <TextBlock Text="ℹ️" Style="{StaticResource TabIconStyle}"/>
-                    <TextBlock x:Name="AboutTabText" Text="{Binding LocalizationProvider[About], Mode=OneWay}" Style="{StaticResource TabTextStyle}"/>
+
+            <!-- About -->
+
+            <Button Grid.Row="4"
+                    Command="{Binding ShowAboutCommand}"
+                    Margin="10"
+                    Height="60">
+
+                <StackPanel Orientation="Horizontal">
+
+                    <TextBlock Text="ℹ️"
+                               FontSize="18"
+                               Margin="5"/>
+
+                    <TextBlock Text="{Binding LocalizationProvider[About]}"
+                               VerticalAlignment="Center"
+                               Margin="5"/>
+
                 </StackPanel>
-            </Border>
 
-            <!-- Разделительная линия после пятой вкладки -->
-            <Border Grid.Row="4" 
-                    Style="{StaticResource DividerStyle}"
-                    Margin="10,62,10,0"/>
+            </Button>
 
-            <Border Grid.Row="5" VerticalAlignment="Bottom" Margin="10,0,10,20" Height="Auto">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Ellipse Width="12" Height="12" Margin="0,0,5,0" VerticalAlignment="Center">
+
+            <!-- ========================= -->
+            <!-- СТАТУС УСТРОЙСТВА -->
+            <!-- ========================= -->
+
+            <Border Grid.Row="5"
+                    VerticalAlignment="Bottom"
+                    Margin="10,0,10,20">
+
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+
+                    <Ellipse Width="12"
+                             Height="12"
+                             Margin="0,0,5,0"
+                             VerticalAlignment="Center">
+
                         <Ellipse.Style>
+
                             <Style TargetType="Ellipse">
-                                <Setter Property="Fill" Value="Red"/>
+
+                                <Setter Property="Fill"
+                                        Value="Red"/>
+
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsDeviceConnected}" Value="True">
-                                        <Setter Property="Fill" Value="Green"/>
+
+                                    <DataTrigger Binding="{Binding SettingsVM.IsDeviceConnected}"
+                                                 Value="True">
+
+                                        <Setter Property="Fill"
+                                                Value="Green"/>
+
                                     </DataTrigger>
+
                                 </Style.Triggers>
+
                             </Style>
+
                         </Ellipse.Style>
+
                     </Ellipse>
-                    <TextBlock VerticalAlignment="Center" Foreground="#333333">
+
+
+                    <TextBlock VerticalAlignment="Center"
+                               Foreground="#333333">
+
                         <TextBlock.Style>
+
                             <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="{Binding LocalizationProvider[EquipmentIsNotConnected], Mode=OneWay}"/>
+
+                                <Setter Property="Text"
+                                        Value="{Binding LocalizationProvider[EquipmentIsNotConnected]}"/>
+
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsDeviceConnected}" Value="True">
-                                        <Setter Property="Text" Value="{Binding LocalizationProvider[EquipmentIsConnected], Mode=OneWay}"/>
+
+                                    <DataTrigger Binding="{Binding SettingsVM.IsDeviceConnected}"
+                                                 Value="True">
+
+                                        <Setter Property="Text"
+                                                Value="{Binding LocalizationProvider[EquipmentIsConnected]}"/>
+
                                     </DataTrigger>
+
                                 </Style.Triggers>
+
                             </Style>
+
                         </TextBlock.Style>
+
                     </TextBlock>
+
                 </StackPanel>
+
             </Border>
+
         </Grid>
 
-        <!-- Основная область контента -->
-        <Grid x:Name="ContentArea" Grid.Column="2" Background="#F0F8FF">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
 
-            <!-- Контент для Установки -->
-            <Grid x:Name="SettingsContent" DataContext="{Binding SettingsVM}" Visibility="Visible" Margin="10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="65"/>
-                </Grid.RowDefinitions>
+        <!-- ========================= -->
+        <!-- ОСНОВНАЯ ОБЛАСТЬ -->
+        <!-- ========================= -->
 
-                <!-- Верхняя часть разделена на две колонки -->
-                <Grid Grid.Row="0" Margin="0,0,0,5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="850"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1"
+              Background="#F0F8FF">
 
-                    <!-- Левая панель -->
-                    <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Margin="0,0,5,0"> 
-                        
-                        <!-- Основной Grid -->
-                        <Grid Margin="15">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
+            <ContentControl Content="{Binding CurrentViewModel}"/>
 
-                            <!-- Поле поиска -->
-                            <Grid Grid.Row="0" Margin="0,0,0,10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock x:Name="SearchLabel" Grid.Column="0" Text="{Binding LocalizationProvider[SearchLabel], Mode=OneWay}" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                <TextBox Grid.Column="1" x:Name="InputTextBox" Height="25" Padding="3" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
-                            </Grid>
-
-                            <!-- DataGrid -->
-                            <DataGrid x:Name="MainTableWithClientData" Grid.Row="1"    
-                                      ItemsSource="{Binding ClientRecords}"
-                                      SelectedItem="{Binding SelectedClientRecord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"     
-                                      AutoGenerateColumns="False"
-                                      CanUserAddRows="False"
-                                      IsReadOnly="True"
-                                      GridLinesVisibility="None"
-                                      AlternatingRowBackground="#F5F5F5"
-                                      RowHeaderWidth="0"
-                                      Margin="0,0,0,10">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[OwnerHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding Owner}" Width="150"/>
-                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarNumberHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding GosNumber}" Width="120"/>
-                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[VinNumberHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding VinCode}" Width="130"/>
-                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarBrandHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding BrandName}" Width="140"/>
-                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarModelHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding Model}" Width="150"/>
-                                    <DataGridTextColumn Header="{Binding Data.LocalizationProvider[DateLastTestHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding LastTestDate, StringFormat='dd.MM.yyyy HH:mm:ss'}" Width="*"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
-
-                            <!-- Кнопки -->
-                            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-                                <Button Content="{Binding LocalizationProvider[AddBth], Mode=OneWay}" Command="{Binding AddClientCommand}" Width="100" Height="30" Margin="5"/>
-                                <Button Content="{Binding LocalizationProvider[UpdateBth], Mode=OneWay}" Command="{Binding EditClientCommand}" Width="100" Height="30" Margin="5"/>
-                                <Button Content="{Binding LocalizationProvider[DeleteBth], Mode=OneWay}" Command="{Binding DeleteClientCommand}" Width="100" Height="30" Margin="5"/>
-                                <Button Content="{Binding LocalizationProvider[AllCheckBth], Mode=OneWay}" Command="{Binding AllCheckClientCommand}" Width="100" Height="30" Margin="5"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
-                    <!-- Правая панель -->
-                    <Border Grid.Column="1" CornerRadius="5">
-                        <Border.Effect>
-                            <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
-                        </Border.Effect>
-
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-
-                            <!-- Блок 1: Информация об авто -->
-                            <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">                              
-                                <StackPanel>  
-                                    <TextBlock Text="{Binding LocalizationProvider[SelectedAuto], Mode=OneWay}" Style="{StaticResource RightColumnHeaderTextStyle}"/>
-
-                                    <TextBlock Text="{Binding LocalizationProvider[PreviewSectionOwner], Mode=OneWay}" Style="{StaticResource RightColumnSubHeaderTextStyle}"/>
-
-                                    <TextBlock Style="{StaticResource RightColumnTextStyle}">
-                                        <Run Text="{Binding LocalizationProvider[PreviewOwnerName], Mode=OneWay}"/>
-                                        <Run Text=": "/>
-                                        <Run Text="{Binding OwnerName, Mode=OneWay}"/>
-                                    </TextBlock>
-
-                                    <TextBlock Style="{StaticResource RightColumnTextStyle}">
-                                        <Run Text="{Binding LocalizationProvider[PreviewOwnerSurname], Mode=OneWay}"/>
-                                        <Run Text=": "/>
-                                        <Run Text="{Binding OwnerSurname, Mode=OneWay}"/>
-                                    </TextBlock>
-
-                                    <TextBlock Text="{Binding LocalizationProvider[PreviewSectionCar], Mode=OneWay}" Style="{StaticResource RightColumnSubHeaderTextStyle}"/>
-
-                                    <TextBlock Style="{StaticResource RightColumnTextStyle}">
-                                        <Run Text="{Binding LocalizationProvider[BrandAndModel], Mode=OneWay}"/>
-                                        <Run Text=": "/>
-                                        <Run Text="{Binding SelectedCarDisplay, Mode=OneWay}"/>
-                                    </TextBlock>
-
-                                    <TextBlock Style="{StaticResource RightColumnTextStyle}">
-                                        <Run Text="{Binding LocalizationProvider[GosNumberLabel], Mode=OneWay}"/>
-                                        <Run Text=": "/>
-                                        <Run Text="{Binding GosNumber, Mode=OneWay}"/>
-                                    </TextBlock>                                 
-
-                                    <TextBlock Style="{StaticResource RightColumnTextStyle}">
-                                        <Run Text="{Binding LocalizationProvider[VinNumberLabel], Mode=OneWay}"/>
-                                        <Run Text=": "/>
-                                        <Run Text="{Binding VinNumber, Mode=OneWay}"/>
-                                    </TextBlock>                                
-
-                                    <TextBlock Text="{Binding LocalizationProvider[PreviewSectionSpecs], Mode=OneWay}" Style="{StaticResource RightColumnSubHeaderTextStyle}"/>
-
-                                    <TextBlock Style="{StaticResource RightColumnTextStyle}">
-                                         <Run Text="{Binding LocalizationProvider[CategoryLabel], Mode=OneWay}"/>
-                                         <Run Text=": "/>
-                                         <Run Text="{Binding CarCategory, Mode=OneWay}"/>
-                                    </TextBlock>
-
-
-                                    <TextBlock Style="{StaticResource RightColumnTextStyle}">
-                                         <Run Text="{Binding LocalizationProvider[CurbMassLabel], Mode=OneWay}"/>
-                                         <Run Text=": "/>
-                                         <Run Text="{Binding CurbMass, Mode=OneWay}"/>
-                                    </TextBlock>
-
-                                    <TextBlock Style="{StaticResource RightColumnTextStyle}">
-                                         <Run Text="{Binding LocalizationProvider[MaxMassLabel], Mode=OneWay}"/>
-                                         <Run Text=": "/>
-                                         <Run Text="{Binding MaxMass, Mode=OneWay}"/>
-                                    </TextBlock>
-
-                                    <TextBlock Style="{StaticResource RightColumnTextStyle}">
-                                         <Run Text="{Binding LocalizationProvider[NumberOfAxes], Mode=OneWay}"/>
-                                         <Run Text=": "/>
-                                         <Run Text="{Binding AxlesCount, Mode=OneWay}"/>
-                                    </TextBlock>                                    
-                                    
-                                </StackPanel>
-                            </Border>
-
-                            <!-- Блок 2: Режим измерений -->
-                            <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}">
-                                <StackPanel>
-                                    <local:ToggleSwitch HorizontalAlignment="Left" Margin="0" IsChecked="{Binding SelectedMeasurementMode}"/>
-                                    <CheckBox Content="{Binding LocalizationProvider[RegardingManufacturerDifference], Mode=OneWay}"
-                                        IsChecked="{Binding IsRelativeDifference}" Style="{StaticResource RightColumnCheckBoxStyle}"/>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- Блок 3: Вид измерений -->
-                            <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}">
-                                <StackPanel IsEnabled="{Binding SelectedMeasurementMode}">
-                                    <TextBlock Text="{Binding LocalizationProvider[TypeOfMeasurements], Mode=OneWay}" Style="{StaticResource RightColumnHeaderTextStyle}"/>
-                                    <ComboBox ItemsSource="{Binding AxleItems}" SelectedItem="{Binding SelectedAxle}" 
-                                        Margin="0,5" IsEnabled="{Binding AxlesCount, Converter={StaticResource GreaterThanZero}}"/>
-                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="5,0,0,0">
-                                        <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[EntryDryingRadioBth], Mode=OneWay}"  
-                                            IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=0}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
-                                        <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[FullLoadRadioBth], Mode=OneWay}" 
-                                            IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=1}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
-                                        <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[ParkingVehicleRadioBth], Mode=OneWay}"   
-                                            IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=2}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
-                                        <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[EntryRadioBth], Mode=OneWay}"           
-                                            IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=3}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- Блок 4: Кнопка Старт -->
-                            <Border Grid.Row="3">
-                                <StackPanel>
-                                    <Button  Content="{Binding LocalizationProvider[StartBth], Mode=OneWay}" Command="{Binding StartCommand}" Height="40" Margin="7" Style="{StaticResource {x:Type Button}}"/>
-                                    </StackPanel>
-                            </Border>
-                        </Grid>
-                    </Border>
-                </Grid>
-
-                <!-- Разделительная линия -->
-                <Border Grid.Row="1" Style="{StaticResource DividerStyle}" Margin="10,0,10,10" VerticalAlignment="Top"/>
-
-                <!-- Нижняя панель с выбором языка -->
-                <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Padding="0">
-                   
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,10,0,0">
-                        <ComboBox x:Name="LanguageComboBox" 
-                                  Style="{StaticResource ComboBoxStyle}"
-                                  SelectionChanged="LanguageComboBox_SelectionChanged">
-                            <ComboBoxItem Tag="ru-RU">🇷🇺 Русский</ComboBoxItem>
-                            <ComboBoxItem Tag="en-US">🇬🇧 English</ComboBoxItem>
-                            <ComboBoxItem Tag="kk-KZ">🇰🇿 Қазақша</ComboBoxItem>
-                            <ComboBoxItem Tag="uz-Latn-UZ">🇺🇿 O'zbekcha</ComboBoxItem>
-                        </ComboBox>
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <!-- Контент для Измерения (заглушка) -->
-            <Grid x:Name="MeasurementsContent" DataContext="{Binding MeasurementsVM}" Visibility="Collapsed" Margin="10">
-                <Border Style="{StaticResource CardBorderStyle}">                                 
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="Проведение и анализ измерений" FontSize="18" Foreground="#666666"/>
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <!-- Контент для Отчеты (заглушка) -->
-            <Grid x:Name="ReportsContent" DataContext="{Binding ReportsVM}" Visibility="Collapsed" Margin="10">
-                <Border Style="{StaticResource CardBorderStyle}">                    
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="Формирование и просмотр отчетов" FontSize="18" Foreground="#666666"/>
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <!-- Контент для Справка (заглушка) -->
-            <Grid x:Name="HelpContent" DataContext="{Binding HelpVM}" Visibility="Collapsed" Margin="10">
-                <Border Style="{StaticResource CardBorderStyle}">                   
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="Документация и помощь по использованию" FontSize="18" Foreground="#666666"/>
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <!-- Контент для О программе (заглушка) -->
-            <Grid x:Name="AboutContent" DataContext="{Binding AboutVM}" Visibility="Collapsed" Margin="10">
-                <Border Style="{StaticResource CardBorderStyle}">                   
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="Версия 1.0.0\n© 2024 Все права защищены" FontSize="18" Foreground="#666666" TextAlignment="Center"/>
-                    </StackPanel>
-                </Border>
-            </Grid>
         </Grid>
+
+
     </Grid>
+
 </Window>

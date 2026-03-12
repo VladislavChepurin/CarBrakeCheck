@@ -34,21 +34,18 @@ namespace TechSto.WPF
         {
             _tabMapping = new Dictionary<string, (Border, FrameworkElement)>
             {
-                ["Settings"] = (SettingsTab, SettingsContent),
-                ["Measurements"] = (MeasurementsTab, MeasurementsContent),
-                ["Reports"] = (ReportsTab, ReportsContent),
-                ["Help"] = (HelpTab, HelpContent),
-                ["About"] = (AboutTab, AboutContent)
+                //["Settings"] = (SettingsTab, SettingsContent),
+                //["Measurements"] = (MeasurementsTab, MeasurementsContent),
+                //["Reports"] = (ReportsTab, ReportsContent),
+                //["Help"] = (HelpTab, HelpContent),
+                //["About"] = (AboutTab, AboutContent)
             };
         }        
         
         private void InitializeLanguage()
         {
             if (_viewModel.SettingsVM.SettingsModel == null) return;
-
-            // Устанавливаем язык из настроек через сервис локализации
-            //_localizationService.SetLanguage(_viewModel.SettingsModel.Language);
-            SetSelectedLanguage();
+            //SetSelectedLanguage();
         }    
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -58,51 +55,51 @@ namespace TechSto.WPF
 
         // ========== МЕТОДЫ ДЛЯ РАБОТЫ С ЯЗЫКОМ ==========
 
-        private void SetSelectedLanguage()
-        {
-            if (_viewModel.SettingsVM.SettingsModel == null || LanguageComboBox == null) return;
+        //private void SetSelectedLanguage()
+        //{
+        //    if (_viewModel.SettingsVM.SettingsModel == null || LanguageComboBox == null) return;
 
-            try
-            {
-                foreach (ComboBoxItem item in LanguageComboBox.Items)
-                {
-                    if (item.Tag?.ToString() == _viewModel.SettingsVM.SettingsModel.Language)
-                    {
-                        LanguageComboBox.SelectedItem = item;
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error setting selected language: {ex.Message}");
-            }
-        }
+        //    try
+        //    {
+        //        foreach (ComboBoxItem item in LanguageComboBox.Items)
+        //        {
+        //            if (item.Tag?.ToString() == _viewModel.SettingsVM.SettingsModel.Language)
+        //            {
+        //                LanguageComboBox.SelectedItem = item;
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        System.Diagnostics.Debug.WriteLine($"Error setting selected language: {ex.Message}");
+        //    }
+        //}
 
-        private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_viewModel.SettingsVM.SettingsModel == null) return;
+        //private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if (_viewModel.SettingsVM.SettingsModel == null) return;
 
-            try
-            {
-                if (LanguageComboBox.SelectedItem is ComboBoxItem selectedItem)
-                {
-                    string cultureCode = selectedItem.Tag?.ToString() ?? "ru-RU";
+        //    try
+        //    {
+        //        if (LanguageComboBox.SelectedItem is ComboBoxItem selectedItem)
+        //        {
+        //            string cultureCode = selectedItem.Tag?.ToString() ?? "ru-RU";
 
-                    // Сохраняем язык в настройках
-                    _viewModel.SettingsVM.SettingsModel.Language = cultureCode;
-                    _appSettingsService.Save(_viewModel.SettingsVM.SettingsModel);
+        //            // Сохраняем язык в настройках
+        //            _viewModel.SettingsVM.SettingsModel.Language = cultureCode;
+        //            _appSettingsService.Save(_viewModel.SettingsVM.SettingsModel);
 
-                    // Меняем язык через сервис локализации
-                    _localizationService.SetLanguage(cultureCode);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при смене языка: {ex.Message}",
-                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
+        //            // Меняем язык через сервис локализации
+        //            _localizationService.SetLanguage(cultureCode);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Ошибка при смене языка: {ex.Message}",
+        //            "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        //    }
+        //}
 
         // ========== МЕТОДЫ ДЛЯ РАБОТЫ С ВКЛАДКАМИ ==========
         private void Tab_MouseDown(object sender, MouseButtonEventArgs e)
@@ -213,11 +210,11 @@ namespace TechSto.WPF
         {
             try
             {
-                if (SettingsContent != null) SettingsContent.Visibility = Visibility.Collapsed;
-                if (MeasurementsContent != null) MeasurementsContent.Visibility = Visibility.Collapsed;
-                if (ReportsContent != null) ReportsContent.Visibility = Visibility.Collapsed;
-                if (HelpContent != null) HelpContent.Visibility = Visibility.Collapsed;
-                if (AboutContent != null) AboutContent.Visibility = Visibility.Collapsed;
+                //if (SettingsContent != null) SettingsContent.Visibility = Visibility.Collapsed;
+                //if (MeasurementsContent != null) MeasurementsContent.Visibility = Visibility.Collapsed;
+                //if (ReportsContent != null) ReportsContent.Visibility = Visibility.Collapsed;
+                //if (HelpContent != null) HelpContent.Visibility = Visibility.Collapsed;
+                //if (AboutContent != null) AboutContent.Visibility = Visibility.Collapsed;
             }
             catch (Exception ex)
             {

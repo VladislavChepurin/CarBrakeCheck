@@ -1,0 +1,235 @@
+﻿<UserControl x:Class="TechSto.WPF.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:TechSto.WPF.Controls"
+             xmlns:converters="clr-namespace:TechSto.WPF.Converters"
+             xmlns:helpers="clr-namespace:TechSto.WPF.Helpers"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <helpers:BindingProxy x:Key="Proxy" Data="{Binding}" />
+        <converters:EqualityToBooleanConverter x:Key="EqualityToBooleanConverter"/>
+        <converters:GreaterThanZeroConverter x:Key="GreaterThanZero"/>
+        <converters:ModeToColorConverter x:Key="ModeToColorConverter"/>
+    </UserControl.Resources>
+
+    <Grid Background="#F0F8FF" Margin="10">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="65"/>
+        </Grid.RowDefinitions>
+
+        <!-- ====================== -->
+        <!-- Верхняя часть -->
+        <!-- ====================== -->
+
+        <Grid Grid.Row="0" Margin="0,0,0,5">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="850"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- ====================== -->
+            <!-- Левая панель -->
+            <!-- ====================== -->
+
+            <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Margin="0,0,5,0">
+
+                <!-- Основной Grid -->
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Поле поиска -->
+                    <Grid Grid.Row="0" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="SearchLabel" Grid.Column="0" Text="{Binding LocalizationProvider[SearchLabel], Mode=OneWay}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBox Grid.Column="1" x:Name="InputTextBox" Height="25" Padding="3" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid>
+
+                    <!-- DataGrid -->
+                    <DataGrid x:Name="MainTableWithClientData" Grid.Row="1"    
+                   ItemsSource="{Binding ClientRecords}"
+                   SelectedItem="{Binding SelectedClientRecord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"     
+                   AutoGenerateColumns="False"
+                   CanUserAddRows="False"
+                   IsReadOnly="True"
+                   GridLinesVisibility="None"
+                   AlternatingRowBackground="#F5F5F5"
+                   RowHeaderWidth="0"
+                   Margin="0,0,0,10">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="{Binding Data.LocalizationProvider[OwnerHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding Owner}" Width="150"/>
+                            <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarNumberHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding GosNumber}" Width="120"/>
+                            <DataGridTextColumn Header="{Binding Data.LocalizationProvider[VinNumberHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding VinCode}" Width="130"/>
+                            <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarBrandHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding BrandName}" Width="140"/>
+                            <DataGridTextColumn Header="{Binding Data.LocalizationProvider[CarModelHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding Model}" Width="150"/>
+                            <DataGridTextColumn Header="{Binding Data.LocalizationProvider[DateLastTestHeader], Mode=OneWay, Source={StaticResource Proxy}}" Binding="{Binding LastTestDate, StringFormat='dd.MM.yyyy HH:mm:ss'}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- Кнопки -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                        <Button Content="{Binding LocalizationProvider[AddBth], Mode=OneWay}" Command="{Binding AddClientCommand}" Width="100" Height="30" Margin="5"/>
+                        <Button Content="{Binding LocalizationProvider[UpdateBth], Mode=OneWay}" Command="{Binding EditClientCommand}" Width="100" Height="30" Margin="5"/>
+                        <Button Content="{Binding LocalizationProvider[DeleteBth], Mode=OneWay}" Command="{Binding DeleteClientCommand}" Width="100" Height="30" Margin="5"/>
+                        <Button Content="{Binding LocalizationProvider[AllCheckBth], Mode=OneWay}" Command="{Binding AllCheckClientCommand}" Width="100" Height="30" Margin="5"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ====================== -->
+            <!-- Правая панель -->
+            <!-- ====================== -->
+
+            <Border Grid.Column="1" CornerRadius="5">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
+                </Border.Effect>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Блок 1: Информация об авто -->
+                    <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding LocalizationProvider[SelectedAuto], Mode=OneWay}" Style="{StaticResource RightColumnHeaderTextStyle}"/>
+
+                            <TextBlock Text="{Binding LocalizationProvider[PreviewSectionOwner], Mode=OneWay}" Style="{StaticResource RightColumnSubHeaderTextStyle}"/>
+
+                            <TextBlock Style="{StaticResource RightColumnTextStyle}">
+                     <Run Text="{Binding LocalizationProvider[PreviewOwnerName], Mode=OneWay}"/>
+                     <Run Text=": "/>
+                     <Run Text="{Binding OwnerName, Mode=OneWay}"/>
+                            </TextBlock>
+
+                            <TextBlock Style="{StaticResource RightColumnTextStyle}">
+                     <Run Text="{Binding LocalizationProvider[PreviewOwnerSurname], Mode=OneWay}"/>
+                     <Run Text=": "/>
+                     <Run Text="{Binding OwnerSurname, Mode=OneWay}"/>
+                            </TextBlock>
+
+                            <TextBlock Text="{Binding LocalizationProvider[PreviewSectionCar], Mode=OneWay}" Style="{StaticResource RightColumnSubHeaderTextStyle}"/>
+
+                            <TextBlock Style="{StaticResource RightColumnTextStyle}">
+                     <Run Text="{Binding LocalizationProvider[BrandAndModel], Mode=OneWay}"/>
+                     <Run Text=": "/>
+                     <Run Text="{Binding SelectedCarDisplay, Mode=OneWay}"/>
+                            </TextBlock>
+
+                            <TextBlock Style="{StaticResource RightColumnTextStyle}">
+                     <Run Text="{Binding LocalizationProvider[GosNumberLabel], Mode=OneWay}"/>
+                     <Run Text=": "/>
+                     <Run Text="{Binding GosNumber, Mode=OneWay}"/>
+                            </TextBlock>
+
+                            <TextBlock Style="{StaticResource RightColumnTextStyle}">
+                     <Run Text="{Binding LocalizationProvider[VinNumberLabel], Mode=OneWay}"/>
+                     <Run Text=": "/>
+                     <Run Text="{Binding VinNumber, Mode=OneWay}"/>
+                            </TextBlock>
+
+                            <TextBlock Text="{Binding LocalizationProvider[PreviewSectionSpecs], Mode=OneWay}" Style="{StaticResource RightColumnSubHeaderTextStyle}"/>
+
+                            <TextBlock Style="{StaticResource RightColumnTextStyle}">
+                      <Run Text="{Binding LocalizationProvider[CategoryLabel], Mode=OneWay}"/>
+                      <Run Text=": "/>
+                      <Run Text="{Binding CarCategory, Mode=OneWay}"/>
+                            </TextBlock>
+
+
+                            <TextBlock Style="{StaticResource RightColumnTextStyle}">
+                      <Run Text="{Binding LocalizationProvider[CurbMassLabel], Mode=OneWay}"/>
+                      <Run Text=": "/>
+                      <Run Text="{Binding CurbMass, Mode=OneWay}"/>
+                            </TextBlock>
+
+                            <TextBlock Style="{StaticResource RightColumnTextStyle}">
+                      <Run Text="{Binding LocalizationProvider[MaxMassLabel], Mode=OneWay}"/>
+                      <Run Text=": "/>
+                      <Run Text="{Binding MaxMass, Mode=OneWay}"/>
+                            </TextBlock>
+
+                            <TextBlock Style="{StaticResource RightColumnTextStyle}">
+                      <Run Text="{Binding LocalizationProvider[NumberOfAxes], Mode=OneWay}"/>
+                      <Run Text=": "/>
+                      <Run Text="{Binding AxlesCount, Mode=OneWay}"/>
+                            </TextBlock>
+
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Блок 2: Режим измерений -->
+                    <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel>
+                            <local:ToggleSwitch HorizontalAlignment="Left" Margin="0" IsChecked="{Binding SelectedMeasurementMode}"/>
+                            <CheckBox Content="{Binding LocalizationProvider[RegardingManufacturerDifference], Mode=OneWay}"
+                     IsChecked="{Binding IsRelativeDifference}" Style="{StaticResource RightColumnCheckBoxStyle}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Блок 3: Вид измерений -->
+                    <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel IsEnabled="{Binding SelectedMeasurementMode}">
+                            <TextBlock Text="{Binding LocalizationProvider[TypeOfMeasurements], Mode=OneWay}" Style="{StaticResource RightColumnHeaderTextStyle}"/>
+                            <ComboBox ItemsSource="{Binding AxleItems}" SelectedItem="{Binding SelectedAxle}" 
+                     Margin="0,5" IsEnabled="{Binding AxlesCount, Converter={StaticResource GreaterThanZero}}"/>
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="5,0,0,0">
+                                <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[EntryDryingRadioBth], Mode=OneWay}"  
+                         IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=0}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+                                <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[FullLoadRadioBth], Mode=OneWay}" 
+                         IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=1}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+                                <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[ParkingVehicleRadioBth], Mode=OneWay}"   
+                         IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=2}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+                                <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[EntryRadioBth], Mode=OneWay}"           
+                         IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=3}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Блок 4: Кнопка Старт -->
+                    <Border Grid.Row="3">
+                        <StackPanel>
+                            <Button  Content="{Binding LocalizationProvider[StartBth], Mode=OneWay}" Command="{Binding StartCommand}" Height="40" Margin="7" Style="{StaticResource {x:Type Button}}"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- ====================== -->
+        <!-- Панель языка -->
+        <!-- ====================== -->
+
+        <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Padding="0">
+
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,10,0,0">
+                <ComboBox x:Name="LanguageComboBox" 
+                  Style="{StaticResource ComboBoxStyle}">
+                    <!--SelectionChanged="LanguageComboBox_SelectionChanged">-->
+                    <ComboBoxItem Tag="ru-RU">🇷🇺 Русский</ComboBoxItem>
+                    <ComboBoxItem Tag="en-US">🇬🇧 English</ComboBoxItem>
+                    <ComboBoxItem Tag="kk-KZ">🇰🇿 Қазақша</ComboBoxItem>
+                    <ComboBoxItem Tag="uz-Latn-UZ">🇺🇿 O'zbekcha</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+        </Border>
+    </Grid>
+
+</UserControl>
