@@ -12,7 +12,8 @@
     <Color x:Key="WhiteColor">#FFFFFF</Color>
     <Color x:Key="DividerColor">#B3D9FF</Color>
     <Color x:Key="CommonTextColor">#010101</Color>
-    <Color x:Key="CardBorderCoolor">#CEEDFF</Color>
+    <Color x:Key="CardBorderColor">#CEEDFF</Color>
+    <Color x:Key="MainBackgroundColor">#F0F8FF</Color>
 
     <!-- Кисти -->
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
@@ -26,7 +27,8 @@
     <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource WhiteColor}"/>
     <SolidColorBrush x:Key="DividerBrush" Color="{StaticResource DividerColor}"/>
     <SolidColorBrush x:Key="CommonTextBrush" Color="{StaticResource CommonTextColor}"/>
-    <SolidColorBrush x:Key="CardBorderBrush" Color="{StaticResource CardBorderCoolor}"/>
+    <SolidColorBrush x:Key="CardBorderBrush" Color="{StaticResource CardBorderColor}"/>
+    <SolidColorBrush x:Key="MainBackgroundBrush" Color="{StaticResource MainBackgroundColor}"/>
 
 
     <!-- Градиентные кисти -->

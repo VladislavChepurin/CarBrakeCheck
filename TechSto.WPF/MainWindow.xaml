@@ -4,13 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:TechSto.WPF.ViewModels"
+        xmlns:converters="clr-namespace:TechSto.WPF.Converters"
         mc:Ignorable="d"
         Title="{Binding LocalizationProvider[NameProgram]}"
         Width="1366"
         Height="768"
         ResizeMode="NoResize">
 
-    <Grid Background="#F0F8FF">
+
+    <Window.Resources>
+        <converters:TabStyleConverter x:Key="TabStyleConverter"/>
+    </Window.Resources>
+
+
+    <Grid Background="{StaticResource MainBackgroundBrush}">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="210"/>
@@ -33,49 +40,84 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
+            <StackPanel Grid.Column="0" Margin="0,10,0,0">
+                
+                <!-- SETTINGS -->
+                <Border Tag="Settings" Grid.Row="0" Style="{Binding CurrentViewModel, Converter={StaticResource TabStyleConverter}, ConverterParameter=Settings}">
+                    <Border.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding ShowSettingsCommand}"/>
+                    </Border.InputBindings>
 
-            <!-- Settings -->
-            <Button Grid.Row="0" Command="{Binding ShowSettingsCommand}" Margin="10" Height="60" Style="{StaticResource MenuButtonStyle}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="📋" FontSize="18" Margin="5"/>
-                    <TextBlock Text="{Binding LocalizationProvider[Settings]}" VerticalAlignment="Center" Margin="5"/>
-                </StackPanel>
-            </Button>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
+                        <TextBlock Text="📋" Style="{StaticResource TabIconStyle}"/>
+                        <TextBlock Text="{Binding LocalizationProvider[Settings]}" Style="{StaticResource TabTextStyle}"/>
+                    </StackPanel>
+                </Border>
 
-            <!-- Measurements -->
-            <Button Grid.Row="1" Command="{Binding ShowMeasurementsCommand}" Margin="10" Height="60">
-                <StackPanel Orientation="Horizontal">
+                <!-- Divider -->
+                <Border Style="{StaticResource DividerStyle}"/>
 
-                    <TextBlock Text="📊" FontSize="18" Margin="5"/>
-                    <TextBlock Text="{Binding LocalizationProvider[Measurements]}"
-                               VerticalAlignment="Center"
-                               Margin="5"/>
-                </StackPanel>
-            </Button>
+                <!-- MEASUREMENTS -->
+                <Border Tag="Settings" Grid.Row="1" Style="{Binding CurrentViewModel, Converter={StaticResource TabStyleConverter}, ConverterParameter=Measurements}">
+                    <Border.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding ShowMeasurementsCommand}"/>
+                    </Border.InputBindings>
 
-            <!-- Reports -->
-            <Button Grid.Row="2" Command="{Binding ShowReportsCommand}" Margin="10" Height="60">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="📈" FontSize="18" Margin="5"/>
-                    <TextBlock Text="{Binding LocalizationProvider[Reports]}" VerticalAlignment="Center" Margin="5"/>
-                </StackPanel>
-            </Button>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
+                        <TextBlock Text="📊" Style="{StaticResource TabIconStyle}"/>
+                        <TextBlock Text="{Binding LocalizationProvider[Measurements]}" Style="{StaticResource TabTextStyle}"/>
+                    </StackPanel>
+                </Border>
+              
+                <!-- Divider -->
+                <Border Style="{StaticResource DividerStyle}"/>
+                                     
+                <!-- REPORTS -->
+                <Border Tag="Settings" Grid.Row="1" Style="{Binding CurrentViewModel, Converter={StaticResource TabStyleConverter}, ConverterParameter=Reports}">
+                    <Border.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding ShowReportsCommand}"/>
+                    </Border.InputBindings>
 
-            <!-- Help -->
-            <Button Grid.Row="3" Command="{Binding ShowHelpCommand}" Margin="10" Height="60">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="❓" FontSize="18" Margin="5"/>
-                    <TextBlock Text="{Binding LocalizationProvider[Help]}" VerticalAlignment="Center" Margin="5"/>
-                </StackPanel>
-            </Button>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
+                        <TextBlock Text="📈" Style="{StaticResource TabIconStyle}"/>
+                        <TextBlock Text="{Binding LocalizationProvider[Reports]}" Style="{StaticResource TabTextStyle}"/>
+                    </StackPanel>
+                </Border>
 
-            <!-- About -->
-            <Button Grid.Row="4" Command="{Binding ShowAboutCommand}" Margin="10" Height="60">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="ℹ️" FontSize="18" Margin="5"/>
-                    <TextBlock Text="{Binding LocalizationProvider[About]}" VerticalAlignment="Center" Margin="5"/>
-                </StackPanel>
-            </Button>
+                <!-- Divider -->
+                <Border Style="{StaticResource DividerStyle}"/>
+
+                <!-- HELP -->
+                <Border Tag="Settings" Grid.Row="1" Style="{Binding CurrentViewModel, Converter={StaticResource TabStyleConverter}, ConverterParameter=Help}">
+                    <Border.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding ShowHelpCommand}"/>
+                    </Border.InputBindings>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
+                        <TextBlock Text="❓" Style="{StaticResource TabIconStyle}"/>
+                        <TextBlock Text="{Binding LocalizationProvider[Help]}" Style="{StaticResource TabTextStyle}"/>
+                    </StackPanel>
+                </Border>
+               
+                <!-- Divider -->
+                <Border Style="{StaticResource DividerStyle}"/>
+
+                <!-- ABOUT -->
+                <Border Tag="Settings" Grid.Row="1" Style="{Binding CurrentViewModel, Converter={StaticResource TabStyleConverter}, ConverterParameter=About}">
+                    <Border.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" Command="{Binding ShowAboutCommand}"/>
+                    </Border.InputBindings>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,0">
+                        <TextBlock Text="ℹ️" Style="{StaticResource TabIconStyle}"/>
+                        <TextBlock Text="{Binding LocalizationProvider[About]}" Style="{StaticResource TabTextStyle}"/>
+                    </StackPanel>
+                </Border>
+              
+                <!-- Divider -->   
+                <Border Style="{StaticResource DividerStyle}"/> 
+                
+            </StackPanel>
 
             <!-- СТАТУС УСТРОЙСТВА -->
 

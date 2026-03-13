@@ -11,7 +11,7 @@
     <!-- Стиль для вкладки "Уставки" -->
     <Style x:Key="SelectedTabStyleSet" TargetType="Border" BasedOn="{StaticResource BaseTabStyle}">
         <Setter Property="Background" Value="{StaticResource SelectedTabGradient}"/>
-        <Setter Property="Margin" Value= "10,20,0,2"/>
+        <Setter Property="Margin" Value= "10,2,0,2"/>
         <Setter Property="Effect">
             <Setter.Value>
                 <DropShadowEffect ShadowDepth="1" Opacity="0.2" BlurRadius="2"/>
@@ -27,8 +27,8 @@
      
     <!-- Стиль для обычной вкладки -->
     <Style x:Key="NormalTabStyle" TargetType="Border" BasedOn="{StaticResource BaseTabStyle}">
-        <Setter Property="Margin" Value="10,2,10,2"/>
-        <Setter Property="Background" Value="{StaticResource PrimaryLightestBrush}"/>
+        <Setter Property="Margin" Value="10,2,0,2"/>
+        <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}"/>
         <Setter Property="Effect">
             <Setter.Value>
                 <DropShadowEffect ShadowDepth="1" Opacity="0.1" BlurRadius="2"/>
@@ -143,6 +143,7 @@
         <Setter Property="Height" Value="1.5"/>
         <Setter Property="Background" Value="{StaticResource DividerBrush}"/>
         <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Margin" Value="10,0,10,0"/>
     </Style>
 
     <!-- Стиль для ComboBox -->

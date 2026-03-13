@@ -40,7 +40,7 @@
             <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Margin="0,0,5,0">
 
                 <!-- Основной Grid -->
-                <Grid Margin="15">
+                <Grid Margin="8">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>

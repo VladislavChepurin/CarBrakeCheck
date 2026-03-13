@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Border Style="{StaticResource CardBorderStyle}">
+        <Border Style="{StaticResource CardBorderStyle}"  Margin="10">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="Проведение и анализ измерений" FontSize="18" Foreground="#666666"/>
             </StackPanel>
