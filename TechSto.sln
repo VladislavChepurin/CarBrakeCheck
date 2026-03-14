@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechSto.WPF", "TechSto.WPF\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechSto.Core", "TechSto.Core\TechSto.Core.csproj", "{07E5FCF3-7A4C-4E01-A08F-8A87A0CDF162}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechSto.ApplicationLayer", "TechSto.Application\TechSto.ApplicationLayer.csproj", "{33BB3D56-1CF9-4407-A4B6-3E7C84CC34B9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechSto.Infrastructure", "TechSto.Infrastructure\TechSto.Infrastructure.csproj", "{9ABF55B2-314E-4EB5-AF0B-ACEBCF6063BE}"
 EndProject
 Global
@@ -25,10 +23,6 @@ Global
 		{07E5FCF3-7A4C-4E01-A08F-8A87A0CDF162}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07E5FCF3-7A4C-4E01-A08F-8A87A0CDF162}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07E5FCF3-7A4C-4E01-A08F-8A87A0CDF162}.Release|Any CPU.Build.0 = Release|Any CPU
-		{33BB3D56-1CF9-4407-A4B6-3E7C84CC34B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{33BB3D56-1CF9-4407-A4B6-3E7C84CC34B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{33BB3D56-1CF9-4407-A4B6-3E7C84CC34B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{33BB3D56-1CF9-4407-A4B6-3E7C84CC34B9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9ABF55B2-314E-4EB5-AF0B-ACEBCF6063BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9ABF55B2-314E-4EB5-AF0B-ACEBCF6063BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9ABF55B2-314E-4EB5-AF0B-ACEBCF6063BE}.Release|Any CPU.ActiveCfg = Release|Any CPU

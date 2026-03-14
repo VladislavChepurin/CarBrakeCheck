@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows;
 using TechSto.Core.Interfaces;
+using TechSto.Core.Messaging;
 using TechSto.Infrastructure.Data;
 using TechSto.Infrastructure.Services;
 using TechSto.WPF.Services;
@@ -36,10 +37,7 @@ namespace TechSto.WPF
                     // DbContext
                     services.AddDbContext<MainContext>(options =>
                         options.UseSqlite("Data Source=DataBase.db")
-                        .UseLazyLoadingProxies());
-
-                    // Репозитории
-                    //services.AddScoped<IClientRecordRepository, ClientRecordRepository>();
+                        .UseLazyLoadingProxies());            
 
                     // Сервисы приложения
                     services.AddScoped<IClientRecordService, ClientRecordService>();
@@ -51,16 +49,17 @@ namespace TechSto.WPF
                     services.AddScoped<IAddClientCarService, AddClientCarService>();
                     services.AddScoped<ICheckService, CheckService>();
 
-                    //services.AddScoped<ICarDetailsService, CarDetailsService>(); // если есть
+                    // Сервис сообщений
+                    services.AddSingleton<IMessageBus, MessageBus>();
+
+                    // Севис работы с оборудованием
+                    services.AddSingleton<IBrakeTesterService, Ft232BrakeTesterService>();
 
                     // Сервисы инфраструктуры
                     services.AddSingleton<ILocalizationService, LocalizationService>();
                     services.AddSingleton<IAppSettingsService, AppSettingsService>();
                     services.AddSingleton<LocalizationProvider>();
-
-                    // Сервис выбора (для связи между вкладками)
-                    //services.AddSingleton<ISelectionService, SelectionService>();
-
+            
                     //// ViewModel                    
                     services.AddSingleton<MainViewModel>();
 
