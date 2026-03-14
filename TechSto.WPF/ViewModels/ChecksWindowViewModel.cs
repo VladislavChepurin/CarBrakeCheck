@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using TechSto.Core.DTOs;
@@ -57,7 +58,7 @@ namespace TechSto.WPF.ViewModels
             OwnerInfo = $"{ownerSurname} {ownerName}".Trim();
             GosNumber = gosNumber;
             CarInfo = carInfo;
-            CloseCommand = new RelayCommand(_ => CloseWindow());
+            CloseCommand = new RelayCommand( () => CloseWindow());
             LoadChecks(carId);
         }
 

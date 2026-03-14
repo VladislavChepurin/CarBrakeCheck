@@ -22,6 +22,7 @@ public class Ft232BrakeTesterService : IBrakeTesterService, IDisposable
 
     private const int MEASUREMENT_SIZE = 18;
     private const int CALIBRATION_SIZE = 32;
+    private const int TIMEOUT = 1000;
 
     public bool IsConnected => _port?.IsOpen == true;
 
@@ -43,7 +44,7 @@ public class Ft232BrakeTesterService : IBrakeTesterService, IDisposable
             if (IsConnected)
                 return true;
 
-            _port = new SerialPort(portName, 460800, Parity.None, 8, StopBits.One)
+            _port = new SerialPort(portName, 410800, Parity.None, 8, StopBits.One)
             {
                 ReadTimeout = 1000,
                 WriteTimeout = 1000
@@ -151,7 +152,7 @@ public class Ft232BrakeTesterService : IBrakeTesterService, IDisposable
             {
                 await SendCommandAsync(CMD_INIT, ct);
 
-                await ReadExactAsync(buffer, ct);
+                await ReadExactAsync(buffer, TIMEOUT, ct);
 
                 if (!ValidateChecksum(buffer))
                     continue;
@@ -199,27 +200,48 @@ public class Ft232BrakeTesterService : IBrakeTesterService, IDisposable
     {
         var buffer = new byte[size];
 
-        await ReadExactAsync(buffer, ct);
+        await ReadExactAsync(buffer, TIMEOUT,ct);
 
         return buffer;
     }
 
-    private async Task ReadExactAsync(byte[] buffer, CancellationToken ct)
+    private async Task ReadExactAsync(byte[] buffer, int timeoutMs, CancellationToken ct)
     {
         int offset = 0;
 
         while (offset < buffer.Length)
         {
-            int read = await _port.BaseStream.ReadAsync(
-                buffer,
-                offset,
-                buffer.Length - offset,
-                ct);
+            _logger.LogDebug($"Reading at offset {offset}, remaining {buffer.Length - offset} bytes");
 
-            if (read == 0)
-                throw new IOException("Device disconnected");
+            using var timeoutCts = new CancellationTokenSource(timeoutMs);
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, timeoutCts.Token);
 
-            offset += read;
+            try
+            {
+                while (offset < buffer.Length)
+                {
+                    // Проверяем отмену перед каждой операцией
+                    linkedCts.Token.ThrowIfCancellationRequested();
+
+                    int read = await _port.BaseStream.ReadAsync(
+                        buffer.AsMemory(offset, buffer.Length - offset),
+                        linkedCts.Token).ConfigureAwait(false);
+
+                    if (read == 0)
+                    {
+                        _logger.LogWarning("Read returned 0 bytes - device disconnected");
+                        throw new IOException("Device disconnected");
+                    }
+
+                    offset += read;
+                    _logger.LogDebug($"Read {read} bytes, total {offset}/{buffer.Length}");
+                }
+            }
+            catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested)
+            {
+                _logger.LogError($"Read timeout after {timeoutMs}ms");
+                throw new TimeoutException($"Device not responding after {timeoutMs}ms");
+            }
         }
     }
 

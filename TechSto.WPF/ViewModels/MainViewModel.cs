@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using CommunityToolkit.Mvvm.Input;
+using System.Windows.Input;
 using TechSto.Core.Interfaces;
 using TechSto.WPF.Services;
 
@@ -57,11 +58,11 @@ namespace TechSto.WPF.ViewModels
 
             OnConnectionStateChanged(false);
 
-            ShowSettingsCommand = new RelayCommand(_ => CurrentViewModel = SettingsVM);
-            ShowMeasurementsCommand = new RelayCommand(_ => CurrentViewModel = MeasurementsVM);
-            ShowReportsCommand = new RelayCommand(_ => CurrentViewModel = ReportsVM);
-            ShowHelpCommand = new RelayCommand(_ => CurrentViewModel = HelpVM);
-            ShowAboutCommand = new RelayCommand(_ => CurrentViewModel = AboutVM);
+            ShowSettingsCommand = new RelayCommand( ()=> CurrentViewModel = SettingsVM);
+            ShowMeasurementsCommand = new RelayCommand( () => CurrentViewModel = MeasurementsVM);
+            ShowReportsCommand = new RelayCommand( () => CurrentViewModel = ReportsVM);
+            ShowHelpCommand = new RelayCommand( () => CurrentViewModel = HelpVM);
+            ShowAboutCommand = new RelayCommand( () => CurrentViewModel = AboutVM);
 
             CurrentViewModel = SettingsVM;
         }

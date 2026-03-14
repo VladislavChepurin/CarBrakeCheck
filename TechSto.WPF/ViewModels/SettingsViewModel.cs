@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -53,12 +54,12 @@ namespace TechSto.WPF.ViewModels
                 OnSelectedClientRecordChanged();
 
                 // Обновляем состояние команды Start
-                _startCommand?.RaiseCanExecuteChanged();
+                _startCommand?.NotifyCanExecuteChanged();
 
                 // Если есть другие команды, зависящие от выбора
-                (_editClientCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (_deleteClientCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (_allCheckClientCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                (_editClientCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (_deleteClientCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (_allCheckClientCommand as RelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 
@@ -85,10 +86,10 @@ namespace TechSto.WPF.ViewModels
 
         // Команды для режимов (не зависят от выбора)
         private RelayCommand? _manualModeCommand;
-        public ICommand ManualModeCommand => _manualModeCommand ??= new RelayCommand(_ => SelectedMeasurementMode = false);
+        public ICommand ManualModeCommand => _manualModeCommand ??= new RelayCommand( () => SelectedMeasurementMode = false);
 
         private RelayCommand? _autoModeCommand;
-        public ICommand AutoModeCommand => _autoModeCommand ??= new RelayCommand(_ => SelectedMeasurementMode = true);
+        public ICommand AutoModeCommand => _autoModeCommand ??= new RelayCommand( () => SelectedMeasurementMode = true);
 
         public string OwnerName => SelectedClientRecord?.OwnerName ?? "";
         public string OwnerSurname => SelectedClientRecord?.OwnerSurname ?? "";
@@ -237,7 +238,7 @@ namespace TechSto.WPF.ViewModels
             }
         }
             
-        private void OpenAddClientWindow(object e)
+        private void OpenAddClientWindow()
         {
             var window = _serviceProvider.GetRequiredService<AddClientCarWindow>();
             window.Owner = Application.Current.MainWindow;
@@ -248,7 +249,7 @@ namespace TechSto.WPF.ViewModels
             }
         }
 
-        private void OpenEditClientWindow(object e)
+        private void OpenEditClientWindow()
         {
             if (SelectedClientRecord == null) return;
 
@@ -276,7 +277,7 @@ namespace TechSto.WPF.ViewModels
             }          
         }
 
-        private void DeleteClient(object e)
+        private void DeleteClient()
         {        
             if (SelectedClientRecord == null)
             {
@@ -318,7 +319,7 @@ namespace TechSto.WPF.ViewModels
             }
         }
 
-        private void OpenAllCheckClient(object e)
+        private void OpenAllCheckClient()
         {
             if (SelectedClientRecord == null)
             {
@@ -396,7 +397,7 @@ namespace TechSto.WPF.ViewModels
             OnPropertyChanged(nameof(CurbMass));
             OnPropertyChanged(nameof(MaxMass));
         }
-        private bool CanExecuteCommand(object? parameter)
+        private bool CanExecuteCommand()
         {
             return SelectedClientRecord != null;
         }
@@ -410,7 +411,7 @@ namespace TechSto.WPF.ViewModels
             }));
         }
 
-        private void ExecuteStart(object? parameter)
+        private void ExecuteStart()
         {
             
         }

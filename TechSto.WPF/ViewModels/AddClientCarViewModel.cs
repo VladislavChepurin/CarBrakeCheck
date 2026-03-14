@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -350,10 +351,10 @@ namespace TechSto.WPF.ViewModels
             AddAnotherCarCommand = new RelayCommand(ExecuteAddAnotherCar);
             CreateBrandCommand = new RelayCommand(ExecuteCreateBrand);
             CreateModelCommand = new RelayCommand(ExecuteCreateModel);
-            ToggleNewModelCommand = new RelayCommand(_ => IsNewModelExpanded = !IsNewModelExpanded);
-            ToggleNewBrandCommand = new RelayCommand(_ => IsNewBrandMode = !IsNewBrandMode);
-            IncreaseAxleCountCommand = new RelayCommand(_ => AxleCount++);
-            DecreaseAxleCountCommand = new RelayCommand(_ => AxleCount--);
+            ToggleNewModelCommand = new RelayCommand( () => IsNewModelExpanded = !IsNewModelExpanded);
+            ToggleNewBrandCommand = new RelayCommand( () => IsNewBrandMode = !IsNewBrandMode);
+            IncreaseAxleCountCommand = new RelayCommand( () => AxleCount++);
+            DecreaseAxleCountCommand = new RelayCommand( () => AxleCount--);
 
             // Загружаем настройки и язык
             SettingsModel = _appSettingsService.Load();
@@ -475,7 +476,7 @@ namespace TechSto.WPF.ViewModels
 
         // ========== Команды ==========
 
-        private void ExecuteCreateBrand(object? _)
+        private void ExecuteCreateBrand()
         {
             if (string.IsNullOrWhiteSpace(NewBrandName))
             {
@@ -498,7 +499,7 @@ namespace TechSto.WPF.ViewModels
             }
         }
 
-        private void ExecuteCreateModel(object? _)
+        private void ExecuteCreateModel()
         {
             if (string.IsNullOrWhiteSpace(NewModelName))
             {
@@ -556,7 +557,7 @@ namespace TechSto.WPF.ViewModels
             AxleCount = 2;
         }
 
-        private void ExecuteAddAnotherCar(object? _)
+        private void ExecuteAddAnotherCar()
         {
             if (string.IsNullOrWhiteSpace(GosNumber))
             {
@@ -584,7 +585,7 @@ namespace TechSto.WPF.ViewModels
             SelectedCarModel = null;
         }
 
-        private void ExecuteSave(object? _)
+        private void ExecuteSave()
         {
             // Валидация владельца
             if (IsNewOwner && string.IsNullOrWhiteSpace(OwnerName))

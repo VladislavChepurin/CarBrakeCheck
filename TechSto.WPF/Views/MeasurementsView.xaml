@@ -9,7 +9,28 @@
     <Grid>
         <Border Style="{StaticResource CardBorderStyle}"  Margin="10">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Text="Проведение и анализ измерений" FontSize="18" Foreground="#666666"/>
+                <TextBox x:Name="PortTextBox" Text="COM4"/>
+                <Button Content="Подключиться" 
+            Command="{Binding ConnectCommand}" 
+            CommandParameter="{Binding Text, ElementName=PortTextBox}"/>
+                <Button Content="Отключиться" Command="{Binding DisconnectCommand}"/>
+                <Button Content="Одиночное измерение" Command="{Binding SingleMeasurementCommand}"/>
+                <Button Content="Непрерывное чтение" Command="{Binding StartContinuousCommand}"/>
+                <Button Content="Остановить" Command="{Binding StopContinuousCommand}"/>
+
+                <TextBlock Text="{Binding ConnectionStatus}"/>
+
+                <ListBox ItemsSource="{Binding Measurements}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Timestamp, StringFormat='HH:mm:ss'}"/>
+                                <TextBlock Text="{Binding TotalWeight, StringFormat='Вес: {0}'}"/>
+                                <TextBlock Text="{Binding DiscreteSignals}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </StackPanel>
         </Border>
     </Grid>
