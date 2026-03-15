@@ -26,6 +26,7 @@ namespace TechSto.WPF.ViewModels
 
         private AppSettings _settings = new();
         private ClientRecordDto? _selectedClientRecord;
+        private Visibility _brandsVisibility = Visibility.Collapsed;
 
         private ObservableCollection<ClientRecordDto> _clientRecords = [];
         private ObservableCollection<ClientRecordDto> _allClientRecords = [];
@@ -34,8 +35,8 @@ namespace TechSto.WPF.ViewModels
         private ObservableCollection<SerialPortInfo> _availablePorts = [];
         private SerialPortInfo? _selectedPort;
 
-        private ObservableCollection<string> _axleItems = [];
-        private string? _selectedAxle;
+        private ObservableCollection<int> _axleItems = [];
+        private int? _selectedAxle;
 
         private string _selectedLanguage = string.Empty;
         private string _searchText = string.Empty;
@@ -99,6 +100,12 @@ namespace TechSto.WPF.ViewModels
         {
             get => _settings;
             private set => SetProperty(ref _settings, value);
+        }
+
+        public Visibility BrandsVisibility
+        {
+            get => _brandsVisibility;
+            set => SetProperty(ref _brandsVisibility, value);
         }
 
         public ObservableCollection<ClientRecordDto> ClientRecords
@@ -193,13 +200,13 @@ namespace TechSto.WPF.ViewModels
             set => SetProperty(ref _isRelativeDifference, value);
         }
 
-        public ObservableCollection<string> AxleItems
+        public ObservableCollection<int> AxleItems
         {
             get => _axleItems;
             private set => SetProperty(ref _axleItems, value);
         }
 
-        public string? SelectedAxle
+        public int? SelectedAxle
         {
             get => _selectedAxle;
             set => SetProperty(ref _selectedAxle, value);
@@ -489,7 +496,7 @@ namespace TechSto.WPF.ViewModels
             if (SelectedClientRecord != null)
             {
                 for (int i = 1; i <= SelectedClientRecord.AxlesCount; i++)
-                    AxleItems.Add($"Ось {i}");
+                    AxleItems.Add(i);
             }
 
             SelectedAxle = AxleItems.FirstOrDefault();
@@ -525,7 +532,7 @@ namespace TechSto.WPF.ViewModels
 
         private void ExecuteStart()
         {
-            _messageBus.Publish(new ClientRecordMessageDto
+            _messageBus.Publish(new ClientDataMessage
             {
                 Start = true,
                 AxlesCount = AxlesCount,
@@ -534,7 +541,9 @@ namespace TechSto.WPF.ViewModels
                 CarCategory = CarCategory,
                 IsRelativeDifference = IsRelativeDifference,
                 SelectedMeasurementMode = SelectedMeasurementMode,
-                SelectedMeasurementType = SelectedMeasurementType
+                CurrentAxles = SelectedAxle ?? 0,
+                SelectedMeasurementType = SelectedMeasurementType,
+                ComPortName = SelectedPort?.PortName
             });
         }
 

@@ -188,8 +188,14 @@
                     <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}">
                         <StackPanel IsEnabled="{Binding SelectedMeasurementMode}">
                             <TextBlock Text="{Binding LocalizationProvider[TypeOfMeasurements], Mode=OneWay}" Style="{StaticResource RightColumnHeaderTextStyle}"/>
-                            <ComboBox ItemsSource="{Binding AxleItems}" SelectedItem="{Binding SelectedAxle}" 
-                     Margin="0,5" IsEnabled="{Binding AxlesCount, Converter={StaticResource GreaterThanZero}}"/>
+                            <ComboBox ItemsSource="{Binding AxleItems}" SelectedItem="{Binding SelectedAxle}"
+                                 Margin="0,5" IsEnabled="{Binding AxlesCount, Converter={StaticResource GreaterThanZero}}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding StringFormat=Ось {0}}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                             <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="5,0,0,0">
                                 <RadioButton GroupName="MeasurementType"
                                      Content="{Binding LocalizationProvider[EntryDryingRadioBth], Mode=OneWay}"

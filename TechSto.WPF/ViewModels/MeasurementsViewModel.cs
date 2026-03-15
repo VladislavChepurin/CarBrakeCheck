@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using TechSto.Core.DTOs;
 using TechSto.Core.Interfaces;
 using TechSto.Core.Messages;
 using TechSto.Core.Models;
@@ -21,7 +20,7 @@ namespace TechSto.WPF.ViewModels
         private BrakeMeasurement _lastMeasurement;
         private bool _isContinuousReading;
         private string _currentPort;
-        private ClientRecordMessageDto _clientRecordMessageDto;
+        private ClientDataMessage _clientRecordMessage;
 
         // Свойства для привязки в UI
         public bool IsConnected
@@ -89,7 +88,7 @@ namespace TechSto.WPF.ViewModels
             _device = brakeTester;
             _localization = localization;
             _messageBus = messageBus;
-            _messageBus.Subscribe<ClientRecordMessageDto>(OnVehicleSettingsChanged);
+            _messageBus.Subscribe<ClientDataMessage>(OnVehicleSettingsChanged);
 
             // Инициализация команд с проверкой возможности выполнения
             ConnectCommand = new AsyncRelayCommand<string>(
@@ -129,9 +128,9 @@ namespace TechSto.WPF.ViewModels
             UpdateConnectionStatus();
         }
 
-        private void OnVehicleSettingsChanged(ClientRecordMessageDto msg)
+        private void OnVehicleSettingsChanged(ClientDataMessage msg)
         {
-            _clientRecordMessageDto = msg;
+            _clientRecordMessage = msg;
         }
 
 
