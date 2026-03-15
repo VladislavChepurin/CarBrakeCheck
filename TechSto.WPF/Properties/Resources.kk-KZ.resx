@@ -525,4 +525,7 @@
   <data name="CheckFailed" xml:space="preserve">
     <value>Lorem ipsum</value>
   </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>Lorem</value>
+  </data>
 </root>

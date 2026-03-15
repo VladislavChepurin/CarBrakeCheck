@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using TechSto.Core.DTOs;
 using TechSto.Core.Interfaces;
+using TechSto.Core.Messaging;
 using TechSto.Core.Models;
 using TechSto.WPF.Services;
 namespace TechSto.WPF.ViewModels
@@ -20,10 +21,32 @@ namespace TechSto.WPF.ViewModels
         private readonly ILocalizationService _localizationService;
         private readonly IClientRecordService _clientRecordService;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IMessageBus _messageBus;
+        private readonly ISerialPortDiscoveryService _serialPortDiscoveryService;
         private AppSettings _settings;
         private string _searchText = string.Empty;
-        private System.Timers.Timer _searchTimer;
+        private readonly System.Timers.Timer _searchTimer;
 
+        private ObservableCollection<SerialPortInfo> _availablePorts = new();
+        public ObservableCollection<SerialPortInfo> AvailablePorts
+        {
+            get => _availablePorts;
+            set => SetProperty(ref _availablePorts, value);
+        }
+
+        private SerialPortInfo? _selectedPort;
+        public SerialPortInfo? SelectedPort
+        {
+            get => _selectedPort;
+            set
+            {
+                if (SetProperty(ref _selectedPort, value) && value != null)
+                {
+                    SettingsModel.LastSelectedComPort = value.PortName;
+                    _appSettingsService.Save(SettingsModel);
+                }
+            }
+        }
 
         private string _selectedLanguage;
         public string SelectedLanguage
@@ -39,6 +62,8 @@ namespace TechSto.WPF.ViewModels
 
                         _appSettingsService.Save(SettingsModel);
                         _localizationService.SetLanguage(value);
+
+                        LoadPorts();
                     }
                 }
             }
@@ -64,7 +89,7 @@ namespace TechSto.WPF.ViewModels
         }
 
         // Свойства для правой панели
-        public string SelectedCarDisplay =>
+        public string CarName =>
             SelectedClientRecord != null
                 ? $"{SelectedClientRecord.BrandName} {SelectedClientRecord.Model}"
                 : "";
@@ -128,8 +153,8 @@ namespace TechSto.WPF.ViewModels
             private set => SetProperty(ref _axleItems, value);
         }
 
-        private string _selectedAxle;
-        public string SelectedAxle
+        private string? _selectedAxle;
+        public string? SelectedAxle
         {
             get => _selectedAxle;
             set => SetProperty(ref _selectedAxle, value);
@@ -147,13 +172,13 @@ namespace TechSto.WPF.ViewModels
             }
         }
 
-        private int _selectedMeasurementType; // для радиокнопок: 0 - въезд/просушка, 1 - полная загрузка и т.д.
+        private MeasurementType _selectedMeasurementType = MeasurementType.EntryDrying;
 
-        public int SelectedMeasurementType
+        public MeasurementType SelectedMeasurementType
         {
             get => _selectedMeasurementType;
             set => SetProperty(ref _selectedMeasurementType, value);
-        }      
+        }
 
         public Visibility BrandsVisibility
         {
@@ -175,14 +200,18 @@ namespace TechSto.WPF.ViewModels
 
         public LocalizationProvider LocalizationProvider { get; }
 
-        public SettingsViewModel(IAppSettingsService appSettingsService, ILocalizationService localizationService,
-                IClientRecordService clientRecordService, IServiceProvider serviceProvider, LocalizationProvider localizationProvider)
+        public SettingsViewModel(IAppSettingsService appSettingsService,ILocalizationService localizationService,
+            IClientRecordService clientRecordService, IServiceProvider serviceProvider, LocalizationProvider localizationProvider,
+            IMessageBus messageBus, ISerialPortDiscoveryService serialPortDiscoveryService)
         {
             _appSettingsService = appSettingsService;
             _localizationService = localizationService;
             _clientRecordService = clientRecordService;
             _serviceProvider = serviceProvider;
+            _messageBus = messageBus;
+            _serialPortDiscoveryService = serialPortDiscoveryService;
             LocalizationProvider = localizationProvider;
+
 
             // Загружаем настройки
             SettingsModel = _appSettingsService.Load();
@@ -198,8 +227,38 @@ namespace TechSto.WPF.ViewModels
                 Application.Current.Dispatcher.Invoke(() => ApplyFilter());
             };
 
+            LoadPorts();
             LoadData();
+            _serialPortDiscoveryService = serialPortDiscoveryService;
         }
+
+        private void LoadPorts()
+        {
+            var ports = _serialPortDiscoveryService.GetAvailablePorts().ToList();
+            var savedPort = SettingsModel.LastSelectedComPort;
+
+            if (!string.IsNullOrWhiteSpace(savedPort) &&
+                ports.All(p => !string.Equals(p.PortName, savedPort, StringComparison.OrdinalIgnoreCase)))
+            {
+                ports.Insert(0, new SerialPortInfo
+                {
+                    PortName = savedPort,
+                    DisplayName = $"{savedPort} ({LocalizationProvider["Unavailable"]})",
+                    IsAvailable = false
+                });
+            }
+
+            AvailablePorts = new ObservableCollection<SerialPortInfo>(ports);
+
+            if (!string.IsNullOrWhiteSpace(savedPort))
+            {
+                SelectedPort = AvailablePorts.FirstOrDefault(p => p.PortName == savedPort);
+            }
+
+            SelectedPort ??= AvailablePorts.FirstOrDefault();
+        }
+
+
 
         private void LoadData()
         {
@@ -387,7 +446,7 @@ namespace TechSto.WPF.ViewModels
             // Сбросить выбранную ось, если их количество изменилось
             SelectedAxle = AxleItems.FirstOrDefault();
             // Обновить свойства, от которых зависит интерфейс
-            OnPropertyChanged(nameof(SelectedCarDisplay));
+            OnPropertyChanged(nameof(CarName));
             OnPropertyChanged(nameof(GosNumber));
             OnPropertyChanged(nameof(VinNumber));
             OnPropertyChanged(nameof(CarCategory));
@@ -413,7 +472,16 @@ namespace TechSto.WPF.ViewModels
 
         private void ExecuteStart()
         {
-            
+            _messageBus.Publish(new ClientRecordMessageDto()
+                                    {  Start = true,
+                                       AxlesCount = AxlesCount, 
+                                       CarName = CarName,
+                                       GosNumber = GosNumber,
+                                       CarCategory = CarCategory,
+                                       IsRelativeDifference = IsRelativeDifference,
+                                       SelectedMeasurementMode = SelectedMeasurementMode,
+                                       SelectedMeasurementType = SelectedMeasurementType
+                                    });
         }
 
         public void Dispose()

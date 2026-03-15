@@ -525,4 +525,7 @@
   <data name="CheckFailed" xml:space="preserve">
     <value>Проверка не пройдена</value>
   </data>
+  <data name="Unavailable" xml:space="preserve">
+    <value>недоступен</value>
+  </data>
 </root>

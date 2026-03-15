@@ -5,9 +5,9 @@ using TechSto.Core.Models;
 
 namespace TechSto.Infrastructure.Services;
 
-public class Ft232BrakeTesterService : IBrakeTesterService, IDisposable
+public class BrakeTesterService : IBrakeTesterService, IDisposable
 {
-    private readonly ILogger<Ft232BrakeTesterService> _logger;
+    private readonly ILogger<BrakeTesterService> _logger;
 
     private SerialPort _port;
     private CancellationTokenSource _readCts;
@@ -18,7 +18,8 @@ public class Ft232BrakeTesterService : IBrakeTesterService, IDisposable
     private bool _disposed;
 
     private const byte CMD_INIT = 0xA5;
-    private const byte CMD_CALIBRATION = 0x47;
+    private const byte READ_CMD_CALIBRATION = 0x47;
+    private const byte WRITE_CMD_CALIBRATION = 0x32;
 
     private const int MEASUREMENT_SIZE = 18;
     private const int CALIBRATION_SIZE = 32;
@@ -30,7 +31,7 @@ public class Ft232BrakeTesterService : IBrakeTesterService, IDisposable
     public event EventHandler<MeasurementReceivedEventArgs> MeasurementReceived;
     public event EventHandler<DeviceErrorEventArgs> ErrorOccurred;
 
-    public Ft232BrakeTesterService(ILogger<Ft232BrakeTesterService> logger)
+    public BrakeTesterService(ILogger<BrakeTesterService> logger)
     {
         _logger = logger;
     }
@@ -316,7 +317,7 @@ public class Ft232BrakeTesterService : IBrakeTesterService, IDisposable
 
     public async Task<CalibrationData> RequestCalibrationDataAsync(CancellationToken ct = default)
     {
-        await SendCommandAsync(CMD_CALIBRATION, ct);
+        await SendCommandAsync(READ_CMD_CALIBRATION, ct);
 
         var data = await ReadExactAsync(CALIBRATION_SIZE, ct);
 
@@ -383,8 +384,6 @@ public class Ft232BrakeTesterService : IBrakeTesterService, IDisposable
                 Timestamp = DateTime.Now
             });
     }
-
-
 
     #endregion
 

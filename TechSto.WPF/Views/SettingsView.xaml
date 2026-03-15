@@ -10,7 +10,7 @@
 
     <UserControl.Resources>
         <helpers:BindingProxy x:Key="Proxy" Data="{Binding}" />
-        <converters:EqualityToBooleanConverter x:Key="EqualityToBooleanConverter"/>
+        <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
         <converters:GreaterThanZeroConverter x:Key="GreaterThanZero"/>
         <converters:ModeToColorConverter x:Key="ModeToColorConverter"/>
     </UserControl.Resources>
@@ -130,7 +130,7 @@
                             <TextBlock Style="{StaticResource RightColumnTextStyle}">
                      <Run Text="{Binding LocalizationProvider[BrandAndModel], Mode=OneWay}"/>
                      <Run Text=": "/>
-                     <Run Text="{Binding SelectedCarDisplay, Mode=OneWay}"/>
+                     <Run Text="{Binding CarName, Mode=OneWay}"/>
                             </TextBlock>
 
                             <TextBlock Style="{StaticResource RightColumnTextStyle}">
@@ -191,14 +191,25 @@
                             <ComboBox ItemsSource="{Binding AxleItems}" SelectedItem="{Binding SelectedAxle}" 
                      Margin="0,5" IsEnabled="{Binding AxlesCount, Converter={StaticResource GreaterThanZero}}"/>
                             <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="5,0,0,0">
-                                <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[EntryDryingRadioBth], Mode=OneWay}"  
-                         IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=0}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
-                                <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[FullLoadRadioBth], Mode=OneWay}" 
-                         IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=1}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
-                                <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[ParkingVehicleRadioBth], Mode=OneWay}"   
-                         IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=2}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
-                                <RadioButton GroupName="MeasurementType" Content="{Binding LocalizationProvider[EntryRadioBth], Mode=OneWay}"           
-                         IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=3}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+                                <RadioButton GroupName="MeasurementType"
+                                     Content="{Binding LocalizationProvider[EntryDryingRadioBth], Mode=OneWay}"
+                                     IsChecked="{Binding SelectedMeasurementType,Converter={StaticResource EnumToBooleanConverter},
+                                     ConverterParameter=EntryDrying}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+
+                                <RadioButton GroupName="MeasurementType"
+                                     Content="{Binding LocalizationProvider[FullLoadRadioBth], Mode=OneWay}"
+                                     IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EnumToBooleanConverter},
+                                     ConverterParameter=FullLoad}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+
+                                <RadioButton GroupName="MeasurementType"
+                                     Content="{Binding LocalizationProvider[ParkingVehicleRadioBth], Mode=OneWay}"
+                                     IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EnumToBooleanConverter},
+                                     ConverterParameter=ParkingVehicle}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
+
+                                <RadioButton GroupName="MeasurementType"
+                                     Content="{Binding LocalizationProvider[EntryRadioBth], Mode=OneWay}"
+                                     IsChecked="{Binding SelectedMeasurementType, Converter={StaticResource EnumToBooleanConverter},
+                                     ConverterParameter=Entry}" Style="{StaticResource RightColumnRadioButtonStyle}"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -219,15 +230,18 @@
 
         <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Padding="0">
 
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,10,0,0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,10,0,0">
 
-                <ComboBox SelectedValuePath="Tag" SelectedValue="{Binding SelectedLanguage, Mode=TwoWay}" Style="{StaticResource ComboBoxStyle}">
+                <ComboBox SelectedValuePath="Tag" SelectedValue="{Binding SelectedLanguage, Mode=TwoWay}" Width="103" Style="{StaticResource ComboBoxStyle}">
                     <ComboBoxItem Tag="ru-RU">🇷🇺 Русский</ComboBoxItem>
                     <ComboBoxItem Tag="en-US">🇬🇧 English</ComboBoxItem>
                     <ComboBoxItem Tag="kk-KZ">🇰🇿 Қазақша</ComboBoxItem>
                     <ComboBoxItem Tag="uz-Latn-UZ">🇺🇿 O'zbekcha</ComboBoxItem>
-                </ComboBox>             
-            </StackPanel>
+                </ComboBox>
+
+                <ComboBox ItemsSource="{Binding AvailablePorts}" SelectedItem="{Binding SelectedPort, Mode=TwoWay}" Width="146" Style="{StaticResource ComboBoxStyle}" />
+
+            </StackPanel>         
         </Border>
     </Grid>
 

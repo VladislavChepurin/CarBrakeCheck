@@ -53,7 +53,8 @@ namespace TechSto.WPF
                     services.AddSingleton<IMessageBus, MessageBus>();
 
                     // Севис работы с оборудованием
-                    services.AddSingleton<IBrakeTesterService, Ft232BrakeTesterService>();
+                    services.AddSingleton<ISerialPortDiscoveryService, SerialPortDiscoveryService>();
+                    services.AddSingleton<IBrakeTesterService, BrakeTesterService>();
 
                     // Сервисы инфраструктуры
                     services.AddSingleton<ILocalizationService, LocalizationService>();

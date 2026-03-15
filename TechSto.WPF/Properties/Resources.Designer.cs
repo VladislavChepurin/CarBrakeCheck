@@ -1159,6 +1159,15 @@ namespace TechSto.WPF.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на недоступен.
+        /// </summary>
+        public static string Unavailable {
+            get {
+                return ResourceManager.GetString("Unavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Изменить.
         /// </summary>
         public static string UpdateBth {

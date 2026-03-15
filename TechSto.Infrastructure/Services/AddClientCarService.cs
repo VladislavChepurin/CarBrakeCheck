@@ -23,11 +23,11 @@ namespace TechSto.Infrastructure.Services
             if (dto.IsNewOwner)
             {
                 owner = new Owner { Name = dto.OwnerName, Surname = dto.OwnerSurname };
-                _context.Owners.Add(owner);
+                _context?.Owners?.Add(owner);
             }
             else
             {
-                owner = _context.Owners.Find(dto.ExistingOwnerId!.Value);
+                owner = _context?.Owners?.Find(dto.ExistingOwnerId!.Value);
                 if (owner != null)
                 {
                     owner.Name = dto.ExistingOwnerName;
@@ -49,16 +49,16 @@ namespace TechSto.Infrastructure.Services
                 else
                     car.OwnerId = owner!.Id;
 
-                _context.TheCars.Add(car);
+                _context?.TheCars?.Add(car);
             }
 
-            _context.SaveChanges();
+            _context?.SaveChanges();
             tx.Commit();
         }
 
         public void UpdateClientCar(UpdateClientCarDto dto)
         {
-            var car = _context.TheCars.Find(dto.CarId)
+            var car = _context?.TheCars?.Find(dto.CarId)
                 ?? throw new InvalidOperationException(/*Properties.Resources.ErrorCarNotFound*/);
 
             using var tx = _context.Database.BeginTransaction();
@@ -69,7 +69,7 @@ namespace TechSto.Infrastructure.Services
 
             if (dto.OwnerId.HasValue)
             {
-                var owner = _context.Owners.Find(dto.OwnerId.Value);
+                var owner = _context?.Owners?.Find(dto.OwnerId.Value);
                 if (owner != null)
                 {
                     owner.Name = dto.OwnerName;
@@ -77,7 +77,7 @@ namespace TechSto.Infrastructure.Services
                     car.OwnerId = owner.Id;
                 }
             }
-            _context.SaveChanges();
+            _context?.SaveChanges();
             tx.Commit();
         }
     }

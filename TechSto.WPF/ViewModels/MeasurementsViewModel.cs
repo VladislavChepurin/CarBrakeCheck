@@ -1,10 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
+using TechSto.Core.DTOs;
 using TechSto.Core.Interfaces;
+using TechSto.Core.Messaging;
 using TechSto.Core.Models;
 using TechSto.WPF.Services;
-using CommunityToolkit.Mvvm.Input;
-using System.Windows;
 
 namespace TechSto.WPF.ViewModels
 {
@@ -12,12 +14,14 @@ namespace TechSto.WPF.ViewModels
     {
         private readonly IBrakeTesterService _device;
         private readonly LocalizationProvider _localization;
+        private readonly IMessageBus _messageBus;
         private bool _isConnected;
         private string _connectionStatus;
         private ObservableCollection<BrakeMeasurement> _measurements = new();
         private BrakeMeasurement _lastMeasurement;
         private bool _isContinuousReading;
         private string _currentPort;
+        private ClientRecordMessageDto _clientRecordMessageDto;
 
         // Свойства для привязки в UI
         public bool IsConnected
@@ -79,10 +83,13 @@ namespace TechSto.WPF.ViewModels
         public ICommand StopContinuousCommand { get; }
         public ICommand ClearMeasurementsCommand { get; }
 
-        public MeasurementsViewModel(IBrakeTesterService brakeTester, LocalizationProvider localization)
+        public MeasurementsViewModel(IBrakeTesterService brakeTester, LocalizationProvider localization,
+            IMessageBus messageBus)
         {
             _device = brakeTester;
             _localization = localization;
+            _messageBus = messageBus;
+            _messageBus.Subscribe<ClientRecordMessageDto>(OnVehicleSettingsChanged);
 
             // Инициализация команд с проверкой возможности выполнения
             ConnectCommand = new AsyncRelayCommand<string>(
@@ -121,6 +128,13 @@ namespace TechSto.WPF.ViewModels
             _isConnected = _device.IsConnected;
             UpdateConnectionStatus();
         }
+
+        private void OnVehicleSettingsChanged(ClientRecordMessageDto msg)
+        {
+            _clientRecordMessageDto = msg;
+        }
+
+
 
         #region Выполнение команд
 

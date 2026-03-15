@@ -5,17 +5,19 @@ namespace TechSto.Core.Models
     public class AppSettings
     {
         public string Language { get; set; } = "ru-RU";
-        public string LastSelectedTab { get; set; } = "Settings";
-        public bool IsMaximized { get; set; } = false;
-        public double WindowWidth { get; set; } = 1200;
-        public double WindowHeight { get; set; } = 650;
+        public string? LastSelectedComPort { get; set; }
         public double WindowLeft { get; set; } = 100;
         public double WindowTop { get; set; } = 100;
 
-
         private static readonly string SettingsPath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "WpfApp1", "settings.json");
+                    "TechSto", "settings.json");
+
+        // Кешируем JsonSerializerOptions
+        private static readonly JsonSerializerOptions JsonOptions = new()
+        {
+            WriteIndented = true
+        };
 
         public static AppSettings Load()
         {
@@ -24,12 +26,11 @@ namespace TechSto.Core.Models
                 if (File.Exists(SettingsPath))
                 {
                     string json = File.ReadAllText(SettingsPath);
-                    return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+                    return JsonSerializer.Deserialize<AppSettings>(json, JsonOptions) ?? new AppSettings();
                 }
             }
             catch (Exception ex)
             {
-                // Логирование ошибки
                 Console.WriteLine($"Error loading settings: {ex.Message}");
             }
 
@@ -40,19 +41,20 @@ namespace TechSto.Core.Models
         {
             try
             {
-                string directory = Path.GetDirectoryName(SettingsPath);
-                if (!Directory.Exists(directory))
-                    Directory.CreateDirectory(directory);
+                string? directory = Path.GetDirectoryName(SettingsPath);
+                if (directory is not null)
+                {
+                    if (!Directory.Exists(directory))
+                        Directory.CreateDirectory(directory);
 
-                string json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(SettingsPath, json);
+                    string json = JsonSerializer.Serialize(this, JsonOptions);
+                    File.WriteAllText(SettingsPath, json);
+                }
             }
             catch (Exception ex)
             {
-                // Логирование ошибки
                 Console.WriteLine($"Error saving settings: {ex.Message}");
             }
         }
     }
 }
-
