@@ -5,36 +5,124 @@ using System.Windows;
 using System.Windows.Input;
 using TechSto.Core.DTOs;
 using TechSto.Core.Interfaces;
-using TechSto.Core.Messaging;
+using TechSto.Core.Messages;
 using TechSto.Core.Models;
 using TechSto.WPF.Services;
+
 namespace TechSto.WPF.ViewModels
 {
     public class SettingsViewModel : ViewModelBase, IDisposable
-    {      
-        private ClientRecordDto _selectedClientRecord;
-        private Visibility _brandsVisibility = Visibility.Collapsed;
-        private ObservableCollection<ClientRecordDto> _clientRecords = [];
-        private ObservableCollection<ClientRecordDto> _allClientRecords = [];
-        private List<ClientRecordDto> _filteredList = [];
+    {
         private readonly IAppSettingsService _appSettingsService;
         private readonly ILocalizationService _localizationService;
         private readonly IClientRecordService _clientRecordService;
         private readonly IServiceProvider _serviceProvider;
         private readonly IMessageBus _messageBus;
         private readonly ISerialPortDiscoveryService _serialPortDiscoveryService;
-        private AppSettings _settings;
-        private string _searchText = string.Empty;
+        private readonly IBrakeTesterService _brakeTesterService;
         private readonly System.Timers.Timer _searchTimer;
 
-        private ObservableCollection<SerialPortInfo> _availablePorts = new();
+        private CancellationTokenSource? _availabilityCts;
+
+        private AppSettings _settings = new();
+        private ClientRecordDto? _selectedClientRecord;
+
+        private ObservableCollection<ClientRecordDto> _clientRecords = [];
+        private ObservableCollection<ClientRecordDto> _allClientRecords = [];
+        private List<ClientRecordDto> _filteredList = [];
+
+        private ObservableCollection<SerialPortInfo> _availablePorts = [];
+        private SerialPortInfo? _selectedPort;
+
+        private ObservableCollection<string> _axleItems = [];
+        private string? _selectedAxle;
+
+        private string _selectedLanguage = string.Empty;
+        private string _searchText = string.Empty;
+
+        private bool _isRelativeDifference;
+        private bool _selectedMeasurementMode;
+        private bool _isDeviceAvailable;
+        private MeasurementType _selectedMeasurementType = MeasurementType.EntryDrying;
+
+        private RelayCommand? _addClientCommand;
+        private RelayCommand? _editClientCommand;
+        private RelayCommand? _deleteClientCommand;
+        private RelayCommand? _allCheckClientCommand;
+        private RelayCommand? _startCommand;
+        private RelayCommand? _manualModeCommand;
+        private RelayCommand? _autoModeCommand;
+
+        public SettingsViewModel(
+            IAppSettingsService appSettingsService,
+            ILocalizationService localizationService,
+            IClientRecordService clientRecordService,
+            IServiceProvider serviceProvider,
+            LocalizationProvider localizationProvider,
+            IMessageBus messageBus,
+            ISerialPortDiscoveryService serialPortDiscoveryService,
+            IBrakeTesterService brakeTesterService)
+        {
+            _appSettingsService = appSettingsService;
+            _localizationService = localizationService;
+            _clientRecordService = clientRecordService;
+            _serviceProvider = serviceProvider;
+            _messageBus = messageBus;
+            _serialPortDiscoveryService = serialPortDiscoveryService;
+            _brakeTesterService = brakeTesterService;
+
+            LocalizationProvider = localizationProvider;
+
+            SettingsModel = _appSettingsService.Load();
+
+            _selectedLanguage = SettingsModel.Language;
+            _localizationService.SetLanguage(SettingsModel.Language);
+
+            _searchTimer = new System.Timers.Timer(300)
+            {
+                AutoReset = false
+            };
+            _searchTimer.Elapsed += (_, _) =>
+            {
+                Application.Current.Dispatcher.Invoke(ApplyFilter);
+            };
+
+            LoadPorts();
+            LoadData();
+
+            _ = CheckSelectedPortAvailabilityAsync();
+        }
+
+        public LocalizationProvider LocalizationProvider { get; }
+
+        public AppSettings SettingsModel
+        {
+            get => _settings;
+            private set => SetProperty(ref _settings, value);
+        }
+
+        public ObservableCollection<ClientRecordDto> ClientRecords
+        {
+            get => _clientRecords;
+            set => SetProperty(ref _clientRecords, value);
+        }
+
         public ObservableCollection<SerialPortInfo> AvailablePorts
         {
             get => _availablePorts;
             set => SetProperty(ref _availablePorts, value);
         }
 
-        private SerialPortInfo? _selectedPort;
+        public bool IsDeviceAvailable
+        {
+            get => _isDeviceAvailable;
+            private set
+            {
+                if (SetProperty(ref _isDeviceAvailable, value))
+                    _startCommand?.NotifyCanExecuteChanged();
+            }
+        }
+
         public SerialPortInfo? SelectedPort
         {
             get => _selectedPort;
@@ -44,11 +132,11 @@ namespace TechSto.WPF.ViewModels
                 {
                     SettingsModel.LastSelectedComPort = value.PortName;
                     _appSettingsService.Save(SettingsModel);
+                    _ = CheckSelectedPortAvailabilityAsync();
                 }
             }
         }
 
-        private string _selectedLanguage;
         public string SelectedLanguage
         {
             get => _selectedLanguage;
@@ -56,75 +144,35 @@ namespace TechSto.WPF.ViewModels
             {
                 if (SetProperty(ref _selectedLanguage, value))
                 {
-                    if (SettingsModel != null)
-                    {
-                        SettingsModel.Language = value;
+                    SettingsModel.Language = value;
+                    _appSettingsService.Save(SettingsModel);
+                    _localizationService.SetLanguage(value);
 
-                        _appSettingsService.Save(SettingsModel);
-                        _localizationService.SetLanguage(value);
-
-                        LoadPorts();
-                    }
+                    LoadPorts();
+                    _ = CheckSelectedPortAvailabilityAsync();
                 }
             }
         }
 
-        public ClientRecordDto SelectedClientRecord
+        public ClientRecordDto? SelectedClientRecord
         {
             get => _selectedClientRecord;
             set
             {
+                if (EqualityComparer<ClientRecordDto?>.Default.Equals(_selectedClientRecord, value))
+                    return;
+
                 _selectedClientRecord = value;
                 OnPropertyChanged();
+
                 OnSelectedClientRecordChanged();
 
-                // Обновляем состояние команды Start
                 _startCommand?.NotifyCanExecuteChanged();
-
-                // Если есть другие команды, зависящие от выбора
-                (_editClientCommand as RelayCommand)?.NotifyCanExecuteChanged();
-                (_deleteClientCommand as RelayCommand)?.NotifyCanExecuteChanged();
-                (_allCheckClientCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                _editClientCommand?.NotifyCanExecuteChanged();
+                _deleteClientCommand?.NotifyCanExecuteChanged();
+                _allCheckClientCommand?.NotifyCanExecuteChanged();
             }
         }
-
-        // Свойства для правой панели
-        public string CarName =>
-            SelectedClientRecord != null
-                ? $"{SelectedClientRecord.BrandName} {SelectedClientRecord.Model}"
-                : "";
-
-        private RelayCommand? _addClientCommand;
-        public ICommand AddClientCommand => _addClientCommand ??= new RelayCommand(OpenAddClientWindow);
-
-        private RelayCommand? _editClientCommand;
-        public ICommand EditClientCommand => _editClientCommand ??= new RelayCommand(OpenEditClientWindow, CanExecuteCommand);
-
-        private RelayCommand? _deleteClientCommand;
-        public ICommand DeleteClientCommand => _deleteClientCommand ??= new RelayCommand(DeleteClient, CanExecuteCommand);
-
-        private RelayCommand? _allCheckClientCommand;
-        public ICommand AllCheckClientCommand => _allCheckClientCommand ??= new RelayCommand(OpenAllCheckClient, CanExecuteCommand);
-
-        private RelayCommand? _startCommand;
-        public ICommand StartCommand => _startCommand ??= new RelayCommand(ExecuteStart, CanExecuteCommand);
-
-        // Команды для режимов (не зависят от выбора)
-        private RelayCommand? _manualModeCommand;
-        public ICommand ManualModeCommand => _manualModeCommand ??= new RelayCommand( () => SelectedMeasurementMode = false);
-
-        private RelayCommand? _autoModeCommand;
-        public ICommand AutoModeCommand => _autoModeCommand ??= new RelayCommand( () => SelectedMeasurementMode = true);
-
-        public string OwnerName => SelectedClientRecord?.OwnerName ?? "";
-        public string OwnerSurname => SelectedClientRecord?.OwnerSurname ?? "";
-        public string VinNumber => SelectedClientRecord?.VinCode ?? "";
-        public string GosNumber => SelectedClientRecord?.GosNumber ?? "";
-        public string CarCategory => SelectedClientRecord?.CategoryName ?? "";
-        public int AxlesCount => SelectedClientRecord?.AxlesCount ?? 0;
-        public int CurbMass => SelectedClientRecord?.CurbMass ?? 0;
-        public int MaxMass => SelectedClientRecord?.MaxMass ?? 0;
-
 
         public string SearchText
         {
@@ -139,40 +187,29 @@ namespace TechSto.WPF.ViewModels
             }
         }
 
-        private bool _isRelativeDifference;
         public bool IsRelativeDifference
         {
             get => _isRelativeDifference;
             set => SetProperty(ref _isRelativeDifference, value);
         }
 
-        private ObservableCollection<string> _axleItems = new();
         public ObservableCollection<string> AxleItems
         {
             get => _axleItems;
             private set => SetProperty(ref _axleItems, value);
         }
 
-        private string? _selectedAxle;
         public string? SelectedAxle
         {
             get => _selectedAxle;
             set => SetProperty(ref _selectedAxle, value);
         }
 
-     // Ползунок Авто-Ручной
-        private bool _selectedMeasurementMode;
         public bool SelectedMeasurementMode
         {
             get => _selectedMeasurementMode;
-            set
-            {
-                _selectedMeasurementMode = value;
-                OnPropertyChanged();
-            }
+            set => SetProperty(ref _selectedMeasurementMode, value);
         }
-
-        private MeasurementType _selectedMeasurementType = MeasurementType.EntryDrying;
 
         public MeasurementType SelectedMeasurementType
         {
@@ -180,57 +217,40 @@ namespace TechSto.WPF.ViewModels
             set => SetProperty(ref _selectedMeasurementType, value);
         }
 
-        public Visibility BrandsVisibility
-        {
-            get => _brandsVisibility;
-            set { _brandsVisibility = value; OnPropertyChanged(); }
-        }
+        public string CarName =>
+            SelectedClientRecord != null
+                ? $"{SelectedClientRecord.BrandName} {SelectedClientRecord.Model}"
+                : string.Empty;
 
-        public ObservableCollection<ClientRecordDto> ClientRecords
-        {
-            get => _clientRecords;
-            set { _clientRecords = value; OnPropertyChanged(); }
-        }
+        public string OwnerName => SelectedClientRecord?.OwnerName ?? string.Empty;
+        public string OwnerSurname => SelectedClientRecord?.OwnerSurname ?? string.Empty;
+        public string VinNumber => SelectedClientRecord?.VinCode ?? string.Empty;
+        public string GosNumber => SelectedClientRecord?.GosNumber ?? string.Empty;
+        public string CarCategory => SelectedClientRecord?.CategoryName ?? string.Empty;
+        public int AxlesCount => SelectedClientRecord?.AxlesCount ?? 0;
+        public int CurbMass => SelectedClientRecord?.CurbMass ?? 0;
+        public int MaxMass => SelectedClientRecord?.MaxMass ?? 0;
 
-        public AppSettings SettingsModel
-        {
-            get => _settings;
-            private set => SetProperty(ref _settings, value);
-        }
+        public ICommand AddClientCommand =>
+            _addClientCommand ??= new RelayCommand(OpenAddClientWindow);
 
-        public LocalizationProvider LocalizationProvider { get; }
+        public ICommand EditClientCommand =>
+            _editClientCommand ??= new RelayCommand(OpenEditClientWindow, CanExecuteCommand);
 
-        public SettingsViewModel(IAppSettingsService appSettingsService,ILocalizationService localizationService,
-            IClientRecordService clientRecordService, IServiceProvider serviceProvider, LocalizationProvider localizationProvider,
-            IMessageBus messageBus, ISerialPortDiscoveryService serialPortDiscoveryService)
-        {
-            _appSettingsService = appSettingsService;
-            _localizationService = localizationService;
-            _clientRecordService = clientRecordService;
-            _serviceProvider = serviceProvider;
-            _messageBus = messageBus;
-            _serialPortDiscoveryService = serialPortDiscoveryService;
-            LocalizationProvider = localizationProvider;
+        public ICommand DeleteClientCommand =>
+            _deleteClientCommand ??= new RelayCommand(DeleteClient, CanExecuteCommand);
 
+        public ICommand AllCheckClientCommand =>
+            _allCheckClientCommand ??= new RelayCommand(OpenAllCheckClient, CanExecuteCommand);
 
-            // Загружаем настройки
-            SettingsModel = _appSettingsService.Load();
+        public ICommand StartCommand =>
+            _startCommand ??= new RelayCommand(ExecuteStart, CanStartCommand);
 
-            // Устанавливаем язык
-            _selectedLanguage = SettingsModel.Language;
-            _localizationService.SetLanguage(SettingsModel.Language);
+        public ICommand ManualModeCommand =>
+            _manualModeCommand ??= new RelayCommand(() => SelectedMeasurementMode = false);
 
-            _searchTimer = new System.Timers.Timer(300);
-            _searchTimer.AutoReset = false;
-            _searchTimer.Elapsed += (s, e) =>
-            {
-                Application.Current.Dispatcher.Invoke(() => ApplyFilter());
-            };
-
-            LoadPorts();
-            LoadData();
-            _serialPortDiscoveryService = serialPortDiscoveryService;
-        }
+        public ICommand AutoModeCommand =>
+            _autoModeCommand ??= new RelayCommand(() => SelectedMeasurementMode = true);
 
         private void LoadPorts()
         {
@@ -251,14 +271,59 @@ namespace TechSto.WPF.ViewModels
             AvailablePorts = new ObservableCollection<SerialPortInfo>(ports);
 
             if (!string.IsNullOrWhiteSpace(savedPort))
-            {
                 SelectedPort = AvailablePorts.FirstOrDefault(p => p.PortName == savedPort);
-            }
 
             SelectedPort ??= AvailablePorts.FirstOrDefault();
         }
 
+        private async Task CheckSelectedPortAvailabilityAsync()
+        {
+            _availabilityCts?.Cancel();
+            _availabilityCts?.Dispose();
+            _availabilityCts = new CancellationTokenSource();
 
+            var ct = _availabilityCts.Token;
+
+            try
+            {
+                if (SelectedPort == null || !SelectedPort.IsAvailable)
+                {
+                    PublishAvailability(false, SelectedPort?.PortName);
+                    return;
+                }
+
+                bool isAvailable = await _brakeTesterService.CheckAvailabilityAsync(SelectedPort.PortName, ct);
+
+                if (ct.IsCancellationRequested)
+                    return;
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    PublishAvailability(isAvailable, SelectedPort.PortName);
+                });
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    PublishAvailability(false, SelectedPort?.PortName);
+                });
+            }
+        }
+
+        private void PublishAvailability(bool isAvailable, string? portName)
+        {
+            IsDeviceAvailable = isAvailable;
+
+            _messageBus.Publish(new DeviceAvailabilityChangedMessage
+            {
+                IsAvailable = isAvailable,
+                PortName = portName
+            });
+        }
 
         private void LoadData()
         {
@@ -289,55 +354,49 @@ namespace TechSto.WPF.ViewModels
                 ).ToList();
             }
 
-            // Обновляем коллекцию только если изменилось количество или порядок
             if (!_filteredList.SequenceEqual(filtered))
             {
                 _filteredList = filtered;
                 ClientRecords = new ObservableCollection<ClientRecordDto>(_filteredList);
             }
         }
-            
+
         private void OpenAddClientWindow()
         {
             var window = _serviceProvider.GetRequiredService<AddClientCarWindow>();
             window.Owner = Application.Current.MainWindow;
 
             if (window.ShowDialog() == true)
-            {
-                LoadData(); // перезагрузка данных после успешного сохранения
-            }
+                LoadData();
         }
 
         private void OpenEditClientWindow()
         {
-            if (SelectedClientRecord == null) return;
+            if (SelectedClientRecord == null)
+                return;
 
-            // Создаём отдельный scope для изоляции контекста
             using var scope = _serviceProvider.CreateScope();
             var sp = scope.ServiceProvider;
 
-            // Загружаем полный объект автомобиля через сервис
             var carService = sp.GetRequiredService<ITheCarService>();
             var car = carService.GetById(SelectedClientRecord.CarId);
 
-            if (car == null) return;
+            if (car == null)
+                return;
 
             var viewModel = ActivatorUtilities.CreateInstance<AddClientCarViewModel>(sp, car.Owner, car);
 
-            // Создаём окно вручную (не через DI, чтобы передать нашу ViewModel)
             var window = new AddClientCarWindow(viewModel, sp.GetRequiredService<ILocalizationService>())
             {
                 Owner = Application.Current.MainWindow
             };
 
             if (window.ShowDialog() == true)
-            {
-                LoadData(); // перезагрузка данных после успешного сохранения               
-            }          
+                LoadData();
         }
 
         private void DeleteClient()
-        {        
+        {
             if (SelectedClientRecord == null)
             {
                 MessageBox.Show(
@@ -359,14 +418,9 @@ namespace TechSto.WPF.ViewModels
 
             try
             {
-                // Предполагаем, что в сервисе есть метод удаления по идентификатору автомобиля
                 _clientRecordService.DeleteClientRecord(SelectedClientRecord.CarId);
-
-                // Перезагружаем данные
                 LoadData();
-
-                // Сбрасываем выделение, так как удалённой записи больше нет
-                SelectedClientRecord = null;                               
+                SelectedClientRecord = null;
             }
             catch (Exception ex)
             {
@@ -391,7 +445,6 @@ namespace TechSto.WPF.ViewModels
                 return;
             }
 
-            // Проверяем наличие проверок через сервис
             using var scope = _serviceProvider.CreateScope();
             var sp = scope.ServiceProvider;
             var checkService = sp.GetRequiredService<ICheckService>();
@@ -409,43 +462,38 @@ namespace TechSto.WPF.ViewModels
                 return;
             }
 
-            // Формируем информацию об автомобиле
             string carInfo = $"{SelectedClientRecord.BrandName} {SelectedClientRecord.Model}".Trim();
 
-            // Получаем фабрику или используем ActivatorUtilities для создания ViewModel с параметрами
             var viewModel = ActivatorUtilities.CreateInstance<ChecksWindowViewModel>(
                 sp,
                 checkService,
                 LocalizationProvider,
                 SelectedClientRecord.CarId,
-                SelectedClientRecord.OwnerName ?? "",
-                SelectedClientRecord.OwnerSurname ?? "",
-                SelectedClientRecord.GosNumber ?? "",
+                SelectedClientRecord.OwnerName ?? string.Empty,
+                SelectedClientRecord.OwnerSurname ?? string.Empty,
+                SelectedClientRecord.GosNumber ?? string.Empty,
                 carInfo
             );
 
-            // Получаем окно из DI и устанавливаем ViewModel
             var window = sp.GetRequiredService<ChecksWindow>();
             window.DataContext = viewModel;
-            window.Owner = Application.Current.MainWindow;   
-            window.Closed += (s, args) => SetFocusReturn();
+            window.Owner = Application.Current.MainWindow;
+            window.Closed += (_, _) => SetFocusReturn();
             window.ShowDialog();
         }
-                
+
         private void OnSelectedClientRecordChanged()
         {
-            // Обновляем список осей
             AxleItems.Clear();
+
             if (SelectedClientRecord != null)
             {
                 for (int i = 1; i <= SelectedClientRecord.AxlesCount; i++)
-                {
                     AxleItems.Add($"Ось {i}");
-                }
             }
-            // Сбросить выбранную ось, если их количество изменилось
+
             SelectedAxle = AxleItems.FirstOrDefault();
-            // Обновить свойства, от которых зависит интерфейс
+
             OnPropertyChanged(nameof(CarName));
             OnPropertyChanged(nameof(GosNumber));
             OnPropertyChanged(nameof(VinNumber));
@@ -456,38 +504,45 @@ namespace TechSto.WPF.ViewModels
             OnPropertyChanged(nameof(CurbMass));
             OnPropertyChanged(nameof(MaxMass));
         }
+
         private bool CanExecuteCommand()
         {
             return SelectedClientRecord != null;
+        }
+
+        private bool CanStartCommand()
+        {
+            return SelectedClientRecord != null && IsDeviceAvailable;
         }
 
         private void SetFocusReturn()
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                //mainWindow?.MainTableWithClientData?.Focus();
+                _ = Application.Current.MainWindow as MainWindow;
             }));
         }
 
         private void ExecuteStart()
         {
-            _messageBus.Publish(new ClientRecordMessageDto()
-                                    {  Start = true,
-                                       AxlesCount = AxlesCount, 
-                                       CarName = CarName,
-                                       GosNumber = GosNumber,
-                                       CarCategory = CarCategory,
-                                       IsRelativeDifference = IsRelativeDifference,
-                                       SelectedMeasurementMode = SelectedMeasurementMode,
-                                       SelectedMeasurementType = SelectedMeasurementType
-                                    });
+            _messageBus.Publish(new ClientRecordMessageDto
+            {
+                Start = true,
+                AxlesCount = AxlesCount,
+                CarName = CarName,
+                GosNumber = GosNumber,
+                CarCategory = CarCategory,
+                IsRelativeDifference = IsRelativeDifference,
+                SelectedMeasurementMode = SelectedMeasurementMode,
+                SelectedMeasurementType = SelectedMeasurementType
+            });
         }
 
         public void Dispose()
         {
-            _searchTimer?.Dispose();
+            _availabilityCts?.Cancel();
+            _availabilityCts?.Dispose();
+            _searchTimer.Dispose();
         }
-
     }
 }

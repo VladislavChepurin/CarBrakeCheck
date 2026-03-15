@@ -6,7 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows;
 using TechSto.Core.Interfaces;
-using TechSto.Core.Messaging;
+using TechSto.Core.Messages;
 using TechSto.Infrastructure.Data;
 using TechSto.Infrastructure.Services;
 using TechSto.WPF.Services;

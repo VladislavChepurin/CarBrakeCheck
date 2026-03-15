@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace TechSto.Core.Messaging
+namespace TechSto.Core.Messages
 {
     public class MessageBus : IMessageBus
     {

@@ -3,405 +3,466 @@ using Microsoft.Extensions.Logging;
 using TechSto.Core.Interfaces;
 using TechSto.Core.Models;
 
-namespace TechSto.Infrastructure.Services;
-
-public class BrakeTesterService : IBrakeTesterService, IDisposable
+namespace TechSto.Infrastructure.Services
 {
-    private readonly ILogger<BrakeTesterService> _logger;
-
-    private SerialPort _port;
-    private CancellationTokenSource _readCts;
-    private Task _readTask;
-
-    private readonly SemaphoreSlim _ioLock = new(1, 1);
-
-    private bool _disposed;
-
-    private const byte CMD_INIT = 0xA5;
-    private const byte READ_CMD_CALIBRATION = 0x47;
-    private const byte WRITE_CMD_CALIBRATION = 0x32;
-
-    private const int MEASUREMENT_SIZE = 18;
-    private const int CALIBRATION_SIZE = 32;
-    private const int TIMEOUT = 1000;
-
-    public bool IsConnected => _port?.IsOpen == true;
-
-    public event EventHandler<DeviceConnectionEventArgs> ConnectionStateChanged;
-    public event EventHandler<MeasurementReceivedEventArgs> MeasurementReceived;
-    public event EventHandler<DeviceErrorEventArgs> ErrorOccurred;
-
-    public BrakeTesterService(ILogger<BrakeTesterService> logger)
+    public class BrakeTesterService : IBrakeTesterService, IDisposable
     {
-        _logger = logger;
-    }
+        private readonly ILogger<BrakeTesterService> _logger;
+        private readonly SemaphoreSlim _ioLock = new(1, 1);
 
-    #region CONNECT
+        private SerialPort? _port;
+        private CancellationTokenSource? _readCts;
+        private Task? _readTask;
+        private bool _disposed;
 
-    public async Task<bool> ConnectAsync(string portName, CancellationToken ct = default)
-    {
-        try
+        private const byte CMD_INIT = 0xA5;
+        private const byte READ_CMD_CALIBRATION = 0x47;
+
+        private const int BAUD_RATE = 410800;
+        private const int MEASUREMENT_SIZE = 18;
+        private const int CALIBRATION_SIZE = 32;
+        private const int TIMEOUT = 1000;
+        private const int AVAILABILITY_CHECK_COUNT = 5;
+
+        public bool IsConnected => _port?.IsOpen == true;
+
+        public event EventHandler<DeviceConnectionEventArgs>? ConnectionStateChanged;
+        public event EventHandler<MeasurementReceivedEventArgs>? MeasurementReceived;
+        public event EventHandler<DeviceErrorEventArgs>? ErrorOccurred;
+
+        public BrakeTesterService(ILogger<BrakeTesterService> logger)
         {
-            if (IsConnected)
-                return true;
-
-            _port = new SerialPort(portName, 410800, Parity.None, 8, StopBits.One)
-            {
-                ReadTimeout = 1000,
-                WriteTimeout = 1000
-            };
-
-            _port.Open();
-
-            _logger.LogInformation("FT232 connected on {port}", portName);
-
-            OnConnectionChanged(true, portName);
-
-            await InitializeAsync(ct);
-
-            return true;
+            _logger = logger;
         }
-        catch (Exception ex)
+
+        public async Task<bool> ConnectAsync(string portName, CancellationToken ct = default)
         {
-            _logger.LogError(ex, "Connection failed");
+            ThrowIfDisposed();
 
-            RaiseError("Connection error", ex, ErrorSeverity.Error);
+            if (string.IsNullOrWhiteSpace(portName))
+                throw new ArgumentException("Port name is required.", nameof(portName));
 
-            return false;
-        }
-    }
-
-    private async Task InitializeAsync(CancellationToken ct)
-    {
-        await SendCommandAsync(CMD_INIT, ct);
-
-        var data = await ReadExactAsync(MEASUREMENT_SIZE, ct);
-
-        if (!ValidateChecksum(data))
-            throw new Exception("Invalid init checksum");
-
-        var measurement = ParseMeasurement(data);
-
-        OnMeasurement(measurement, data);
-
-        _logger.LogInformation("Device initialized");
-    }
-
-    #endregion
-
-    #region CONTINUOUS READING
-
-    public async Task<bool> RequestMeasurementAsync(CancellationToken ct = default) 
-    {
-        if (!IsConnected) throw new InvalidOperationException("Device not connected");
-        try 
-        {
-            await SendCommandAsync(CMD_INIT, ct);
-            var data = await ReadExactAsync(MEASUREMENT_SIZE, ct);
-            if (!ValidateChecksum(data))
-            {
-                _logger.LogWarning("Invalid checksum in measurement");
-                return false; 
-            } 
-            var measurement = ParseMeasurement(data);
-            OnMeasurement(measurement, data);
-            return true; } catch (Exception ex) { _logger.LogError(ex, "Measurement request failed");
-            RaiseError("Measurement error", ex, ErrorSeverity.Error); return false; 
-        }
-    }
-
-    public Task StartContinuousReadingAsync(CancellationToken ct = default)
-    {
-        if (!IsConnected)
-            throw new InvalidOperationException("Device not connected");
-
-        _readCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-
-        _readTask = Task.Run(() => ReadLoopAsync(_readCts.Token));
-
-        _logger.LogInformation("Continuous reading started");
-
-        return Task.CompletedTask;
-    }
-
-    public void StopContinuousReading()
-    {
-        if (_readCts == null)
-            return;
-
-        _readCts.Cancel();
-
-        try
-        {
-            _readTask?.Wait();
-        }
-        catch { }
-
-        _readCts.Dispose();
-        _readCts = null;
-
-        _logger.LogInformation("Continuous reading stopped");
-    }
-
-    private async Task ReadLoopAsync(CancellationToken ct)
-    {
-        var buffer = new byte[MEASUREMENT_SIZE];
-
-        while (!ct.IsCancellationRequested)
-        {
             try
             {
-                await SendCommandAsync(CMD_INIT, ct);
+                if (IsConnected)
+                    return true;
 
-                await ReadExactAsync(buffer, TIMEOUT, ct);
+                var port = CreatePort(portName);
 
-                if (!ValidateChecksum(buffer))
-                    continue;
+                try
+                {
+                    port.Open();
+                    _port = port;
 
-                var measurement = ParseMeasurement(buffer);
+                    await InitializeAsync(ct).ConfigureAwait(false);
 
-                OnMeasurement(measurement, buffer);
-            }
-            catch (OperationCanceledException)
-            {
-                break;
+                    _logger.LogInformation("FT232 connected on {Port}", portName);
+                    OnConnectionChanged(true, portName);
+
+                    return true;
+                }
+                catch
+                {
+                    try
+                    {
+                        if (port.IsOpen)
+                            port.Close();
+                    }
+                    catch (Exception closeEx)
+                    {
+                        _logger.LogWarning(closeEx, "Error while closing port after failed initialization");
+                    }
+
+                    port.Dispose();
+
+                    if (ReferenceEquals(_port, port))
+                        _port = null;
+
+                    throw;
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Read loop error");
-
-                RaiseError("Read error", ex, ErrorSeverity.Error);
-
-                await Task.Delay(200, ct);
+                _logger.LogError(ex, "Connection failed");
+                RaiseError("Connection error", ex, ErrorSeverity.Error);
+                return false;
             }
         }
-    }
 
-    #endregion
-
-    #region IO
-
-    private async Task SendCommandAsync(byte command, CancellationToken ct)
-    {
-        await _ioLock.WaitAsync(ct);
-
-        try
+        public async Task<bool> CheckAvailabilityAsync(string portName, CancellationToken ct = default)
         {
-            var data = new[] { command };
+            ThrowIfDisposed();
 
-            await _port.BaseStream.WriteAsync(data, 0, 1, ct);
-        }
-        finally
-        {
-            _ioLock.Release();
-        }
-    }
-
-    private async Task<byte[]> ReadExactAsync(int size, CancellationToken ct)
-    {
-        var buffer = new byte[size];
-
-        await ReadExactAsync(buffer, TIMEOUT,ct);
-
-        return buffer;
-    }
-
-    private async Task ReadExactAsync(byte[] buffer, int timeoutMs, CancellationToken ct)
-    {
-        int offset = 0;
-
-        while (offset < buffer.Length)
-        {
-            _logger.LogDebug($"Reading at offset {offset}, remaining {buffer.Length - offset} bytes");
-
-            using var timeoutCts = new CancellationTokenSource(timeoutMs);
-            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, timeoutCts.Token);
+            if (string.IsNullOrWhiteSpace(portName))
+                return false;
 
             try
             {
-                while (offset < buffer.Length)
+                using var probePort = CreatePort(portName);
+                probePort.Open();
+
+                for (int attempt = 0; attempt < AVAILABILITY_CHECK_COUNT; attempt++)
                 {
-                    // Проверяем отмену перед каждой операцией
-                    linkedCts.Token.ThrowIfCancellationRequested();
+                    ct.ThrowIfCancellationRequested();
 
-                    int read = await _port.BaseStream.ReadAsync(
-                        buffer.AsMemory(offset, buffer.Length - offset),
-                        linkedCts.Token).ConfigureAwait(false);
+                    byte[] commandBuffer = { CMD_INIT };
+                    probePort.Write(commandBuffer, 0, 1);
 
-                    if (read == 0)
+                    var responseBuffer = new byte[MEASUREMENT_SIZE];
+                    await ReadExactInternalAsync(probePort, responseBuffer, TIMEOUT, ct).ConfigureAwait(false);
+
+                    if (!ValidateChecksum(responseBuffer))
                     {
-                        _logger.LogWarning("Read returned 0 bytes - device disconnected");
-                        throw new IOException("Device disconnected");
+                        _logger.LogWarning(
+                            "Availability check failed on attempt {Attempt}: invalid checksum",
+                            attempt + 1);
+
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Availability check failed for port {Port}", portName);
+                return false;
+            }
+        }
+
+        public async Task<bool> RequestMeasurementAsync(CancellationToken ct = default)
+        {
+            ThrowIfDisposed();
+
+            if (!IsConnected)
+                throw new InvalidOperationException("Device not connected");
+
+            try
+            {
+                var data = await ExchangeAsync(CMD_INIT, MEASUREMENT_SIZE, TIMEOUT, ct).ConfigureAwait(false);
+
+                if (!ValidateChecksum(data))
+                {
+                    _logger.LogWarning("Invalid checksum in measurement");
+                    return false;
+                }
+
+                var measurement = ParseMeasurement(data);
+                OnMeasurement(measurement, data);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Measurement request failed");
+                RaiseError("Measurement error", ex, ErrorSeverity.Error);
+                return false;
+            }
+        }
+
+        public Task StartContinuousReadingAsync(CancellationToken ct = default)
+        {
+            ThrowIfDisposed();
+
+            if (!IsConnected)
+                throw new InvalidOperationException("Device not connected");
+
+            StopContinuousReading();
+
+            _readCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            _readTask = Task.Run(() => ReadLoopAsync(_readCts.Token), _readCts.Token);
+
+            _logger.LogInformation("Continuous reading started");
+            return Task.CompletedTask;
+        }
+
+        public void StopContinuousReading()
+        {
+            if (_readCts == null)
+                return;
+
+            _readCts.Cancel();
+
+            try
+            {
+                _readTask?.GetAwaiter().GetResult();
+            }
+            catch
+            {
+            }
+
+            _readCts.Dispose();
+            _readCts = null;
+            _readTask = null;
+
+            _logger.LogInformation("Continuous reading stopped");
+        }
+
+        public async Task<CalibrationData> RequestCalibrationDataAsync(CancellationToken ct = default)
+        {
+            ThrowIfDisposed();
+
+            var data = await ExchangeAsync(READ_CMD_CALIBRATION, CALIBRATION_SIZE, TIMEOUT, ct).ConfigureAwait(false);
+
+            return new CalibrationData
+            {
+                RawData = data,
+                IsValid = true
+            };
+        }
+
+        public async Task DisconnectAsync(CancellationToken ct = default)
+        {
+            ThrowIfDisposed();
+
+            StopContinuousReading();
+
+            if (_port != null)
+            {
+                var port = _port;
+                _port = null;
+
+                await Task.Run(() =>
+                {
+                    if (port.IsOpen)
+                        port.Close();
+
+                    port.Dispose();
+                }, ct).ConfigureAwait(false);
+            }
+
+            OnConnectionChanged(false, null);
+        }
+
+        private async Task InitializeAsync(CancellationToken ct)
+        {
+            var data = await ExchangeAsync(CMD_INIT, MEASUREMENT_SIZE, TIMEOUT, ct).ConfigureAwait(false);
+
+            if (!ValidateChecksum(data))
+                throw new InvalidOperationException("Invalid init checksum");
+
+            var measurement = ParseMeasurement(data);
+            OnMeasurement(measurement, data);
+
+            _logger.LogInformation("Device initialized");
+        }
+
+        private async Task<byte[]> ExchangeAsync(byte command, int responseSize, int timeoutMs, CancellationToken ct)
+        {
+            await _ioLock.WaitAsync(ct).ConfigureAwait(false);
+
+            try
+            {
+                var port = _port ?? throw new InvalidOperationException("Device is not connected");
+
+                byte[] commandBuffer = { command };
+                port.Write(commandBuffer, 0, 1);
+
+                var responseBuffer = new byte[responseSize];
+                await ReadExactInternalAsync(port, responseBuffer, timeoutMs, ct).ConfigureAwait(false);
+
+                return responseBuffer;
+            }
+            finally
+            {
+                _ioLock.Release();
+            }
+        }
+
+        private async Task ReadLoopAsync(CancellationToken ct)
+        {
+            while (!ct.IsCancellationRequested)
+            {
+                try
+                {
+                    var buffer = await ExchangeAsync(CMD_INIT, MEASUREMENT_SIZE, TIMEOUT, ct).ConfigureAwait(false);
+
+                    if (!ValidateChecksum(buffer))
+                    {
+                        _logger.LogWarning("Invalid checksum in continuous read");
+                        continue;
                     }
 
-                    offset += read;
-                    _logger.LogDebug($"Read {read} bytes, total {offset}/{buffer.Length}");
+                    var measurement = ParseMeasurement(buffer);
+                    OnMeasurement(measurement, buffer);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Read loop error");
+                    RaiseError("Read error", ex, ErrorSeverity.Error);
+
+                    await Task.Delay(200, ct).ConfigureAwait(false);
                 }
             }
-            catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested)
+        }
+
+        private static SerialPort CreatePort(string portName)
+        {
+            return new SerialPort(portName, BAUD_RATE, Parity.None, 8, StopBits.One)
             {
-                _logger.LogError($"Read timeout after {timeoutMs}ms");
-                throw new TimeoutException($"Device not responding after {timeoutMs}ms");
+                ReadTimeout = TIMEOUT,
+                WriteTimeout = TIMEOUT
+            };
+        }
+
+        private static async Task ReadExactInternalAsync(SerialPort port, byte[] buffer, int timeoutMs, CancellationToken ct)
+        {
+            ArgumentNullException.ThrowIfNull(buffer);
+
+            await Task.Run(() =>
+            {
+                int offset = 0;
+                int originalReadTimeout = port.ReadTimeout;
+
+                try
+                {
+                    port.ReadTimeout = timeoutMs;
+
+                    while (offset < buffer.Length)
+                    {
+                        ct.ThrowIfCancellationRequested();
+
+                        int read = port.Read(buffer, offset, buffer.Length - offset);
+
+                        if (read == 0)
+                            throw new IOException("Device disconnected");
+
+                        offset += read;
+                    }
+                }
+                catch (TimeoutException)
+                {
+                    throw new TimeoutException($"Device not responding after {timeoutMs}ms");
+                }
+                finally
+                {
+                    port.ReadTimeout = originalReadTimeout;
+                }
+            }, ct).ConfigureAwait(false);
+        }
+
+        private bool ValidateChecksum(byte[] data)
+        {
+            uint sum = 0;
+
+            for (int i = 0; i < 14; i++)
+                sum += data[i];
+
+            byte rx16 = data[16];
+            byte rx17 = data[17];
+
+            byte calc17 = 0;
+            uint dat = sum;
+
+            while (dat >= 256)
+            {
+                dat -= 255;
+                dat -= 1;
+                calc17++;
             }
-        }
-    }
 
-    #endregion
+            byte calc16 = (byte)dat;
 
-    #region CHECKSUM
-
-    private bool ValidateChecksum(byte[] data)
-    {
-        uint sum = 0;
-
-        for (int i = 0; i < 14; i++)
-            sum += data[i];
-
-        byte rx16 = data[16];
-        byte rx17 = data[17];
-
-        byte calc17 = 0;
-        uint dat = sum;
-
-        while (dat >= 256)
-        {
-            dat -= 255;
-            dat -= 1;
-            calc17++;
+            return rx16 == calc16 && rx17 == calc17;
         }
 
-        byte calc16 = (byte)dat;
-
-        return rx16 == calc16 && rx17 == calc17;
-    }
-
-    #endregion
-
-    #region PARSE
-
-    private BrakeMeasurement ParseMeasurement(byte[] data)
-    {
-        return new BrakeMeasurement
+        private BrakeMeasurement ParseMeasurement(byte[] data)
         {
-            RightWeight1 = data[0],
-            RightWeight2 = data[1],
-            LeftWeight1 = data[2],
-            LeftWeight2 = data[3],
-            PedalPressure = data[4],
-
-            RightBrakeSensor = data[5] | (data[6] << 8),
-            LeftBrakeSensor = data[7] | (data[8] << 8),
-
-            DiscreteSignals = ParseDiscrete(data[13]),
-
-            Timestamp = DateTime.Now,
-            IsValid = true
-        };
-    }
-
-    private DiscreteSignals ParseDiscrete(byte value)
-    {
-        return new DiscreteSignals
-        {
-            PedalConnected = (value & 0x80) != 0,
-            LeftRunOverSensor = (value & 0x40) != 0,
-            RightRunOverSensor = (value & 0x20) != 0,
-            LeftSlipSensor = (value & 0x04) != 0,
-            RightSlipSensor = (value & 0x02) != 0
-        };
-    }
-
-    #endregion
-
-    #region CALIBRATION
-
-    public async Task<CalibrationData> RequestCalibrationDataAsync(CancellationToken ct = default)
-    {
-        await SendCommandAsync(READ_CMD_CALIBRATION, ct);
-
-        var data = await ReadExactAsync(CALIBRATION_SIZE, ct);
-
-        return new CalibrationData
-        {
-            RawData = data,
-            IsValid = true
-        };
-    }
-
-    #endregion
-
-    #region DISCONNECT
-
-    public async Task DisconnectAsync(CancellationToken ct = default)
-    {
-        StopContinuousReading();
-
-        if (_port != null)
-        {
-            await Task.Run(() => _port.Close(), ct);
-
-            _port.Dispose();
-            _port = null;
+            return new BrakeMeasurement
+            {
+                RightWeight1 = data[0],
+                RightWeight2 = data[1],
+                LeftWeight1 = data[2],
+                LeftWeight2 = data[3],
+                PedalPressure = data[4],
+                RightBrakeSensor = data[5] | (data[6] << 8),
+                LeftBrakeSensor = data[7] | (data[8] << 8),
+                DiscreteSignals = ParseDiscrete(data[13]),
+                Timestamp = DateTime.Now,
+                IsValid = true
+            };
         }
 
-        OnConnectionChanged(false, null);
-    }
+        private DiscreteSignals ParseDiscrete(byte value)
+        {
+            return new DiscreteSignals
+            {
+                PedalConnected = (value & 0x80) != 0,
+                LeftRunOverSensor = (value & 0x40) != 0,
+                RightRunOverSensor = (value & 0x20) != 0,
+                LeftSlipSensor = (value & 0x04) != 0,
+                RightSlipSensor = (value & 0x02) != 0
+            };
+        }
 
-    #endregion
-
-    #region EVENTS
-
-    private void OnConnectionChanged(bool connected, string port)
-    {
-        ConnectionStateChanged?.Invoke(this,
-            new DeviceConnectionEventArgs
+        private void OnConnectionChanged(bool connected, string? port)
+        {
+            ConnectionStateChanged?.Invoke(this, new DeviceConnectionEventArgs
             {
                 IsConnected = connected,
-                PortName = port,
+                PortName = port ?? string.Empty,
                 Timestamp = DateTime.Now
             });
-    }
+        }
 
-    private void OnMeasurement(BrakeMeasurement measurement, byte[] raw)
-    {
-        MeasurementReceived?.Invoke(this,
-            new MeasurementReceivedEventArgs
+        private void OnMeasurement(BrakeMeasurement measurement, byte[] raw)
+        {
+            MeasurementReceived?.Invoke(this, new MeasurementReceivedEventArgs
             {
                 Measurement = measurement,
                 RawData = raw,
                 Timestamp = DateTime.Now
             });
-    }
+        }
 
-    private void RaiseError(string msg, Exception ex, ErrorSeverity severity)
-    {
-        ErrorOccurred?.Invoke(this,
-            new DeviceErrorEventArgs
+        private void RaiseError(string msg, Exception ex, ErrorSeverity severity)
+        {
+            ErrorOccurred?.Invoke(this, new DeviceErrorEventArgs
             {
                 ErrorMessage = msg,
                 Exception = ex,
                 Severity = severity,
                 Timestamp = DateTime.Now
             });
+        }
+
+        private void ThrowIfDisposed()
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+        }
+
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            StopContinuousReading();
+
+            if (_port != null)
+            {
+                try
+                {
+                    if (_port.IsOpen)
+                        _port.Close();
+                }
+                catch
+                {
+                }
+
+                _port.Dispose();
+                _port = null;
+            }
+
+            _ioLock.Dispose();
+            _disposed = true;
+        }
     }
-
-    #endregion
-
-    #region DISPOSE
-
-    public void Dispose()
-    {
-        if (_disposed)
-            return;
-
-        StopContinuousReading();
-
-        _port?.Dispose();
-
-        _ioLock.Dispose();
-
-        _disposed = true;
-    }
-
-    #endregion
 }

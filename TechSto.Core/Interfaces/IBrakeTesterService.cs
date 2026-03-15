@@ -4,6 +4,7 @@ namespace TechSto.Core.Interfaces
 {
     public interface IBrakeTesterService : IDisposable
     {
+
         /// <summary>
         /// Состояние подключения к устройству
         /// </summary>
@@ -39,6 +40,16 @@ namespace TechSto.Core.Interfaces
         /// Запрос калибровочных данных
         /// </summary>
         Task<CalibrationData> RequestCalibrationDataAsync(CancellationToken cancellationToken = default);
+
+
+        /// <summary>
+        /// Быстрая проверка подключения
+        /// </summary>
+        /// <param name="portName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<bool> CheckAvailabilityAsync(string portName, CancellationToken cancellationToken = default);
+
 
         /// <summary>
         /// Событие изменения состояния подключения

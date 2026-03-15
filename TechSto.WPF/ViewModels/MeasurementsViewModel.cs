@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using TechSto.Core.DTOs;
 using TechSto.Core.Interfaces;
-using TechSto.Core.Messaging;
+using TechSto.Core.Messages;
 using TechSto.Core.Models;
 using TechSto.WPF.Services;
 

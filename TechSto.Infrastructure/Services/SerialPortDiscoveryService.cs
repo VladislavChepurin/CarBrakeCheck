@@ -13,7 +13,8 @@ namespace TechSto.Infrastructure.Services
                 .Select(x => new SerialPortInfo
                 {
                     PortName = x,
-                    DisplayName = x
+                    DisplayName = x,
+                    IsAvailable = true
                 })
                 .ToArray();
         }

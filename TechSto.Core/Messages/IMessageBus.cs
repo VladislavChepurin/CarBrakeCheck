@@ -1,4 +1,4 @@
-﻿namespace TechSto.Core.Messaging
+﻿namespace TechSto.Core.Messages
 {
     public interface IMessageBus
     {
